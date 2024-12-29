@@ -1,0 +1,2480 @@
+{
+  "permissions": {
+    "workspace": {
+      "row": {
+        "insert": [],
+        "update": {
+          "preMutation": []
+        },
+        "delete": []
+      }
+    },
+    "user": {
+      "row": {
+        "insert": [],
+        "update": {
+          "preMutation": []
+        },
+        "delete": []
+      }
+    },
+    "task": {
+      "row": {
+        "insert": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": null
+                  },
+                  "op": "IS NOT"
+                },
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "column",
+                    "name": "creator_id"
+                  },
+                  "right": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "op": "="
+                }
+              ]
+            }
+          ]
+        ],
+        "update": {
+          "preMutation": [
+            [
+              "allow",
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "simple",
+                    "left": {
+                      "type": "static",
+                      "anchor": "authData",
+                      "field": "sub"
+                    },
+                    "right": {
+                      "type": "literal",
+                      "value": null
+                    },
+                    "op": "IS NOT"
+                  },
+                  {
+                    "type": "simple",
+                    "left": {
+                      "type": "column",
+                      "name": "creator_id"
+                    },
+                    "right": {
+                      "type": "static",
+                      "anchor": "authData",
+                      "field": "sub"
+                    },
+                    "op": "="
+                  }
+                ]
+              }
+            ],
+            [
+              "allow",
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "simple",
+                    "left": {
+                      "type": "static",
+                      "anchor": "authData",
+                      "field": "sub"
+                    },
+                    "right": {
+                      "type": "literal",
+                      "value": null
+                    },
+                    "op": "IS NOT"
+                  },
+                  {
+                    "type": "simple",
+                    "left": {
+                      "type": "static",
+                      "anchor": "authData",
+                      "field": "role"
+                    },
+                    "right": {
+                      "type": "literal",
+                      "value": "admin"
+                    },
+                    "op": "="
+                  }
+                ]
+              }
+            ]
+          ],
+          "postMutation": [
+            [
+              "allow",
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "simple",
+                    "left": {
+                      "type": "static",
+                      "anchor": "authData",
+                      "field": "sub"
+                    },
+                    "right": {
+                      "type": "literal",
+                      "value": null
+                    },
+                    "op": "IS NOT"
+                  },
+                  {
+                    "type": "simple",
+                    "left": {
+                      "type": "column",
+                      "name": "creator_id"
+                    },
+                    "right": {
+                      "type": "static",
+                      "anchor": "authData",
+                      "field": "sub"
+                    },
+                    "op": "="
+                  }
+                ]
+              }
+            ],
+            [
+              "allow",
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "simple",
+                    "left": {
+                      "type": "static",
+                      "anchor": "authData",
+                      "field": "sub"
+                    },
+                    "right": {
+                      "type": "literal",
+                      "value": null
+                    },
+                    "op": "IS NOT"
+                  },
+                  {
+                    "type": "simple",
+                    "left": {
+                      "type": "static",
+                      "anchor": "authData",
+                      "field": "role"
+                    },
+                    "right": {
+                      "type": "literal",
+                      "value": "admin"
+                    },
+                    "op": "="
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        "delete": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": null
+                  },
+                  "op": "IS NOT"
+                },
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "column",
+                    "name": "creator_id"
+                  },
+                  "right": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "op": "="
+                }
+              ]
+            }
+          ],
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": null
+                  },
+                  "op": "IS NOT"
+                },
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "role"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": "admin"
+                  },
+                  "op": "="
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "task_comment": {
+      "row": {
+        "insert": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": null
+                  },
+                  "op": "IS NOT"
+                },
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "role"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": "admin"
+                  },
+                  "op": "="
+                }
+              ]
+            }
+          ],
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "simple",
+                      "left": {
+                        "type": "static",
+                        "anchor": "authData",
+                        "field": "sub"
+                      },
+                      "right": {
+                        "type": "literal",
+                        "value": null
+                      },
+                      "op": "IS NOT"
+                    },
+                    {
+                      "type": "simple",
+                      "left": {
+                        "type": "column",
+                        "name": "creator_id"
+                      },
+                      "right": {
+                        "type": "static",
+                        "anchor": "authData",
+                        "field": "sub"
+                      },
+                      "op": "="
+                    }
+                  ]
+                },
+                {
+                  "type": "correlatedSubquery",
+                  "related": {
+                    "system": "permissions",
+                    "correlation": {
+                      "parentField": [
+                        "task_id"
+                      ],
+                      "childField": [
+                        "id"
+                      ]
+                    },
+                    "subquery": {
+                      "table": "task",
+                      "alias": "zsubq_task",
+                      "where": {
+                        "type": "simple",
+                        "left": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "right": {
+                          "type": "literal",
+                          "value": null
+                        },
+                        "op": "IS NOT"
+                      },
+                      "orderBy": [
+                        [
+                          "id",
+                          "asc"
+                        ]
+                      ]
+                    }
+                  },
+                  "op": "EXISTS"
+                }
+              ]
+            }
+          ]
+        ],
+        "update": {
+          "preMutation": [
+            [
+              "allow",
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "simple",
+                    "left": {
+                      "type": "static",
+                      "anchor": "authData",
+                      "field": "sub"
+                    },
+                    "right": {
+                      "type": "literal",
+                      "value": null
+                    },
+                    "op": "IS NOT"
+                  },
+                  {
+                    "type": "simple",
+                    "left": {
+                      "type": "static",
+                      "anchor": "authData",
+                      "field": "role"
+                    },
+                    "right": {
+                      "type": "literal",
+                      "value": "admin"
+                    },
+                    "op": "="
+                  }
+                ]
+              }
+            ],
+            [
+              "allow",
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "simple",
+                        "left": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "right": {
+                          "type": "literal",
+                          "value": null
+                        },
+                        "op": "IS NOT"
+                      },
+                      {
+                        "type": "simple",
+                        "left": {
+                          "type": "column",
+                          "name": "creator_id"
+                        },
+                        "right": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "op": "="
+                      }
+                    ]
+                  },
+                  {
+                    "type": "correlatedSubquery",
+                    "related": {
+                      "system": "permissions",
+                      "correlation": {
+                        "parentField": [
+                          "task_id"
+                        ],
+                        "childField": [
+                          "id"
+                        ]
+                      },
+                      "subquery": {
+                        "table": "task",
+                        "alias": "zsubq_task",
+                        "where": {
+                          "type": "simple",
+                          "left": {
+                            "type": "static",
+                            "anchor": "authData",
+                            "field": "sub"
+                          },
+                          "right": {
+                            "type": "literal",
+                            "value": null
+                          },
+                          "op": "IS NOT"
+                        },
+                        "orderBy": [
+                          [
+                            "id",
+                            "asc"
+                          ]
+                        ]
+                      }
+                    },
+                    "op": "EXISTS"
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        "delete": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": null
+                  },
+                  "op": "IS NOT"
+                },
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "role"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": "admin"
+                  },
+                  "op": "="
+                }
+              ]
+            }
+          ],
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "correlatedSubquery",
+                  "related": {
+                    "system": "permissions",
+                    "correlation": {
+                      "parentField": [
+                        "task_id"
+                      ],
+                      "childField": [
+                        "id"
+                      ]
+                    },
+                    "subquery": {
+                      "table": "task",
+                      "alias": "zsubq_task",
+                      "where": {
+                        "type": "simple",
+                        "left": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "right": {
+                          "type": "literal",
+                          "value": null
+                        },
+                        "op": "IS NOT"
+                      },
+                      "orderBy": [
+                        [
+                          "id",
+                          "asc"
+                        ]
+                      ]
+                    }
+                  },
+                  "op": "EXISTS"
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "simple",
+                      "left": {
+                        "type": "static",
+                        "anchor": "authData",
+                        "field": "sub"
+                      },
+                      "right": {
+                        "type": "literal",
+                        "value": null
+                      },
+                      "op": "IS NOT"
+                    },
+                    {
+                      "type": "simple",
+                      "left": {
+                        "type": "column",
+                        "name": "creator_id"
+                      },
+                      "right": {
+                        "type": "static",
+                        "anchor": "authData",
+                        "field": "sub"
+                      },
+                      "op": "="
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "tag": {
+      "row": {
+        "insert": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": null
+                  },
+                  "op": "IS NOT"
+                },
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "role"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": "admin"
+                  },
+                  "op": "="
+                }
+              ]
+            }
+          ]
+        ],
+        "update": {
+          "preMutation": [
+            [
+              "allow",
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "simple",
+                    "left": {
+                      "type": "static",
+                      "anchor": "authData",
+                      "field": "sub"
+                    },
+                    "right": {
+                      "type": "literal",
+                      "value": null
+                    },
+                    "op": "IS NOT"
+                  },
+                  {
+                    "type": "simple",
+                    "left": {
+                      "type": "static",
+                      "anchor": "authData",
+                      "field": "role"
+                    },
+                    "right": {
+                      "type": "literal",
+                      "value": "admin"
+                    },
+                    "op": "="
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        "delete": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": null
+                  },
+                  "op": "IS NOT"
+                },
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "role"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": "admin"
+                  },
+                  "op": "="
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "view_state": {
+      "row": {
+        "insert": [
+          [
+            "allow",
+            {
+              "type": "simple",
+              "left": {
+                "type": "column",
+                "name": "user_id"
+              },
+              "right": {
+                "type": "static",
+                "anchor": "authData",
+                "field": "sub"
+              },
+              "op": "="
+            }
+          ]
+        ],
+        "update": {
+          "preMutation": [
+            [
+              "allow",
+              {
+                "type": "simple",
+                "left": {
+                  "type": "column",
+                  "name": "user_id"
+                },
+                "right": {
+                  "type": "static",
+                  "anchor": "authData",
+                  "field": "sub"
+                },
+                "op": "="
+              }
+            ]
+          ],
+          "postMutation": [
+            [
+              "allow",
+              {
+                "type": "simple",
+                "left": {
+                  "type": "column",
+                  "name": "user_id"
+                },
+                "right": {
+                  "type": "static",
+                  "anchor": "authData",
+                  "field": "sub"
+                },
+                "op": "="
+              }
+            ]
+          ]
+        },
+        "delete": []
+      }
+    },
+    "task_tag": {
+      "row": {
+        "insert": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "correlatedSubquery",
+                  "related": {
+                    "system": "permissions",
+                    "correlation": {
+                      "parentField": [
+                        "task_id"
+                      ],
+                      "childField": [
+                        "id"
+                      ]
+                    },
+                    "subquery": {
+                      "table": "task",
+                      "alias": "zsubq_task",
+                      "where": {
+                        "type": "simple",
+                        "left": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "right": {
+                          "type": "literal",
+                          "value": null
+                        },
+                        "op": "IS NOT"
+                      },
+                      "orderBy": [
+                        [
+                          "id",
+                          "asc"
+                        ]
+                      ]
+                    }
+                  },
+                  "op": "EXISTS"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "simple",
+                          "left": {
+                            "type": "static",
+                            "anchor": "authData",
+                            "field": "sub"
+                          },
+                          "right": {
+                            "type": "literal",
+                            "value": null
+                          },
+                          "op": "IS NOT"
+                        },
+                        {
+                          "type": "simple",
+                          "left": {
+                            "type": "static",
+                            "anchor": "authData",
+                            "field": "role"
+                          },
+                          "right": {
+                            "type": "literal",
+                            "value": "admin"
+                          },
+                          "op": "="
+                        }
+                      ]
+                    },
+                    {
+                      "type": "correlatedSubquery",
+                      "related": {
+                        "system": "permissions",
+                        "correlation": {
+                          "parentField": [
+                            "task_id"
+                          ],
+                          "childField": [
+                            "id"
+                          ]
+                        },
+                        "subquery": {
+                          "table": "task",
+                          "alias": "zsubq_task",
+                          "where": {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "simple",
+                                "left": {
+                                  "type": "static",
+                                  "anchor": "authData",
+                                  "field": "sub"
+                                },
+                                "right": {
+                                  "type": "literal",
+                                  "value": null
+                                },
+                                "op": "IS NOT"
+                              },
+                              {
+                                "type": "simple",
+                                "left": {
+                                  "type": "column",
+                                  "name": "creator_id"
+                                },
+                                "right": {
+                                  "type": "static",
+                                  "anchor": "authData",
+                                  "field": "sub"
+                                },
+                                "op": "="
+                              }
+                            ]
+                          },
+                          "orderBy": [
+                            [
+                              "id",
+                              "asc"
+                            ]
+                          ]
+                        }
+                      },
+                      "op": "EXISTS"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
+        "update": {
+          "preMutation": []
+        },
+        "delete": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "correlatedSubquery",
+                  "related": {
+                    "system": "permissions",
+                    "correlation": {
+                      "parentField": [
+                        "task_id"
+                      ],
+                      "childField": [
+                        "id"
+                      ]
+                    },
+                    "subquery": {
+                      "table": "task",
+                      "alias": "zsubq_task",
+                      "where": {
+                        "type": "simple",
+                        "left": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "right": {
+                          "type": "literal",
+                          "value": null
+                        },
+                        "op": "IS NOT"
+                      },
+                      "orderBy": [
+                        [
+                          "id",
+                          "asc"
+                        ]
+                      ]
+                    }
+                  },
+                  "op": "EXISTS"
+                },
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "and",
+                      "conditions": [
+                        {
+                          "type": "simple",
+                          "left": {
+                            "type": "static",
+                            "anchor": "authData",
+                            "field": "sub"
+                          },
+                          "right": {
+                            "type": "literal",
+                            "value": null
+                          },
+                          "op": "IS NOT"
+                        },
+                        {
+                          "type": "simple",
+                          "left": {
+                            "type": "static",
+                            "anchor": "authData",
+                            "field": "role"
+                          },
+                          "right": {
+                            "type": "literal",
+                            "value": "admin"
+                          },
+                          "op": "="
+                        }
+                      ]
+                    },
+                    {
+                      "type": "correlatedSubquery",
+                      "related": {
+                        "system": "permissions",
+                        "correlation": {
+                          "parentField": [
+                            "task_id"
+                          ],
+                          "childField": [
+                            "id"
+                          ]
+                        },
+                        "subquery": {
+                          "table": "task",
+                          "alias": "zsubq_task",
+                          "where": {
+                            "type": "and",
+                            "conditions": [
+                              {
+                                "type": "simple",
+                                "left": {
+                                  "type": "static",
+                                  "anchor": "authData",
+                                  "field": "sub"
+                                },
+                                "right": {
+                                  "type": "literal",
+                                  "value": null
+                                },
+                                "op": "IS NOT"
+                              },
+                              {
+                                "type": "simple",
+                                "left": {
+                                  "type": "column",
+                                  "name": "creator_id"
+                                },
+                                "right": {
+                                  "type": "static",
+                                  "anchor": "authData",
+                                  "field": "sub"
+                                },
+                                "op": "="
+                              }
+                            ]
+                          },
+                          "orderBy": [
+                            [
+                              "id",
+                              "asc"
+                            ]
+                          ]
+                        }
+                      },
+                      "op": "EXISTS"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "emoji": {
+      "row": {
+        "insert": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "correlatedSubquery",
+                      "related": {
+                        "system": "permissions",
+                        "correlation": {
+                          "parentField": [
+                            "subject_id"
+                          ],
+                          "childField": [
+                            "id"
+                          ]
+                        },
+                        "subquery": {
+                          "table": "task",
+                          "alias": "zsubq_task",
+                          "where": {
+                            "type": "simple",
+                            "left": {
+                              "type": "static",
+                              "anchor": "authData",
+                              "field": "sub"
+                            },
+                            "right": {
+                              "type": "literal",
+                              "value": null
+                            },
+                            "op": "IS NOT"
+                          },
+                          "orderBy": [
+                            [
+                              "id",
+                              "asc"
+                            ]
+                          ]
+                        }
+                      },
+                      "op": "EXISTS"
+                    },
+                    {
+                      "type": "correlatedSubquery",
+                      "related": {
+                        "system": "permissions",
+                        "correlation": {
+                          "parentField": [
+                            "subject_id"
+                          ],
+                          "childField": [
+                            "id"
+                          ]
+                        },
+                        "subquery": {
+                          "table": "task_comment",
+                          "alias": "zsubq_task_comment",
+                          "where": {
+                            "type": "correlatedSubquery",
+                            "related": {
+                              "system": "permissions",
+                              "correlation": {
+                                "parentField": [
+                                  "task_id"
+                                ],
+                                "childField": [
+                                  "id"
+                                ]
+                              },
+                              "subquery": {
+                                "table": "task",
+                                "alias": "zsubq_task",
+                                "where": {
+                                  "type": "simple",
+                                  "left": {
+                                    "type": "static",
+                                    "anchor": "authData",
+                                    "field": "sub"
+                                  },
+                                  "right": {
+                                    "type": "literal",
+                                    "value": null
+                                  },
+                                  "op": "IS NOT"
+                                },
+                                "orderBy": [
+                                  [
+                                    "id",
+                                    "asc"
+                                  ]
+                                ]
+                              }
+                            },
+                            "op": "EXISTS"
+                          },
+                          "orderBy": [
+                            [
+                              "id",
+                              "asc"
+                            ]
+                          ]
+                        }
+                      },
+                      "op": "EXISTS"
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "simple",
+                      "left": {
+                        "type": "static",
+                        "anchor": "authData",
+                        "field": "sub"
+                      },
+                      "right": {
+                        "type": "literal",
+                        "value": null
+                      },
+                      "op": "IS NOT"
+                    },
+                    {
+                      "type": "simple",
+                      "left": {
+                        "type": "column",
+                        "name": "creator_id"
+                      },
+                      "right": {
+                        "type": "static",
+                        "anchor": "authData",
+                        "field": "sub"
+                      },
+                      "op": "="
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        ],
+        "update": {
+          "preMutation": [
+            [
+              "allow",
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "correlatedSubquery",
+                        "related": {
+                          "system": "permissions",
+                          "correlation": {
+                            "parentField": [
+                              "subject_id"
+                            ],
+                            "childField": [
+                              "id"
+                            ]
+                          },
+                          "subquery": {
+                            "table": "task",
+                            "alias": "zsubq_task",
+                            "where": {
+                              "type": "simple",
+                              "left": {
+                                "type": "static",
+                                "anchor": "authData",
+                                "field": "sub"
+                              },
+                              "right": {
+                                "type": "literal",
+                                "value": null
+                              },
+                              "op": "IS NOT"
+                            },
+                            "orderBy": [
+                              [
+                                "id",
+                                "asc"
+                              ]
+                            ]
+                          }
+                        },
+                        "op": "EXISTS"
+                      },
+                      {
+                        "type": "correlatedSubquery",
+                        "related": {
+                          "system": "permissions",
+                          "correlation": {
+                            "parentField": [
+                              "subject_id"
+                            ],
+                            "childField": [
+                              "id"
+                            ]
+                          },
+                          "subquery": {
+                            "table": "task_comment",
+                            "alias": "zsubq_task_comment",
+                            "where": {
+                              "type": "correlatedSubquery",
+                              "related": {
+                                "system": "permissions",
+                                "correlation": {
+                                  "parentField": [
+                                    "task_id"
+                                  ],
+                                  "childField": [
+                                    "id"
+                                  ]
+                                },
+                                "subquery": {
+                                  "table": "task",
+                                  "alias": "zsubq_task",
+                                  "where": {
+                                    "type": "simple",
+                                    "left": {
+                                      "type": "static",
+                                      "anchor": "authData",
+                                      "field": "sub"
+                                    },
+                                    "right": {
+                                      "type": "literal",
+                                      "value": null
+                                    },
+                                    "op": "IS NOT"
+                                  },
+                                  "orderBy": [
+                                    [
+                                      "id",
+                                      "asc"
+                                    ]
+                                  ]
+                                }
+                              },
+                              "op": "EXISTS"
+                            },
+                            "orderBy": [
+                              [
+                                "id",
+                                "asc"
+                              ]
+                            ]
+                          }
+                        },
+                        "op": "EXISTS"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "simple",
+                        "left": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "right": {
+                          "type": "literal",
+                          "value": null
+                        },
+                        "op": "IS NOT"
+                      },
+                      {
+                        "type": "simple",
+                        "left": {
+                          "type": "column",
+                          "name": "creator_id"
+                        },
+                        "right": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "op": "="
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ],
+          "postMutation": [
+            [
+              "allow",
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "or",
+                    "conditions": [
+                      {
+                        "type": "correlatedSubquery",
+                        "related": {
+                          "system": "permissions",
+                          "correlation": {
+                            "parentField": [
+                              "subject_id"
+                            ],
+                            "childField": [
+                              "id"
+                            ]
+                          },
+                          "subquery": {
+                            "table": "task",
+                            "alias": "zsubq_task",
+                            "where": {
+                              "type": "simple",
+                              "left": {
+                                "type": "static",
+                                "anchor": "authData",
+                                "field": "sub"
+                              },
+                              "right": {
+                                "type": "literal",
+                                "value": null
+                              },
+                              "op": "IS NOT"
+                            },
+                            "orderBy": [
+                              [
+                                "id",
+                                "asc"
+                              ]
+                            ]
+                          }
+                        },
+                        "op": "EXISTS"
+                      },
+                      {
+                        "type": "correlatedSubquery",
+                        "related": {
+                          "system": "permissions",
+                          "correlation": {
+                            "parentField": [
+                              "subject_id"
+                            ],
+                            "childField": [
+                              "id"
+                            ]
+                          },
+                          "subquery": {
+                            "table": "task_comment",
+                            "alias": "zsubq_task_comment",
+                            "where": {
+                              "type": "correlatedSubquery",
+                              "related": {
+                                "system": "permissions",
+                                "correlation": {
+                                  "parentField": [
+                                    "task_id"
+                                  ],
+                                  "childField": [
+                                    "id"
+                                  ]
+                                },
+                                "subquery": {
+                                  "table": "task",
+                                  "alias": "zsubq_task",
+                                  "where": {
+                                    "type": "simple",
+                                    "left": {
+                                      "type": "static",
+                                      "anchor": "authData",
+                                      "field": "sub"
+                                    },
+                                    "right": {
+                                      "type": "literal",
+                                      "value": null
+                                    },
+                                    "op": "IS NOT"
+                                  },
+                                  "orderBy": [
+                                    [
+                                      "id",
+                                      "asc"
+                                    ]
+                                  ]
+                                }
+                              },
+                              "op": "EXISTS"
+                            },
+                            "orderBy": [
+                              [
+                                "id",
+                                "asc"
+                              ]
+                            ]
+                          }
+                        },
+                        "op": "EXISTS"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "and",
+                    "conditions": [
+                      {
+                        "type": "simple",
+                        "left": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "right": {
+                          "type": "literal",
+                          "value": null
+                        },
+                        "op": "IS NOT"
+                      },
+                      {
+                        "type": "simple",
+                        "left": {
+                          "type": "column",
+                          "name": "creator_id"
+                        },
+                        "right": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "op": "="
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        "delete": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "or",
+                  "conditions": [
+                    {
+                      "type": "correlatedSubquery",
+                      "related": {
+                        "system": "permissions",
+                        "correlation": {
+                          "parentField": [
+                            "subject_id"
+                          ],
+                          "childField": [
+                            "id"
+                          ]
+                        },
+                        "subquery": {
+                          "table": "task",
+                          "alias": "zsubq_task",
+                          "where": {
+                            "type": "simple",
+                            "left": {
+                              "type": "static",
+                              "anchor": "authData",
+                              "field": "sub"
+                            },
+                            "right": {
+                              "type": "literal",
+                              "value": null
+                            },
+                            "op": "IS NOT"
+                          },
+                          "orderBy": [
+                            [
+                              "id",
+                              "asc"
+                            ]
+                          ]
+                        }
+                      },
+                      "op": "EXISTS"
+                    },
+                    {
+                      "type": "correlatedSubquery",
+                      "related": {
+                        "system": "permissions",
+                        "correlation": {
+                          "parentField": [
+                            "subject_id"
+                          ],
+                          "childField": [
+                            "id"
+                          ]
+                        },
+                        "subquery": {
+                          "table": "task_comment",
+                          "alias": "zsubq_task_comment",
+                          "where": {
+                            "type": "correlatedSubquery",
+                            "related": {
+                              "system": "permissions",
+                              "correlation": {
+                                "parentField": [
+                                  "task_id"
+                                ],
+                                "childField": [
+                                  "id"
+                                ]
+                              },
+                              "subquery": {
+                                "table": "task",
+                                "alias": "zsubq_task",
+                                "where": {
+                                  "type": "simple",
+                                  "left": {
+                                    "type": "static",
+                                    "anchor": "authData",
+                                    "field": "sub"
+                                  },
+                                  "right": {
+                                    "type": "literal",
+                                    "value": null
+                                  },
+                                  "op": "IS NOT"
+                                },
+                                "orderBy": [
+                                  [
+                                    "id",
+                                    "asc"
+                                  ]
+                                ]
+                              }
+                            },
+                            "op": "EXISTS"
+                          },
+                          "orderBy": [
+                            [
+                              "id",
+                              "asc"
+                            ]
+                          ]
+                        }
+                      },
+                      "op": "EXISTS"
+                    }
+                  ]
+                },
+                {
+                  "type": "and",
+                  "conditions": [
+                    {
+                      "type": "simple",
+                      "left": {
+                        "type": "static",
+                        "anchor": "authData",
+                        "field": "sub"
+                      },
+                      "right": {
+                        "type": "literal",
+                        "value": null
+                      },
+                      "op": "IS NOT"
+                    },
+                    {
+                      "type": "simple",
+                      "left": {
+                        "type": "column",
+                        "name": "creator_id"
+                      },
+                      "right": {
+                        "type": "static",
+                        "anchor": "authData",
+                        "field": "sub"
+                      },
+                      "op": "="
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "user_pref": {
+      "row": {
+        "insert": [
+          [
+            "allow",
+            {
+              "type": "simple",
+              "left": {
+                "type": "column",
+                "name": "user_id"
+              },
+              "right": {
+                "type": "static",
+                "anchor": "authData",
+                "field": "sub"
+              },
+              "op": "="
+            }
+          ]
+        ],
+        "update": {
+          "preMutation": [
+            [
+              "allow",
+              {
+                "type": "simple",
+                "left": {
+                  "type": "column",
+                  "name": "user_id"
+                },
+                "right": {
+                  "type": "static",
+                  "anchor": "authData",
+                  "field": "sub"
+                },
+                "op": "="
+              }
+            ]
+          ],
+          "postMutation": [
+            [
+              "allow",
+              {
+                "type": "simple",
+                "left": {
+                  "type": "column",
+                  "name": "user_id"
+                },
+                "right": {
+                  "type": "static",
+                  "anchor": "authData",
+                  "field": "sub"
+                },
+                "op": "="
+              }
+            ]
+          ]
+        },
+        "delete": [
+          [
+            "allow",
+            {
+              "type": "simple",
+              "left": {
+                "type": "column",
+                "name": "user_id"
+              },
+              "right": {
+                "type": "static",
+                "anchor": "authData",
+                "field": "sub"
+              },
+              "op": "="
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "schema": {
+    "version": 1,
+    "tables": {
+      "emoji": {
+        "tableName": "emoji",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "annotation": {
+            "type": "string",
+            "optional": false
+          },
+          "created_at": {
+            "type": "number",
+            "optional": false
+          },
+          "creator_id": {
+            "type": "string",
+            "optional": false
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "subject_id": {
+            "type": "string",
+            "optional": false
+          },
+          "updated_at": {
+            "type": "number",
+            "optional": false
+          },
+          "value": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {
+          "creator": {
+            "sourceField": [
+              "creator_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "user"
+          },
+          "task": {
+            "sourceField": [
+              "subject_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "task"
+          },
+          "task_comment": {
+            "sourceField": [
+              "subject_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "task_comment"
+          }
+        }
+      },
+      "enterprise": {
+        "tableName": "enterprise",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "created_at": {
+            "type": "number",
+            "optional": false
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "name": {
+            "type": "string",
+            "optional": false
+          },
+          "slug": {
+            "type": "string",
+            "optional": false
+          },
+          "updated_at": {
+            "type": "number",
+            "optional": false
+          }
+        },
+        "relationships": {}
+      },
+      "project": {
+        "tableName": "project",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "created_at": {
+            "type": "number",
+            "optional": false
+          },
+          "description": {
+            "type": "string",
+            "optional": true
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "name": {
+            "type": "string",
+            "optional": false
+          },
+          "slug": {
+            "type": "string",
+            "optional": false
+          },
+          "sort_order": {
+            "type": "number",
+            "optional": false
+          },
+          "team_id": {
+            "type": "string",
+            "optional": true
+          },
+          "updated_at": {
+            "type": "number",
+            "optional": false
+          },
+          "workspace_id": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {
+          "team": {
+            "sourceField": [
+              "team_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "team"
+          },
+          "workspace": {
+            "sourceField": [
+              "workspace_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "workspace"
+          }
+        }
+      },
+      "tag": {
+        "tableName": "tag",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "name": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {}
+      },
+      "task": {
+        "tableName": "task",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "archived_at": {
+            "type": "number",
+            "optional": true
+          },
+          "assignee_id": {
+            "type": "string",
+            "optional": true
+          },
+          "bucket": {
+            "type": "string",
+            "optional": false
+          },
+          "completed_at": {
+            "type": "number",
+            "optional": true
+          },
+          "created_at": {
+            "type": "number",
+            "optional": false
+          },
+          "creator_id": {
+            "type": "string",
+            "optional": false
+          },
+          "deadline": {
+            "type": "number",
+            "optional": true
+          },
+          "deadline_offset": {
+            "type": "number",
+            "optional": true
+          },
+          "deadline_suppression_date": {
+            "type": "number",
+            "optional": true
+          },
+          "description": {
+            "type": "string",
+            "optional": false
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "index": {
+            "type": "number",
+            "optional": true
+          },
+          "last_reminder_interaction_date": {
+            "type": "number",
+            "optional": true
+          },
+          "project_id": {
+            "type": "string",
+            "optional": true
+          },
+          "reminder_time": {
+            "type": "number",
+            "optional": true
+          },
+          "short_id": {
+            "type": "number",
+            "optional": true
+          },
+          "sort_order": {
+            "type": "number",
+            "optional": true
+          },
+          "start_date": {
+            "type": "number",
+            "optional": true
+          },
+          "team_id": {
+            "type": "string",
+            "optional": true
+          },
+          "title": {
+            "type": "string",
+            "optional": false
+          },
+          "today_index": {
+            "type": "number",
+            "optional": true
+          },
+          "today_index_reference_date": {
+            "type": "number",
+            "optional": true
+          },
+          "today_sort_order": {
+            "type": "number",
+            "optional": true
+          },
+          "updated_at": {
+            "type": "number",
+            "optional": false
+          }
+        },
+        "relationships": {
+          "assignee": {
+            "sourceField": [
+              "assignee_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "user"
+          },
+          "comments": {
+            "sourceField": [
+              "id"
+            ],
+            "destField": [
+              "task_id"
+            ],
+            "destSchema": "task_comment"
+          },
+          "creator": {
+            "sourceField": [
+              "creator_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "user"
+          },
+          "emoji": {
+            "sourceField": [
+              "id"
+            ],
+            "destField": [
+              "subject_id"
+            ],
+            "destSchema": "emoji"
+          },
+          "project": {
+            "sourceField": [
+              "project_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "project"
+          },
+          "tags": [
+            {
+              "sourceField": [
+                "id"
+              ],
+              "destField": [
+                "task_id"
+              ],
+              "destSchema": "task_tag"
+            },
+            {
+              "sourceField": [
+                "tag_id"
+              ],
+              "destField": [
+                "id"
+              ],
+              "destSchema": "tag"
+            }
+          ],
+          "team": {
+            "sourceField": [
+              "team_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "team"
+          },
+          "view_state": {
+            "sourceField": [
+              "id"
+            ],
+            "destField": [
+              "task_id"
+            ],
+            "destSchema": "view_state"
+          }
+        }
+      },
+      "task_comment": {
+        "tableName": "task_comment",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "body": {
+            "type": "string",
+            "optional": false
+          },
+          "created_at": {
+            "type": "number",
+            "optional": false
+          },
+          "creator_id": {
+            "type": "string",
+            "optional": false
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "task_id": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {
+          "creator": {
+            "sourceField": [
+              "creator_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "user"
+          },
+          "emoji": {
+            "sourceField": [
+              "id"
+            ],
+            "destField": [
+              "subject_id"
+            ],
+            "destSchema": "emoji"
+          },
+          "task": {
+            "sourceField": [
+              "task_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "task"
+          }
+        }
+      },
+      "task_tag": {
+        "tableName": "task_tag",
+        "primaryKey": [
+          "task_id",
+          "tag_id"
+        ],
+        "columns": {
+          "tag_id": {
+            "type": "string",
+            "optional": false
+          },
+          "task_id": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {
+          "task": {
+            "sourceField": [
+              "task_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "task"
+          }
+        }
+      },
+      "team": {
+        "tableName": "team",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "created_at": {
+            "type": "number",
+            "optional": false
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "name": {
+            "type": "string",
+            "optional": false
+          },
+          "slug": {
+            "type": "string",
+            "optional": false
+          },
+          "updated_at": {
+            "type": "number",
+            "optional": false
+          },
+          "workspace_id": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {
+          "workspace": {
+            "sourceField": [
+              "workspace_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "workspace"
+          }
+        }
+      },
+      "team_member": {
+        "tableName": "team_member",
+        "primaryKey": [
+          "team_id",
+          "user_id"
+        ],
+        "columns": {
+          "created_at": {
+            "type": "number",
+            "optional": false
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "role": {
+            "type": "string",
+            "optional": false
+          },
+          "team_id": {
+            "type": "string",
+            "optional": false
+          },
+          "updated_at": {
+            "type": "number",
+            "optional": false
+          },
+          "user_id": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {
+          "team": {
+            "sourceField": [
+              "team_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "team"
+          },
+          "user": {
+            "sourceField": [
+              "user_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "user"
+          }
+        }
+      },
+      "user": {
+        "tableName": "user",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "avatar_url": {
+            "type": "string",
+            "optional": false
+          },
+          "created_at": {
+            "type": "number",
+            "optional": false
+          },
+          "email": {
+            "type": "string",
+            "optional": false
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "name": {
+            "type": "string",
+            "optional": true
+          },
+          "role": {
+            "type": "string",
+            "optional": false
+          },
+          "updated_at": {
+            "type": "number",
+            "optional": false
+          }
+        },
+        "relationships": {}
+      },
+      "user_pref": {
+        "tableName": "user_pref",
+        "primaryKey": [
+          "user_id",
+          "key"
+        ],
+        "columns": {
+          "key": {
+            "type": "string",
+            "optional": false
+          },
+          "user_id": {
+            "type": "string",
+            "optional": false
+          },
+          "value": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {}
+      },
+      "view_state": {
+        "tableName": "view_state",
+        "primaryKey": [
+          "user_id",
+          "task_id"
+        ],
+        "columns": {
+          "task_id": {
+            "type": "string",
+            "optional": false
+          },
+          "user_id": {
+            "type": "string",
+            "optional": false
+          },
+          "viewed_at": {
+            "type": "number",
+            "optional": false
+          }
+        },
+        "relationships": {}
+      },
+      "workspace": {
+        "tableName": "workspace",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "created_at": {
+            "type": "number",
+            "optional": false
+          },
+          "enterprise_id": {
+            "type": "string",
+            "optional": true
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "name": {
+            "type": "string",
+            "optional": false
+          },
+          "slug": {
+            "type": "string",
+            "optional": false
+          },
+          "updated_at": {
+            "type": "number",
+            "optional": false
+          }
+        },
+        "relationships": {
+          "enterprise": {
+            "sourceField": [
+              "enterprise_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "enterprise"
+          }
+        }
+      },
+      "workspace_member": {
+        "tableName": "workspace_member",
+        "primaryKey": [
+          "workspace_id",
+          "user_id"
+        ],
+        "columns": {
+          "created_at": {
+            "type": "number",
+            "optional": false
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "role": {
+            "type": "string",
+            "optional": false
+          },
+          "updated_at": {
+            "type": "number",
+            "optional": false
+          },
+          "user_id": {
+            "type": "string",
+            "optional": false
+          },
+          "workspace_id": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {
+          "user": {
+            "sourceField": [
+              "user_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "user"
+          },
+          "workspace": {
+            "sourceField": [
+              "workspace_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "workspace"
+          }
+        }
+      }
+    }
+  }
+}

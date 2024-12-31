@@ -2,7 +2,6 @@ import { NextRequest } from "next/server";
 import postgres from "postgres";
 import { Octokit } from "@octokit/core";
 import { SignJWT } from "jose";
-import { nanoid } from "nanoid";
 import { setCookie } from "cookies-next/server";
 
 const sql = postgres(process.env.ZERO_UPSTREAM_DB as string);
@@ -41,7 +40,7 @@ export async function GET(request: NextRequest) {
         client_secret: process.env.GITHUB_CLIENT_SECRET,
         code,
       }),
-    },
+    }
   );
 
   const tokenData = await tokenResponse.json();
@@ -56,7 +55,7 @@ export async function GET(request: NextRequest) {
     },
   });
 
-  let userId = nanoid();
+  let userId = crypto.randomUUID();
   const existingUserId =
     await sql`SELECT id FROM "user" WHERE "githubID" = ${userDetails.data.id}`;
 
@@ -89,11 +88,12 @@ export async function GET(request: NextRequest) {
 
   // Create response with redirect
   const response = Response.redirect(
-    redirectUrl ? decodeURIComponent(redirectUrl) : new URL("/", request.url),
+    redirectUrl ? decodeURIComponent(redirectUrl) : new URL("/", request.url)
   );
 
   // Set cookie
   setCookie("jwt", jwt, {
+    secure: process.env.NODE_ENV === "production",
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   });
 

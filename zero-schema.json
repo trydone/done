@@ -1942,10 +1942,6 @@
             "type": "string",
             "optional": true
           },
-          "bucket": {
-            "type": "string",
-            "optional": false
-          },
           "completed_at": {
             "type": "number",
             "optional": true
@@ -2001,6 +1997,14 @@
           "sort_order": {
             "type": "number",
             "optional": true
+          },
+          "start": {
+            "type": "string",
+            "optional": false
+          },
+          "start_bucket": {
+            "type": "string",
+            "optional": false
           },
           "start_date": {
             "type": "number",

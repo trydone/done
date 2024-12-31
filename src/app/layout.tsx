@@ -6,14 +6,22 @@ import { useCallback, useSyncExternalStore } from "react";
 import { zeroRef } from "@/lib/zero-setup";
 import { RootStoreProvider } from "@/lib/stores/root-store-provider";
 import { LoginProvider } from "@/components/login-provider";
-
+import { AppSidebar } from "@/components/app-sidebar";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
+import { Footer } from "@/components/footer";
+
+// import {
+//   SidebarInset,
+//   SidebarProvider,
+//   SidebarTrigger,
+// } from "@/components/ui/sidebar";
+// import { AppSidebar } from "@/components/app-sidebar";
+// import { Separator } from "@/components/ui/separator";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,11 +51,11 @@ export default function RootLayout({
     <ZeroProvider zero={z}>
       <RootStoreProvider>
         <LoginProvider>
-          <SidebarProvider>
-            <html lang="en">
-              <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-              >
+          <html lang="en">
+            <body
+              className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            >
+              <SidebarProvider>
                 <AppSidebar />
                 <SidebarInset>
                   <header className="flex h-14 shrink-0 items-center gap-2">
@@ -60,10 +68,12 @@ export default function RootLayout({
                   <div className="flex flex-1 flex-col gap-4 px-4 py-10">
                     {children}
                   </div>
+
+                  <Footer />
                 </SidebarInset>
-              </body>
-            </html>
-          </SidebarProvider>
+              </SidebarProvider>
+            </body>
+          </html>
         </LoginProvider>
       </RootStoreProvider>
     </ZeroProvider>

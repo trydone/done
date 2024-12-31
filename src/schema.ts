@@ -9,7 +9,7 @@ import {
 } from "@rocicorp/zero";
 import type { Condition } from "node_modules/@rocicorp/zero/out/zero-protocol/src/ast";
 
-const enterpriseSchema = createTableSchema({
+export const enterpriseSchema = createTableSchema({
   tableName: "enterprise",
   columns: {
     id: "string",
@@ -21,7 +21,7 @@ const enterpriseSchema = createTableSchema({
   primaryKey: "id",
 });
 
-const workspaceSchema = createTableSchema({
+export const workspaceSchema = createTableSchema({
   tableName: "workspace",
   columns: {
     id: "string",
@@ -41,7 +41,7 @@ const workspaceSchema = createTableSchema({
   },
 });
 
-const teamSchema = createTableSchema({
+export const teamSchema = createTableSchema({
   tableName: "team",
   columns: {
     id: "string",
@@ -61,7 +61,7 @@ const teamSchema = createTableSchema({
   },
 });
 
-const workspaceMemberSchema = createTableSchema({
+export const workspaceMemberSchema = createTableSchema({
   tableName: "workspace_member",
   columns: {
     id: "string",
@@ -86,7 +86,7 @@ const workspaceMemberSchema = createTableSchema({
   },
 });
 
-const teamMemberSchema = createTableSchema({
+export const teamMemberSchema = createTableSchema({
   tableName: "team_member",
   columns: {
     id: "string",
@@ -111,7 +111,7 @@ const teamMemberSchema = createTableSchema({
   },
 });
 
-const projectSchema = createTableSchema({
+export const projectSchema = createTableSchema({
   tableName: "project",
   columns: {
     id: "string",
@@ -139,7 +139,7 @@ const projectSchema = createTableSchema({
   },
 });
 
-const userSchema = createTableSchema({
+export const userSchema = createTableSchema({
   tableName: "user",
   columns: {
     id: "string",
@@ -153,7 +153,7 @@ const userSchema = createTableSchema({
   primaryKey: "id",
 });
 
-const taskSchema = {
+export const taskSchema = {
   tableName: "task",
   columns: {
     id: "string",
@@ -171,8 +171,9 @@ const taskSchema = {
     completed_at: { type: "number", optional: true },
     archived_at: { type: "number", optional: true },
 
+    start: "string",
     start_date: { type: "number", optional: true },
-    bucket: "string",
+    start_bucket: "string",
 
     // Deadline management
     deadline: { type: "number", optional: true },
@@ -246,7 +247,7 @@ const taskSchema = {
   },
 } as const;
 
-const viewStateSchema = createTableSchema({
+export const viewStateSchema = createTableSchema({
   tableName: "view_state",
   columns: {
     task_id: "string",
@@ -256,7 +257,7 @@ const viewStateSchema = createTableSchema({
   primaryKey: ["user_id", "task_id"],
 });
 
-const taskCommentSchema = {
+export const taskCommentSchema = {
   tableName: "task_comment",
   columns: {
     id: "string",
@@ -285,7 +286,7 @@ const taskCommentSchema = {
   },
 } as const;
 
-const tagSchema = createTableSchema({
+export const tagSchema = createTableSchema({
   tableName: "tag",
   columns: {
     id: "string",
@@ -294,7 +295,7 @@ const tagSchema = createTableSchema({
   primaryKey: "id",
 });
 
-const taskTagSchema = {
+export const taskTagSchema = {
   tableName: "task_tag",
   columns: {
     task_id: "string",
@@ -310,7 +311,7 @@ const taskTagSchema = {
   },
 } as const;
 
-const emojiSchema = {
+export const emojiSchema = {
   tableName: "emoji",
   columns: {
     id: "string",
@@ -341,7 +342,7 @@ const emojiSchema = {
   },
 } as const;
 
-const userPrefSchema = createTableSchema({
+export const userPrefSchema = createTableSchema({
   tableName: "user_pref",
   columns: {
     key: "string",

@@ -7,7 +7,7 @@
     "dev:zero-cache": "zero-cache-dev -p src/schema.ts",
     "dev:db-up": "docker compose --env-file .env -f ./docker/docker-compose.yml up",
     "dev:db-down": "docker compose --env-file .env -f ./docker/docker-compose.yml down",
-    "dev:clean": "source .env && docker volume rm -f docker_done_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
+    "dev:clean": "source ./.env && docker volume rm -f docker_done_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -16,6 +16,8 @@
     "db:inspect": "atlas schema inspect --url 'postgresql://user:password@127.0.0.1:5430/done?sslmode=disable' --dev-url docker://postgres/16 > ./atlas/schema.hcl"
   },
   "dependencies": {
+    "nanoid": "^5.0.9",
+    "@octokit/core": "^6.1.2",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.4",
@@ -52,5 +54,6 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "npm@10.8.3+sha512.d08425c8062f56d43bb8e84315864218af2492eb769e1f1ca40740f44e85bd148969382d651660363942e5909cb7ffcbef7ca0ae963ddc2c57a51243b4da8f56"
 }

@@ -2308,19 +2308,23 @@
           "id"
         ],
         "columns": {
-          "avatar_url": {
+          "avatar": {
             "type": "string",
-            "optional": false
+            "optional": true
           },
           "created_at": {
             "type": "number",
             "optional": false
           },
-          "email": {
-            "type": "string",
+          "githubID": {
+            "type": "number",
             "optional": false
           },
           "id": {
+            "type": "string",
+            "optional": false
+          },
+          "login": {
             "type": "string",
             "optional": false
           },

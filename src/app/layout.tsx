@@ -1,5 +1,4 @@
 "use client";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ZeroProvider } from "@rocicorp/zero/react";
 import { ReactNode, useCallback, useSyncExternalStore } from "react";
@@ -16,15 +15,17 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Footer } from "@/components/nav/footer";
 import { DndProvider } from "@/components/dnd/dnd-context";
+import localFont from "next/font/local";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const glide = localFont({
+  src: [
+    {
+      path: "../public/fonts/Glide-Variable.woff2",
+    },
+  ],
+  variable: "--font-glide",
+  weight: "400 900",
+  display: "swap",
 });
 
 export default function RootLayout({
@@ -43,9 +44,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${glide.variable} antialiased`}>
         <ZeroProvider zero={z}>
           <RootStoreProvider>
             <LoginProvider>

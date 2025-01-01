@@ -1,9 +1,9 @@
 import { useDroppable } from "@dnd-kit/core";
 import { observer } from "mobx-react-lite";
-import { useDndContext } from "@/context/DndContext";
 import { SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useDndContext } from "../dnd/dnd-context";
 
 type Props = {
   item: any;

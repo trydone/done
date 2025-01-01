@@ -5,17 +5,16 @@ import {
   CalendarIcon,
   ClockIcon,
   TagIcon,
-  ListIcon,
   GripVerticalIcon,
+  ListIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useContext } from "react";
 import { RootStoreContext } from "@/lib/stores/root-store";
-import { TaskRow } from "@/schema";
 
 type Props = {
-  item: TaskRow;
+  item: any;
 };
 
 export const TaskItem = observer(({ item }: Props) => {
@@ -43,10 +42,11 @@ export const TaskItem = observer(({ item }: Props) => {
     opacity: isDragging ? 0.5 : 1,
   };
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: MouseEvent) => {
     e.stopPropagation();
 
     if (e.metaKey || e.ctrlKey) {
+      const isSelected = !!selectedTaskIds.find((id) => id === item.id);
       const newSelected = isSelected
         ? selectedTaskIds.filter((id) => id !== item.id)
         : [...selectedTaskIds, item.id];
@@ -67,7 +67,7 @@ export const TaskItem = observer(({ item }: Props) => {
     }
   };
 
-  const handleDoubleClick = (e: React.MouseEvent) => {
+  const handleDoubleClick = (e: MouseEvent) => {
     e.stopPropagation();
     setOpenTaskId(item.id);
     setSelectedTaskIds([]);

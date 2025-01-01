@@ -2,7 +2,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ZeroProvider } from "@rocicorp/zero/react";
-import { useCallback, useSyncExternalStore } from "react";
+import { ReactNode, useCallback, useSyncExternalStore } from "react";
 import { zeroRef } from "@/lib/zero-setup";
 import { RootStoreProvider } from "@/lib/stores/root-store-provider";
 import { LoginProvider } from "@/components/auth/login-provider";
@@ -30,7 +30,7 @@ const geistMono = Geist_Mono({
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   const z = useSyncExternalStore(
     zeroRef.onChange,

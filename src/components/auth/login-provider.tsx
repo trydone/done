@@ -1,10 +1,10 @@
-import { loginContext } from "@/lib/hooks/use-login";
+import { loginContext } from "@/hooks/use-login";
 import { clearJwt } from "@/lib/jwt";
 import { authRef } from "@/lib/zero-setup";
-import { useCallback, useSyncExternalStore } from "react";
+import { ReactNode, useCallback, useSyncExternalStore } from "react";
 
 type Props = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 export const LoginProvider = ({ children }: Props) => {

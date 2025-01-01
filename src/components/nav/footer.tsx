@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { PlusIcon } from "lucide-react";
-import { TaskComposer } from "./task-composer";
+import { NewTaskDialog } from "../task/new-task-dialog";
 
 export const Footer = () => {
   const [taskDialogOpen, setTaskDialogOpen] = useState(false);
@@ -17,7 +17,7 @@ export const Footer = () => {
         </Button>
       </footer>
 
-      <TaskComposer
+      <NewTaskDialog
         open={taskDialogOpen}
         onClose={() => setTaskDialogOpen(false)}
       />

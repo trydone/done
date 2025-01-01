@@ -1,6 +1,6 @@
 "use client";
 
-import { TaskList } from "@/components/task-list";
+import { TaskList } from "@/components/task/task-list";
 import { useQuery, useZero } from "@rocicorp/zero/react";
 
 export default function Page() {

@@ -162,6 +162,8 @@ export const taskSchema = {
     title: "string",
     description: "string",
 
+    workspace_id: "string",
+
     // Organization & sorting
     sort_order: { type: "number", optional: true },
     today_sort_order: { type: "number", optional: true },
@@ -198,6 +200,11 @@ export const taskSchema = {
   },
   primaryKey: "id",
   relationships: {
+    workspace: {
+      sourceField: "workspace_id",
+      destField: "id",
+      destSchema: () => workspaceSchema,
+    },
     tags: [
       {
         sourceField: "id",

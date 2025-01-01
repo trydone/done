@@ -44,6 +44,7 @@ authAtom.onChange((auth) => {
       return auth?.encoded;
     },
     schema,
+    kvStore: "mem",
   });
   zeroAtom.value = z;
 
@@ -70,16 +71,16 @@ export function preload(z: Zero<Schema>) {
       .related("creator")
       .related("assignee")
       .related("emoji", (emoji) =>
-        emoji.related("creator", (creator) => creator.one()),
+        emoji.related("creator", (creator) => creator.one())
       )
       .related("comments", (comments) =>
         comments
           .related("creator", (creator) => creator.one())
           .related("emoji", (emoji) =>
-            emoji.related("creator", (creator) => creator.one()),
+            emoji.related("creator", (creator) => creator.one())
           )
           .limit(INITIAL_COMMENT_LIMIT)
-          .orderBy("created_at", "desc"),
+          .orderBy("created_at", "desc")
       )
       .preload();
   });

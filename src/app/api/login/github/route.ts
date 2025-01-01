@@ -2,7 +2,8 @@ import { NextRequest } from "next/server";
 import postgres from "postgres";
 import { Octokit } from "@octokit/core";
 import { SignJWT } from "jose";
-import { setCookie } from "cookies-next/server";
+import { cookies } from "next/headers";
+import { decodeJwt } from "jose";
 
 const sql = postgres(process.env.ZERO_UPSTREAM_DB as string);
 
@@ -72,12 +73,33 @@ export async function GET(request: NextRequest) {
       )`;
   }
 
-  const userRows = await sql`SELECT * FROM "user" WHERE "id" = ${userId}`;
+  const cookieStore = await cookies();
+
+  const token = cookieStore.get("jwt");
+  let sessionId = crypto.randomUUID();
+  if (token) {
+    const payload = decodeJwt(token.value);
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (payload.exp && payload.exp >= currentTime && payload.sub) {
+      sessionId = payload.sub;
+    }
+  }
+
+  // const existingSessionId =
+  //   await sql`SELECT id FROM "session" WHERE "id" = ${sessionId} AND "user_id" = ${userId}`;
+
+  // if (existingSessionId.length === 0) {
+  //   await sql`INSERT INTO "session"
+  //     ("id", "user_id") VALUES (
+  //       ${sessionId},
+  //       ${userId}
+  //     )`;
+  // }
 
   const jwtPayload = {
-    sub: userId,
+    sub: sessionId,
     iat: Math.floor(Date.now() / 1000),
-    role: userRows[0].role,
+    role: `user`,
     name: userDetails.data.login,
   };
 
@@ -86,16 +108,12 @@ export async function GET(request: NextRequest) {
     .setExpirationTime("30days")
     .sign(new TextEncoder().encode(process.env.ZERO_AUTH_SECRET));
 
-  // Create response with redirect
-  const response = Response.redirect(
-    redirectUrl ? decodeURIComponent(redirectUrl) : new URL("/", request.url)
-  );
-
-  // Set cookie
-  setCookie("jwt", jwt, {
+  cookieStore.set("jwt", jwt, {
+    maxAge: 60 * 60 * 24 * 30,
     secure: process.env.NODE_ENV === "production",
-    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   });
 
-  return response;
+  return Response.redirect(
+    redirectUrl ? decodeURIComponent(redirectUrl) : new URL("/", request.url)
+  );
 }

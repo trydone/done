@@ -336,8 +336,9 @@ table "task" {
     type = uuid
   }
   column "sort_order" {
-    null = false
-    type = double_precision
+    null    = false
+    type    = double_precision
+    default = 0
   }
   column "start" {
     null    = false
@@ -657,6 +658,36 @@ table "workspace_member" {
   index "workspace_member_workspace_user_idx" {
     unique  = true
     columns = [column.workspace_id, column.user_id]
+  }
+}
+table "session" {
+  schema = schema.public
+  column "id" {
+    null = false
+    type = uuid
+  }
+  column "user_id" {
+    null = false
+    type = uuid
+  }
+  column "created_at" {
+    null    = false
+    type    = timestamptz
+    default = sql("now()")
+  }
+  column "updated_at" {
+    null    = false
+    type    = timestamptz
+    default = sql("now()")
+  }
+  primary_key {
+    columns = [column.id]
+  }
+  foreign_key "session_user_id_fk" {
+    columns     = [column.user_id]
+    ref_columns = [table.user.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
   }
 }
 table "schemaVersions" {

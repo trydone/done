@@ -49,6 +49,7 @@ export function TaskComposer({ open, onClose }: Props) {
     const id = v4();
     z.mutate.task.insert({
       id,
+      workspace_id: `b1b6643f-e485-4a11-947c-af24dc7d17ee`,
       title: data.title,
       description: data.description,
       created_at: Date.now(),

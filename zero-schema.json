@@ -2033,6 +2033,10 @@
           "updated_at": {
             "type": "number",
             "optional": false
+          },
+          "workspace_id": {
+            "type": "string",
+            "optional": false
           }
         },
         "relationships": {
@@ -2118,6 +2122,15 @@
               "task_id"
             ],
             "destSchema": "view_state"
+          },
+          "workspace": {
+            "sourceField": [
+              "workspace_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "workspace"
           }
         }
       },

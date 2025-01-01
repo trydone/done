@@ -200,6 +200,11 @@ export const taskSchema = {
   },
   primaryKey: "id",
   relationships: {
+    session: {
+      sourceField: "creator_id",
+      destSchema: () => sessionSchema,
+      destField: "user_id",
+    },
     workspace: {
       sourceField: "workspace_id",
       destField: "id",
@@ -350,6 +355,17 @@ export const emojiSchema = {
   },
 } as const;
 
+export const sessionSchema = createTableSchema({
+  tableName: "session",
+  columns: {
+    id: "string",
+    user_id: "string",
+    created_at: "number",
+    updated_at: "number",
+  },
+  primaryKey: ["id", "user_id"],
+});
+
 export const userPrefSchema = createTableSchema({
   tableName: "user_pref",
   columns: {
@@ -397,6 +413,7 @@ export const schema = createSchema({
     task_tag: taskTagSchema,
     view_state: viewStateSchema,
     emoji: emojiSchema,
+    session: sessionSchema,
     user_pref: userPrefSchema,
   },
 });
@@ -454,6 +471,25 @@ export const permissions: ReturnType<typeof definePermissions> =
           iq.where((eb) => loggedInUserIsCreator(authData, eb))
         )
       );
+
+    // const allowIfSessionUserTaskCreator = (
+    //   authData: AuthData,
+    //   eb: ExpressionBuilder<typeof taskTagSchema>
+    // ) => eb.exists("task", (q) => q.whereExists("session", (q) => q.and()));
+
+    const allowTasks = (
+      authData: AuthData,
+      eb: ExpressionBuilder<typeof taskSchema>
+    ) => {
+      return eb.and(
+        // logged in
+        eb.cmpLit(authData.sub, "IS NOT", null),
+        // belongs to the user of the curr session
+        eb.exists("session", (session) =>
+          session.where("id", "=", authData.sub)
+        )
+      );
+    };
 
     const canSeeTask = (
       authData: AuthData,
@@ -525,7 +561,7 @@ export const permissions: ReturnType<typeof definePermissions> =
             postMutation: [loggedInUserIsCreator, loggedInUserIsAdmin],
           },
           delete: [loggedInUserIsCreator, loggedInUserIsAdmin],
-          // select: [canSeeTask],
+          select: [allowTasks],
         },
       },
       task_comment: {

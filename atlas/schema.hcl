@@ -681,7 +681,7 @@ table "session" {
     default = sql("now()")
   }
   primary_key {
-    columns = [column.id]
+    columns = [column.id, column.user_id]
   }
   foreign_key "session_user_id_fk" {
     columns     = [column.user_id]

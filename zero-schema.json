@@ -20,6 +20,71 @@
     },
     "task": {
       "row": {
+        "select": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": null
+                  },
+                  "op": "IS NOT"
+                },
+                {
+                  "type": "correlatedSubquery",
+                  "related": {
+                    "system": "permissions",
+                    "correlation": {
+                      "parentField": [
+                        "creator_id"
+                      ],
+                      "childField": [
+                        "user_id"
+                      ]
+                    },
+                    "subquery": {
+                      "table": "session",
+                      "alias": "zsubq_session",
+                      "where": {
+                        "type": "simple",
+                        "left": {
+                          "type": "column",
+                          "name": "id"
+                        },
+                        "right": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "op": "="
+                      },
+                      "orderBy": [
+                        [
+                          "id",
+                          "asc"
+                        ],
+                        [
+                          "user_id",
+                          "asc"
+                        ]
+                      ]
+                    }
+                  },
+                  "op": "EXISTS"
+                }
+              ]
+            }
+          ]
+        ],
         "insert": [
           [
             "allow",
@@ -1911,6 +1976,32 @@
           }
         }
       },
+      "session": {
+        "tableName": "session",
+        "primaryKey": [
+          "id",
+          "user_id"
+        ],
+        "columns": {
+          "created_at": {
+            "type": "number",
+            "optional": false
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "updated_at": {
+            "type": "number",
+            "optional": false
+          },
+          "user_id": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {}
+      },
       "tag": {
         "tableName": "tag",
         "primaryKey": [
@@ -2084,6 +2175,15 @@
               "id"
             ],
             "destSchema": "project"
+          },
+          "session": {
+            "sourceField": [
+              "creator_id"
+            ],
+            "destField": [
+              "user_id"
+            ],
+            "destSchema": "session"
           },
           "tags": [
             {

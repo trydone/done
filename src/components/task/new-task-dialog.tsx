@@ -23,7 +23,7 @@ import { v4 } from "uuid";
 
 const taskFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
+  description: z.string().optional(),
 });
 
 type TaskFormValues = z.infer<typeof taskFormSchema>;

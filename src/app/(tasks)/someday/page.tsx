@@ -20,7 +20,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1>Logbook</h1>
+      <h1>Someday</h1>
 
       <TaskList items={tasks} />
     </div>

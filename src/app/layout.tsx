@@ -42,14 +42,14 @@ export default function RootLayout({
   }
 
   return (
-    <DndProvider>
-      <ZeroProvider zero={z}>
-        <RootStoreProvider>
-          <LoginProvider>
-            <html lang="en">
-              <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-              >
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <ZeroProvider zero={z}>
+          <RootStoreProvider>
+            <LoginProvider>
+              <DndProvider>
                 <SidebarProvider>
                   <AppSidebar />
 
@@ -73,11 +73,11 @@ export default function RootLayout({
                 </SidebarProvider>
 
                 <Toaster />
-              </body>
-            </html>
-          </LoginProvider>
-        </RootStoreProvider>
-      </ZeroProvider>
-    </DndProvider>
+              </DndProvider>
+            </LoginProvider>
+          </RootStoreProvider>
+        </ZeroProvider>
+      </body>
+    </html>
   );
 }

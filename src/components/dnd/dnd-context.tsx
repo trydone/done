@@ -109,13 +109,13 @@ export const DndProvider = observer(({ children }: { children: ReactNode }) => {
       >
         {children}
         <DragOverlay>
-          {activeId && activeType === "task" && (
+          {/* {activeId && activeType === "task" && (
             <TaskItem
               task={taskStore.tasks.get(activeId as string)!}
               isSelected={false}
               isDragging
             />
-          )}
+          )} */}
           {activeId && activeType === "multiple-tasks" && (
             <MultipleTasksOverlay count={selectedTaskIds.length} />
           )}

@@ -13,8 +13,12 @@ export const TaskList = ({ items }: Props) => {
   return (
     <SortableContext items={items} strategy={verticalListSortingStrategy}>
       <div>
-        {items.map((item) => (
+        {/* {items.map((item) => (
           <TaskItem key={item.id} item={item} />
+        ))} */}
+
+        {items.map((item) => (
+          <div key={item.id}>{item.title}</div>
         ))}
       </div>
     </SortableContext>

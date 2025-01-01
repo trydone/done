@@ -14,11 +14,9 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-import Link from "next/link";
+import { AppSidebarItem } from "./app-sidebar-item";
 
 const items = [
   {
@@ -65,8 +63,8 @@ export const AppSidebar = () => {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <AppSidebarItem item={item} />
+              {items.map((item, index) => (
+                <AppSidebarItem item={item} key={index} />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>

@@ -58,7 +58,7 @@ authAtom.onChange((auth) => {
 
 let didPreload = false;
 
-export function preload(z: Zero<Schema>) {
+export const preload = (z: Zero<Schema>) => {
   if (didPreload) {
     return;
   }
@@ -92,7 +92,7 @@ export function preload(z: Zero<Schema>) {
 
   z.query.user.preload();
   z.query.tag.preload();
-}
+};
 
 // To enable accessing zero in the devtools easily.
 function exposeDevHooks(z: Zero<Schema>) {

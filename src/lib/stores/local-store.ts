@@ -10,8 +10,8 @@ export class LocalStore {
   selectedWorkspaceId?: string;
 
   // Selection and View States
-  selectedTaskId: string | null = null;
-  isDetailViewOpen = false;
+  selectedTaskIds: string[] = [];
+  openTaskId: string | null = null;
   sidebarCollapsed = false;
 
   // Search State
@@ -64,9 +64,9 @@ export class LocalStore {
   }
 
   // Selection Actions
-  setSelectedTaskId(taskId: string | null) {
-    this.selectedTaskId = taskId;
-    if (taskId) {
+  setSelectedTaskIds(taskIds: string[]) {
+    this.selectedTaskIds = taskIds;
+    if (taskIds) {
       this.updateButtonStates({
         move: true,
         delete: true,
@@ -88,11 +88,11 @@ export class LocalStore {
   }
 
   // View Actions
-  setDetailViewOpen(isOpen: boolean) {
-    this.isDetailViewOpen = isOpen;
+  setOpenTaskId(openTaskId: string | null) {
+    this.openTaskId = openTaskId;
     this.updateButtonStates({
-      newTask: !isOpen,
-      quickSearch: !isOpen,
+      newTask: !openTaskId,
+      quickSearch: !openTaskId,
     });
   }
 
@@ -119,16 +119,15 @@ export class LocalStore {
     this.completionAnimationTasks.add(taskId);
     setTimeout(() => {
       this.completionAnimationTasks.delete(taskId);
-      if (this.selectedTaskId === taskId) {
-        this.setSelectedTaskId(null);
-      }
+      this.setSelectedTaskIds(
+        this.selectedTaskIds.filter((id) => id !== taskId)
+      );
     }, 5000);
   }
 
   toggleChecklistExpanded(taskId: string) {
     this.checklistExpanded[taskId] = !this.checklistExpanded[taskId];
   }
-
   // Button State Actions
   updateButtonStates(newStates: Partial<typeof this.buttonStates>) {
     this.buttonStates = { ...this.buttonStates, ...newStates };
@@ -145,7 +144,7 @@ export class LocalStore {
   }
 
   get hasSelectedTask() {
-    return this.selectedTaskId !== null;
+    return this.selectedTaskIds.length > 0;
   }
 
   get isSearching() {
@@ -162,8 +161,8 @@ export class LocalStore {
 
   // Reset State
   reset() {
-    this.selectedTaskId = null;
-    this.isDetailViewOpen = false;
+    this.selectedTaskIds = [];
+    this.openTaskId = null;
     this.quickSearchQuery = "";
     this.quickSearchActive = false;
     this.draggedTaskId = null;

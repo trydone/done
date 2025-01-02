@@ -1,9 +1,23 @@
 "use client";
 import { useQuery, useZero } from "@rocicorp/zero/react";
-import { Schema } from "@/schema";
-import { TaskList } from "@/components/task-list";
 
-export default function Page() {
+import { TaskList } from "@/components/task-list";
+import { WorkspaceSwitch } from "@/components/workspace/workspace-switch";
+import { Page } from "@/components/shared/page";
+import { Section } from "@/components/shared/section";
+import { H1 } from "@/components/shared/typography";
+import { Schema } from "@/schema";
+
+export default function PageInbox() {
+  return (
+    <Page>
+      <SectionInbox />
+      <SectionWorkspaces />
+    </Page>
+  );
+}
+
+const SectionInbox = () => {
   const zero = useZero<Schema>();
 
   const [tasks] = useQuery(
@@ -14,13 +28,21 @@ export default function Page() {
       .orderBy("sort_order", "asc")
   );
 
-  console.log({ tasks });
-
   return (
-    <div>
-      <h1>Inbox</h1>
-
+    <Section>
+      <H1>Inbox</H1>
       <TaskList items={tasks} />
-    </div>
+    </Section>
   );
-}
+};
+
+const SectionWorkspaces = () => {
+  return (
+    <Section>
+      <H1>Workspaces</H1>
+      <WorkspaceSwitch.Block />
+      <WorkspaceSwitch.Block />
+      <WorkspaceSwitch.Block />
+    </Section>
+  );
+};

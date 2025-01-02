@@ -31,6 +31,11 @@ authAtom.value =
 
 authAtom.onChange((auth) => {
   zeroAtom.value?.close();
+
+  if (typeof window === "undefined") {
+    return;
+  }
+
   const z = new Zero({
     logLevel: "info",
     server: process.env.NEXT_PUBLIC_SERVER,

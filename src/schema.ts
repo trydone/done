@@ -7,7 +7,8 @@ import {
   createTableSchema,
   definePermissions,
 } from "@rocicorp/zero";
-import type { Condition } from "node_modules/@rocicorp/zero/out/zero-protocol/src/ast";
+// @ts-expect-error - no direct import available
+import type { Condition } from "@rocicorp/zero/out/zero-protocol/src/ast";
 
 export const enterpriseSchema = createTableSchema({
   tableName: "enterprise",
@@ -21,7 +22,7 @@ export const enterpriseSchema = createTableSchema({
   primaryKey: "id",
 });
 
-export const workspaceSchema = createTableSchema({
+export const workspaceSchema = {
   tableName: "workspace",
   columns: {
     id: "string",
@@ -29,17 +30,28 @@ export const workspaceSchema = createTableSchema({
     slug: "string",
     created_at: "number",
     updated_at: "number",
-    enterprise_id: { type: "string", optional: true },
   },
-  primaryKey: "id",
+  primaryKey: ["id"],
   relationships: {
-    enterprise: {
-      sourceField: "enterprise_id",
-      destField: "id",
-      destSchema: () => enterpriseSchema,
+    members: {
+      sourceField: "id",
+      destField: "workspace_id",
+      destSchema: () => workspaceMemberSchema,
     },
+    sessionMembers: [
+      {
+        sourceField: "id",
+        destField: "workspace_id",
+        destSchema: () => workspaceMemberSchema,
+      },
+      {
+        sourceField: "user_id",
+        destField: "user_id",
+        destSchema: () => sessionSchema,
+      },
+    ],
   },
-});
+} as const satisfies TableSchema;
 
 export const teamSchema = createTableSchema({
   tableName: "team",
@@ -61,10 +73,10 @@ export const teamSchema = createTableSchema({
   },
 });
 
-export const workspaceMemberSchema = createTableSchema({
+export const workspaceMemberSchema = {
   tableName: "workspace_member",
   columns: {
-    id: "string",
+    id: { type: "string" },
     workspace_id: "string",
     user_id: "string",
     role: "string",
@@ -73,10 +85,10 @@ export const workspaceMemberSchema = createTableSchema({
   },
   primaryKey: ["workspace_id", "user_id"],
   relationships: {
-    workspace: {
-      sourceField: "workspace_id",
-      destField: "id",
-      destSchema: () => workspaceSchema,
+    session: {
+      sourceField: "user_id",
+      destField: "user_id",
+      destSchema: () => sessionSchema,
     },
     user: {
       sourceField: "user_id",
@@ -84,7 +96,7 @@ export const workspaceMemberSchema = createTableSchema({
       destSchema: () => userSchema,
     },
   },
-});
+} as const satisfies TableSchema;
 
 export const teamMemberSchema = createTableSchema({
   tableName: "team_member",
@@ -472,24 +484,21 @@ export const permissions: ReturnType<typeof definePermissions> =
         )
       );
 
-    // const allowIfSessionUserTaskCreator = (
-    //   authData: AuthData,
-    //   eb: ExpressionBuilder<typeof taskTagSchema>
-    // ) => eb.exists("task", (q) => q.whereExists("session", (q) => q.and()));
-
-    const allowTasks = (
+    const allowTask = (
       authData: AuthData,
       eb: ExpressionBuilder<typeof taskSchema>
-    ) => {
-      return eb.and(
-        // logged in
-        eb.cmpLit(authData.sub, "IS NOT", null),
-        // belongs to the user of the curr session
+    ) =>
+      eb.and(
+        userIsLoggedIn(authData, eb),
         eb.exists("session", (session) =>
           session.where("id", "=", authData.sub)
         )
       );
-    };
+
+    const allowWorkspace = (
+      authData: AuthData,
+      eb: ExpressionBuilder<typeof workspaceSchema>
+    ) => eb.exists("sessionMembers", (q) => q.where("id", "=", authData.sub));
 
     const canSeeTask = (
       authData: AuthData,
@@ -537,6 +546,7 @@ export const permissions: ReturnType<typeof definePermissions> =
             preMutation: NOBODY_CAN,
           },
           delete: NOBODY_CAN,
+          select: [allowWorkspace],
         },
       },
       user: {
@@ -561,7 +571,7 @@ export const permissions: ReturnType<typeof definePermissions> =
             postMutation: [loggedInUserIsCreator, loggedInUserIsAdmin],
           },
           delete: [loggedInUserIsCreator, loggedInUserIsAdmin],
-          select: [allowTasks],
+          select: [allowTask],
         },
       },
       task_comment: {

@@ -613,10 +613,6 @@ table "workspace" {
 }
 table "workspace_member" {
   schema = schema.public
-  column "id" {
-    null = false
-    type = uuid
-  }
   column "workspace_id" {
     null = false
     type = uuid
@@ -641,7 +637,7 @@ table "workspace_member" {
     default = sql("now()")
   }
   primary_key {
-    columns = [column.id]
+    columns = [column.workspace_id, column.user_id]
   }
   foreign_key "workspace_member_user_id_fk" {
     columns     = [column.user_id]

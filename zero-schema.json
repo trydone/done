@@ -2,6 +2,82 @@
   "permissions": {
     "workspace": {
       "row": {
+        "select": [
+          [
+            "allow",
+            {
+              "type": "correlatedSubquery",
+              "related": {
+                "system": "permissions",
+                "correlation": {
+                  "parentField": [
+                    "id"
+                  ],
+                  "childField": [
+                    "workspace_id"
+                  ]
+                },
+                "subquery": {
+                  "table": "workspace_member",
+                  "alias": "zsubq_sessionMembers",
+                  "orderBy": [
+                    [
+                      "workspace_id",
+                      "asc"
+                    ],
+                    [
+                      "user_id",
+                      "asc"
+                    ]
+                  ],
+                  "where": {
+                    "type": "correlatedSubquery",
+                    "related": {
+                      "system": "permissions",
+                      "correlation": {
+                        "parentField": [
+                          "user_id"
+                        ],
+                        "childField": [
+                          "user_id"
+                        ]
+                      },
+                      "subquery": {
+                        "table": "session",
+                        "alias": "zsubq_sessionMembers",
+                        "where": {
+                          "type": "simple",
+                          "left": {
+                            "type": "column",
+                            "name": "id"
+                          },
+                          "right": {
+                            "type": "static",
+                            "anchor": "authData",
+                            "field": "sub"
+                          },
+                          "op": "="
+                        },
+                        "orderBy": [
+                          [
+                            "id",
+                            "asc"
+                          ],
+                          [
+                            "user_id",
+                            "asc"
+                          ]
+                        ]
+                      }
+                    },
+                    "op": "EXISTS"
+                  }
+                }
+              },
+              "op": "EXISTS"
+            }
+          ]
+        ],
         "insert": [],
         "update": {
           "preMutation": []
@@ -2510,10 +2586,6 @@
             "type": "number",
             "optional": false
           },
-          "enterprise_id": {
-            "type": "string",
-            "optional": true
-          },
           "id": {
             "type": "string",
             "optional": false
@@ -2532,15 +2604,35 @@
           }
         },
         "relationships": {
-          "enterprise": {
+          "members": {
             "sourceField": [
-              "enterprise_id"
-            ],
-            "destField": [
               "id"
             ],
-            "destSchema": "enterprise"
-          }
+            "destField": [
+              "workspace_id"
+            ],
+            "destSchema": "workspace_member"
+          },
+          "sessionMembers": [
+            {
+              "sourceField": [
+                "id"
+              ],
+              "destField": [
+                "workspace_id"
+              ],
+              "destSchema": "workspace_member"
+            },
+            {
+              "sourceField": [
+                "user_id"
+              ],
+              "destField": [
+                "user_id"
+              ],
+              "destSchema": "session"
+            }
+          ]
         }
       },
       "workspace_member": {
@@ -2576,6 +2668,15 @@
           }
         },
         "relationships": {
+          "session": {
+            "sourceField": [
+              "user_id"
+            ],
+            "destField": [
+              "user_id"
+            ],
+            "destSchema": "session"
+          },
           "user": {
             "sourceField": [
               "user_id"
@@ -2584,15 +2685,6 @@
               "id"
             ],
             "destSchema": "user"
-          },
-          "workspace": {
-            "sourceField": [
-              "workspace_id"
-            ],
-            "destField": [
-              "id"
-            ],
-            "destSchema": "workspace"
           }
         }
       }

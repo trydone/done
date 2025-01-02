@@ -85,16 +85,16 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // const existingSessionId =
-  //   await sql`SELECT id FROM "session" WHERE "id" = ${sessionId} AND "user_id" = ${userId}`;
+  const existingSessionId =
+    await sql`SELECT id FROM "session" WHERE "id" = ${sessionId} AND "user_id" = ${userId}`;
 
-  // if (existingSessionId.length === 0) {
-  //   await sql`INSERT INTO "session"
-  //     ("id", "user_id") VALUES (
-  //       ${sessionId},
-  //       ${userId}
-  //     )`;
-  // }
+  if (existingSessionId.length === 0) {
+    await sql`INSERT INTO "session"
+      ("id", "user_id") VALUES (
+        ${sessionId},
+        ${userId}
+      )`;
+  }
 
   const jwtPayload = {
     sub: sessionId,

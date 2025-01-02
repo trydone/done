@@ -1,22 +1,104 @@
-import * as React from "react"
+import { CircleXFilledIcon } from '@fingertip/icons'
+import * as React from 'react'
+import TextareaAutosize from 'react-textarea-autosize'
 
-import { cn } from "@/lib/utils"
+import { cn } from '@/lib/utils'
 
-const Textarea = React.forwardRef<
-  HTMLTextAreaElement,
-  React.ComponentProps<"textarea">
->(({ className, ...props }, ref) => {
-  return (
-    <textarea
-      className={cn(
-        "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        className
-      )}
-      ref={ref}
-      {...props}
-    />
-  )
-})
-Textarea.displayName = "Textarea"
+export interface TextareaProps
+  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'style'> {
+  hasError?: boolean
+  clearable?: boolean
+  onClear?: () => void
+  clearClassName?: string
+  leftAddon?: React.ReactNode | null
+  rightAddon?: React.ReactNode | null
+  leftControl?: React.ReactNode | null
+  rightControl?: React.ReactNode | null
+  minRows?: number
+}
+
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  (
+    {
+      className,
+      onClear,
+      clearable,
+      hasError,
+      leftAddon,
+      rightAddon,
+      clearClassName,
+      leftControl,
+      rightControl,
+      minRows,
+      ...props
+    },
+    ref,
+  ) => {
+    return (
+      <label
+        className={cn('relative w-full', {
+          'input-group': !!leftAddon || !!rightAddon,
+        })}
+      >
+        {leftAddon && <span>{leftAddon}</span>}
+
+        {leftControl && (
+          <div className="absolute left-3 flex h-full flex-row place-items-center items-center justify-center">
+            {leftControl}
+          </div>
+        )}
+
+        <TextareaAutosize
+          className={cn(
+            'flex h-[52px] w-full rounded-2xl border-[1.5px] border-input transition-colors hover:border-input-hover bg-card px-4 py-[14px] font-sans font-normal text-base leading-snug text-foreground ring-offset-background placeholder:text-placeholder-foreground focus:outline-none focus:border-ring disabled:cursor-not-allowed disabled:opacity-50',
+            {
+              'border-destructive-foreground': hasError,
+              'pr-9': clearable && !!props.value,
+              'pr-12': clearable && !!props.value && rightControl,
+            },
+            className,
+          )}
+          ref={ref}
+          minRows={minRows}
+          {...props}
+        />
+
+        {clearable && !!props.value && (
+          <div className="absolute right-0 top-0">
+            <button
+              tabIndex={-1}
+              className={cn(
+                'flex h-[52px] w-10 items-center justify-center !p-0 text-muted-foreground',
+                clearClassName,
+              )}
+              type="button"
+              onClick={() => onClear?.()}
+              aria-label="clear input"
+            >
+              <CircleXFilledIcon
+                width={16}
+                height={16}
+                className="text-muted-foreground/50"
+              />
+            </button>
+          </div>
+        )}
+
+        {rightControl && (
+          <div
+            className={cn('absolute right-3 top-4', {
+              'right-9': clearable && !!props.value,
+            })}
+          >
+            {rightControl}
+          </div>
+        )}
+
+        {rightAddon && <span>{rightAddon}</span>}
+      </label>
+    )
+  },
+)
+Textarea.displayName = 'Textarea'
 
 export { Textarea }

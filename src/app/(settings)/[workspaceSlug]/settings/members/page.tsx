@@ -31,20 +31,13 @@ import { Schema } from "@/schema";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-interface Member {
-  id: string;
-  name: string;
-  username: string;
-  email: string;
-  role: "Admin" | "Member";
-  avatarUrl?: string;
-  joinedAt: Date;
-  isOnline: boolean;
-}
+type Props = {
+  params: { workspaceSlug: string };
+};
 
-export default function MembersPage() {
+export default function Page({ params: { workspaceSlug } }: Props) {
   const z = useZero<Schema>();
-  const [members] = useQuery(z.query.member);
+  const [members] = useQuery(z.query.workspace_member);
   const [search, setSearch] = React.useState("");
   const [filter, setFilter] = React.useState<"All" | "Admin" | "Member">("All");
 

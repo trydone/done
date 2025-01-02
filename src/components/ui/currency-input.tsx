@@ -1,21 +1,21 @@
-import { CircleXFilledIcon } from '@fingertip/icons'
-import * as React from 'react'
+import { CircleXFilledIcon } from "lucide-react";
+import * as React from "react";
 import CurrencyInputField, {
   CurrencyInputProps,
-} from 'react-currency-input-field'
+} from "react-currency-input-field";
 
-import { cn } from '@/lib/utils'
+import { cn } from "@/lib/utils";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  hasError?: boolean
-  clearable?: boolean
-  onClear?: () => void
-  clearClassName?: string
-  leftAddon?: React.ReactNode | null
-  rightAddon?: React.ReactNode | null
-  leftControl?: React.ReactNode | null
-  rightControl?: React.ReactNode | null
+  hasError?: boolean;
+  clearable?: boolean;
+  onClear?: () => void;
+  clearClassName?: string;
+  leftAddon?: React.ReactNode | null;
+  rightAddon?: React.ReactNode | null;
+  leftControl?: React.ReactNode | null;
+  rightControl?: React.ReactNode | null;
 }
 
 export const CurrencyInput = ({
@@ -32,8 +32,8 @@ export const CurrencyInput = ({
 }: CurrencyInputProps & InputProps) => {
   return (
     <label
-      className={cn('relative w-full', {
-        'input-group': !!leftAddon || !!rightAddon,
+      className={cn("relative w-full", {
+        "input-group": !!leftAddon || !!rightAddon,
       })}
     >
       {leftAddon && (
@@ -49,10 +49,10 @@ export const CurrencyInput = ({
       <div className="w-full">
         <CurrencyInputField
           className={cn(
-            'input flex h-[52px] w-full rounded-2xl border-[1.5px] border-input bg-card px-4 py-[14px] font-sans font-normal text-base leading-snug text-foreground ring-offset-background placeholder:text-placeholder-foreground focus:outline-none focus:border-ring disabled:cursor-not-allowed disabled:opacity-50',
+            "input flex h-[52px] w-full rounded-2xl border-[1.5px] border-input bg-card px-4 py-[14px] font-sans font-normal text-base leading-snug text-foreground ring-offset-background placeholder:text-placeholder-foreground focus:outline-none focus:border-ring disabled:cursor-not-allowed disabled:opacity-50",
             {
-              'border-destructive-foreground': hasError,
-              'pr-9': clearable && !!props.value,
+              "border-destructive-foreground": hasError,
+              "pr-9": clearable && !!props.value,
             },
             className,
           )}
@@ -64,7 +64,7 @@ export const CurrencyInput = ({
             <button
               tabIndex={-1}
               className={cn(
-                'flex h-[52px] items-center justify-center !p-0 text-muted-foreground',
+                "flex h-[52px] items-center justify-center !p-0 text-muted-foreground",
                 clearClassName,
               )}
               type="button"
@@ -89,5 +89,5 @@ export const CurrencyInput = ({
 
       {rightAddon && <span className="cursor-pointer">{rightAddon}</span>}
     </label>
-  )
-}
+  );
+};

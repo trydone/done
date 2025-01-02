@@ -1,49 +1,49 @@
-import { ChevronDownIcon } from '@fingertip/icons'
-import * as PopoverPrimitive from '@radix-ui/react-popover'
-import { useCombobox, UseComboboxStateChange } from 'downshift'
+import { ChevronDownIcon } from "lucide-react";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
+import { useCombobox, UseComboboxStateChange } from "downshift";
 import React, {
   forwardRef,
   ReactNode,
   useCallback,
   useImperativeHandle,
   useRef,
-} from 'react'
+} from "react";
 
-import { cn } from '@/lib/utils/cn'
+import { cn } from "@/lib/utils/cn";
 
-import { Input, InputProps } from './input'
+import { Input, InputProps } from "./input";
 
 export type ComboboxOption = {
-  id?: string | number
-  label?: string
-  description?: string // Added description field
-}
+  id?: string | number;
+  label?: string;
+  description?: string; // Added description field
+};
 
 export type OnChangeParams =
   | ((changes: UseComboboxStateChange<ComboboxOption>) => void)
-  | undefined
+  | undefined;
 
-export interface ComboboxProps extends Omit<InputProps, 'value' | 'onChange'> {
-  options: ComboboxOption[] | undefined
-  value?: ComboboxOption | undefined
-  onChange?: OnChangeParams
-  onInputChange?: OnChangeParams
-  isLoading?: boolean
-  startOpen?: boolean
-  leftIcon?: ReactNode
-  clearable?: boolean
-  children?: ReactNode
-  noResults?: ReactNode
-  clearInputValue?: () => void
-  ref?: any
+export interface ComboboxProps extends Omit<InputProps, "value" | "onChange"> {
+  options: ComboboxOption[] | undefined;
+  value?: ComboboxOption | undefined;
+  onChange?: OnChangeParams;
+  onInputChange?: OnChangeParams;
+  isLoading?: boolean;
+  startOpen?: boolean;
+  leftIcon?: ReactNode;
+  clearable?: boolean;
+  children?: ReactNode;
+  noResults?: ReactNode;
+  clearInputValue?: () => void;
+  ref?: any;
 }
 
 export type ComboboxRef = {
-  clearInput: () => void
-  closeMenu: () => void
-  selectItem: (option: ComboboxOption) => void
-  inputValue: string
-}
+  clearInput: () => void;
+  closeMenu: () => void;
+  selectItem: (option: ComboboxOption) => void;
+  inputValue: string;
+};
 
 export const Combobox: React.FC<ComboboxProps> = forwardRef(
   (
@@ -74,23 +74,23 @@ export const Combobox: React.FC<ComboboxProps> = forwardRef(
       closeMenu,
     } = useCombobox({
       items: options || [],
-      itemToString: (item: ComboboxOption | null) => item?.label || '',
+      itemToString: (item: ComboboxOption | null) => item?.label || "",
       initialSelectedItem: value,
       onInputValueChange: onInputChange,
       onSelectedItemChange: onChange,
       initialIsOpen: startOpen,
       defaultHighlightedIndex: 0,
-    })
+    });
 
-    const comboboxRef = useRef<HTMLInputElement>(null)
-    const listboxRef = useRef<HTMLDivElement>(null)
+    const comboboxRef = useRef<HTMLInputElement>(null);
+    const listboxRef = useRef<HTMLDivElement>(null);
 
     const clearInput = useCallback(() => {
-      setInputValue('')
+      setInputValue("");
       if (onClear) {
-        onClear()
+        onClear();
       }
-    }, [onClear, setInputValue])
+    }, [onClear, setInputValue]);
 
     useImperativeHandle(
       ref,
@@ -102,7 +102,7 @@ export const Combobox: React.FC<ComboboxProps> = forwardRef(
           inputValue,
         }) as ComboboxRef,
       [clearInput, closeMenu, inputValue, selectItem],
-    )
+    );
 
     return (
       <>
@@ -111,11 +111,11 @@ export const Combobox: React.FC<ComboboxProps> = forwardRef(
             <div className="relative w-full">
               <Input
                 className={cn({
-                  'pl-10': !!leftIcon,
+                  "pl-10": !!leftIcon,
                 })}
                 onClear={() => {
-                  selectItem({})
-                  onClear?.()
+                  selectItem({});
+                  onClear?.();
                 }}
                 clearable={clearable}
                 {...getInputProps({}, { suppressRefError: true })}
@@ -139,11 +139,12 @@ export const Combobox: React.FC<ComboboxProps> = forwardRef(
               asChild
               onOpenAutoFocus={(event) => event.preventDefault()}
               onInteractOutside={(event) => {
-                const target = event.target as Element | null
-                const isCombobox = target === comboboxRef.current
-                const inListbox = target && listboxRef.current?.contains(target)
+                const target = event.target as Element | null;
+                const isCombobox = target === comboboxRef.current;
+                const inListbox =
+                  target && listboxRef.current?.contains(target);
                 if (isCombobox || inListbox) {
-                  event.preventDefault()
+                  event.preventDefault();
                 }
               }}
             >
@@ -155,18 +156,18 @@ export const Combobox: React.FC<ComboboxProps> = forwardRef(
 
                 {(options || []).map((item, index) => {
                   const escapeRegExp = (string: string) => {
-                    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-                  }
+                    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                  };
 
                   const labelParts = item.label?.split(
-                    new RegExp(`(${escapeRegExp(inputValue)})`, 'gi'),
-                  )
+                    new RegExp(`(${escapeRegExp(inputValue)})`, "gi"),
+                  );
 
                   return (
                     <div
                       key={`${item.id}${index}`}
-                      className={cn('rounded-lg cursor-pointer px-4 py-2', {
-                        'bg-accent text-accent-foreground':
+                      className={cn("rounded-lg cursor-pointer px-4 py-2", {
+                        "bg-accent text-accent-foreground":
                           highlightedIndex === index,
                       })}
                       {...getItemProps({
@@ -189,7 +190,7 @@ export const Combobox: React.FC<ComboboxProps> = forwardRef(
                         </div>
                       )}
                     </div>
-                  )
+                  );
                 })}
 
                 {(options || []).length === 0 &&
@@ -210,6 +211,6 @@ export const Combobox: React.FC<ComboboxProps> = forwardRef(
           </PopoverPrimitive.Portal>
         </PopoverPrimitive.Root>
       </>
-    )
+    );
   },
-)
+);

@@ -1,43 +1,43 @@
-import { CheckIcon, ChevronDownIcon } from '@fingertip/icons'
-import React, { useCallback, useState } from 'react'
+import { CheckIcon, ChevronDownIcon } from "lucide-react";
+import React, { useCallback, useState } from "react";
 
-import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
-import { calendarColorSwatches } from '@/lib/data/color-swatches'
+} from "@/components/ui/popover";
+import { calendarColorSwatches } from "@/lib/data/color-swatches";
 
 type Props = {
-  color: string
-  onSelect: (color: string) => void
-  label?: string
-}
+  color: string;
+  onSelect: (color: string) => void;
+  label?: string;
+};
 
-export const ColorPicker = ({ color, onSelect, label = 'Colour' }: Props) => {
-  const [open, setOpen] = useState(false)
+export const ColorPicker = ({ color, onSelect, label = "Colour" }: Props) => {
+  const [open, setOpen] = useState(false);
 
   const onSelectColor = useCallback(
     (value: string) => {
-      onSelect(value)
-      setOpen(false)
+      onSelect(value);
+      setOpen(false);
     },
     [onSelect],
-  )
+  );
 
   return (
     <Popover
       open={open}
       onOpenChange={(value) => {
-        setOpen(value)
+        setOpen(value);
       }}
     >
       <PopoverTrigger
         onClick={(e) => {
-          e.preventDefault()
-          setOpen(!open)
+          e.preventDefault();
+          setOpen(!open);
         }}
         className="flex items-center space-x-1"
       >
@@ -79,10 +79,10 @@ export const ColorPicker = ({ color, onSelect, label = 'Colour' }: Props) => {
                   />
                 )}
               </Button>
-            )
+            );
           })}
         </div>
       </PopoverContent>
     </Popover>
-  )
-}
+  );
+};

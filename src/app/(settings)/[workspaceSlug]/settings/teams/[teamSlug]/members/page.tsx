@@ -41,17 +41,21 @@ interface Member {
   avatarUrl?: string;
 }
 
-export default function ProductMembersPage() {
+type Props = {
+  params: { workspaceSlug: string; teamSlug: string };
+};
+
+export default function Page({ params: { workspaceSlug, teamSlug } }: Props) {
   const z = useZero<Schema>();
-  const [members] = useQuery(z.query.member);
+  const [members] = useQuery(z.query.team_member);
   const [search, setSearch] = React.useState("");
   const [filter, setFilter] = React.useState("All");
 
   const filteredMembers = React.useMemo(() => {
     return members.filter(
       (member) =>
-        member.name.toLowerCase().includes(search.toLowerCase()) ||
-        member.email.toLowerCase().includes(search.toLowerCase()),
+        member.user.name.toLowerCase().includes(search.toLowerCase()) ||
+        member.user.login.toLowerCase().includes(search.toLowerCase()),
     );
   }, [members, search]);
 
@@ -68,7 +72,7 @@ export default function ProductMembersPage() {
     <div className="container mx-auto py-6 space-y-6">
       {/* Header */}
       <div className="flex items-center space-x-4">
-        <Link href="/areas" className="hover:opacity-80">
+        <Link href="/teams" className="hover:opacity-80">
           <ChevronLeft className="h-6 w-6" />
         </Link>
         <div className="flex items-center space-x-3">
@@ -144,7 +148,7 @@ export default function ProductMembersPage() {
                 </div>
               </TableCell>
               <TableCell className="text-muted-foreground">
-                {member.email}
+                {member.user.login}
               </TableCell>
               <TableCell>{member.role}</TableCell>
               <TableCell>

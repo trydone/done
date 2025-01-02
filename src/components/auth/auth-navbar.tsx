@@ -1,4 +1,4 @@
-import { LogoLink } from "@/components/shared/logo-link";
+import { LogoLink } from "@/components/ui/logo-link";
 import { cn } from "@/lib/utils";
 
 type Props = {

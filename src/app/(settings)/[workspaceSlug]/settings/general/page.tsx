@@ -32,46 +32,17 @@ import {
 import { toast } from "sonner";
 import { Schema } from "@/schema";
 import { ExternalLink, Upload } from "lucide-react";
+import { useCallback } from "react";
 
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+type Props = {
+  params: { workspaceSlug: string };
+};
 
-export default function WorkspaceSettingsPage() {
+export default function Page({ params: { workspaceSlug } }: Props) {
   const z = useZero<Schema>();
   const [workspace] = useQuery(z.query.workspace);
   const [isUploading, setIsUploading] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-
-  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.[0]) return;
-    setIsUploading(true);
-
-    try {
-      const file = e.target.files[0];
-      // Implement file upload logic here
-      await z.mutate.workspace.update({
-        id: workspace?.id,
-        logoUrl: "uploaded-url",
-      });
-      toast.success("Logo updated successfully");
-    } catch (error) {
-      toast.error("Failed to upload logo");
-    } finally {
-      setIsUploading(false);
-    }
-  };
 
   const handleNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -85,19 +56,7 @@ export default function WorkspaceSettingsPage() {
     }
   };
 
-  const handleFiscalMonthChange = async (month: string) => {
-    try {
-      await z.mutate.workspace.update({
-        id: workspace?.id,
-        fiscalYearStartMonth: month,
-      });
-      toast.success("Fiscal year start month updated");
-    } catch (error) {
-      toast.error("Failed to update fiscal year start month");
-    }
-  };
-
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     try {
       await z.mutate.workspace.delete({ id: workspace?.id });
       toast.success("Workspace scheduled for deletion");
@@ -105,7 +64,7 @@ export default function WorkspaceSettingsPage() {
     } catch (error) {
       toast.error("Failed to delete workspace");
     }
-  };
+  }, []);
 
   return (
     <div className="container max-w-3xl mx-auto py-6 space-y-8">
@@ -127,38 +86,6 @@ export default function WorkspaceSettingsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Logo */}
-          <div className="space-y-2">
-            <Label>Logo</Label>
-            <p className="text-sm text-muted-foreground">
-              Recommended size is 256x256px
-            </p>
-            <div className="flex items-center gap-4">
-              <div className="h-24 w-24 rounded-lg border-2 border-dashed flex items-center justify-center">
-                {workspace?.logoUrl ? (
-                  <img
-                    src={workspace.logoUrl}
-                    alt="Logo"
-                    className="max-h-full max-w-full"
-                  />
-                ) : (
-                  <Upload className="h-8 w-8 text-muted-foreground" />
-                )}
-              </div>
-              <Button disabled={isUploading} asChild>
-                <label className="cursor-pointer">
-                  DO
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept="image/*"
-                    onChange={handleLogoUpload}
-                  />
-                </label>
-              </Button>
-            </div>
-          </div>
-
           {/* Name */}
           <div className="space-y-2">
             <Label>Name</Label>
@@ -174,61 +101,14 @@ export default function WorkspaceSettingsPage() {
             <Label>URL</Label>
             <div className="flex items-center space-x-2">
               <Input
-                value={`linear.app/${workspace?.slug ?? "get-done"}`}
+                value={`trydone.io/${workspace?.slug ?? ""}`}
                 readOnly
                 disabled
               />
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="sm">
                 <ExternalLink className="h-4 w-4" />
               </Button>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Time & Region */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Time & Region</CardTitle>
-          <CardDescription>
-            Configure regional and time-based settings
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Fiscal Year */}
-          <div className="space-y-2">
-            <Label>First month of the fiscal year</Label>
-            <p className="text-sm text-muted-foreground">
-              Used when grouping projects and issues quarterly, half-yearly, and
-              yearly
-            </p>
-            <Select
-              defaultValue={workspace?.fiscalYearStartMonth}
-              onValueChange={handleFiscalMonthChange}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select month" />
-              </SelectTrigger>
-              <SelectContent>
-                {MONTHS.map((month) => (
-                  <SelectItem key={month} value={month}>
-                    {month}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Region */}
-          <div className="space-y-2">
-            <Label>Region</Label>
-            <p className="text-sm text-muted-foreground">
-              Set when a workspace is created and cannot be changed.{" "}
-              <a href="#" className="text-primary hover:underline">
-                Read more
-              </a>
-            </p>
-            <Input value="United States" disabled />
           </div>
         </CardContent>
       </Card>
@@ -249,31 +129,10 @@ export default function WorkspaceSettingsPage() {
                 Schedule workspace to be permanently deleted
               </p>
             </div>
-            <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="destructive">Delete...</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Delete Workspace</DialogTitle>
-                  <DialogDescription>
-                    This action cannot be undone. The workspace and all its data
-                    will be permanently deleted.
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <Button
-                    variant="ghost"
-                    onClick={() => setDeleteDialogOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button variant="destructive" onClick={handleDelete}>
-                    Delete Workspace
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+
+            <Button variant="destructive" onClick={handleDelete}>
+              Delete...
+            </Button>
           </div>
         </CardContent>
       </Card>

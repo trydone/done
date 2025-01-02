@@ -1,4 +1,4 @@
-table "area" {
+table "team" {
   schema = schema.public
   column "id" {
     null = false
@@ -29,24 +29,24 @@ table "area" {
   primary_key {
     columns = [column.id]
   }
-  foreign_key "area_workspace_id_fk" {
+  foreign_key "team_workspace_id_fk" {
     columns     = [column.workspace_id]
     ref_columns = [table.workspace.column.id]
     on_update   = NO_ACTION
     on_delete   = CASCADE
   }
-  index "area_workspace_slug_idx" {
+  index "team_workspace_slug_idx" {
     unique  = true
     columns = [column.workspace_id, column.slug]
   }
 }
-table "area_member" {
+table "team_member" {
   schema = schema.public
   column "id" {
     null = false
     type = uuid
   }
-  column "area_id" {
+  column "team_id" {
     null = false
     type = uuid
   }
@@ -72,21 +72,21 @@ table "area_member" {
   primary_key {
     columns = [column.id]
   }
-  foreign_key "area_member_area_id_fk" {
-    columns     = [column.area_id]
-    ref_columns = [table.area.column.id]
+  foreign_key "team_member_team_id_fk" {
+    columns     = [column.team_id]
+    ref_columns = [table.team.column.id]
     on_update   = NO_ACTION
     on_delete   = CASCADE
   }
-  foreign_key "area_member_user_id_fk" {
+  foreign_key "team_member_user_id_fk" {
     columns     = [column.user_id]
     ref_columns = [table.user.column.id]
     on_update   = NO_ACTION
     on_delete   = CASCADE
   }
-  index "area_member_area_user_idx" {
+  index "team_member_team_user_idx" {
     unique  = true
-    columns = [column.area_id, column.user_id]
+    columns = [column.team_id, column.user_id]
   }
 }
 
@@ -157,7 +157,7 @@ table "project" {
   }
 }
 
-table "project_area" {
+table "project_team" {
   schema = schema.public
 
   column "project_id" {
@@ -165,7 +165,7 @@ table "project_area" {
     null = false
   }
 
-  column "area_id" {
+  column "team_id" {
     type = uuid
     null = false
   }
@@ -177,18 +177,18 @@ table "project_area" {
   }
 
   primary_key {
-    columns = [column.project_id, column.area_id]
+    columns = [column.project_id, column.team_id]
   }
 
-  foreign_key "project_area_project_id_fk" {
+  foreign_key "project_team_project_id_fk" {
     columns = [column.project_id]
     ref_columns = [table.project.column.id]
     on_delete = CASCADE
   }
 
-  foreign_key "project_area_area_id_fk" {
-    columns = [column.area_id]
-    ref_columns = [table.area.column.id]
+  foreign_key "project_team_team_id_fk" {
+    columns = [column.team_id]
+    ref_columns = [table.team.column.id]
     on_delete = CASCADE
   }
 }
@@ -221,7 +221,7 @@ table "task" {
     null = true
   }
 
-  column "area_id" {
+  column "team_id" {
     type = uuid
     null = true
   }
@@ -302,9 +302,9 @@ table "task" {
     on_delete = NO_ACTION
   }
 
-  foreign_key "task_area_id_fk" {
-    columns = [column.area_id]
-    ref_columns = [table.area.column.id]
+  foreign_key "task_team_id_fk" {
+    columns = [column.team_id]
+    ref_columns = [table.team.column.id]
     on_delete = NO_ACTION
   }
 

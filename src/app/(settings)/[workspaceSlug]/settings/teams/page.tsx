@@ -18,27 +18,21 @@ import { Schema } from "@/schema";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 
-interface Area {
-  id: string;
-  name: string;
-  isPro: boolean;
-  visibility: "Workspace" | "Private" | "Public";
-  memberCount: number;
-  issueCount: number;
-  createdAt: Date;
-}
+type Props = {
+  params: { workspaceSlug: string };
+};
 
-export default function TeamsPage() {
+export default function Page({ params: { workspaceSlug } }: Props) {
   const z = useZero<Schema>();
   const router = useRouter();
-  const [areas] = useQuery(z.query.area);
+  const [teams] = useQuery(z.query.team);
   const [search, setSearch] = React.useState("");
 
-  const filteredAreas = React.useMemo(() => {
-    return areas.filter((area) =>
-      area.name.toLowerCase().includes(search.toLowerCase()),
+  const filteredTeams = React.useMemo(() => {
+    return teams.filter((team) =>
+      team.name.toLowerCase().includes(search.toLowerCase()),
     );
-  }, [areas, search]);
+  }, [teams, search]);
 
   const handleCreateTeam = () => {
     router.push("/teams/new");
@@ -73,45 +67,20 @@ export default function TeamsPage() {
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
-            <TableHead>Visibility</TableHead>
-            <TableHead>Members</TableHead>
-            <TableHead>Issues</TableHead>
             <TableHead>Created</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredAreas.map((area) => (
-            <TableRow key={area.id}>
+          {filteredTeams.map((team) => (
+            <TableRow key={team.id}>
               <TableCell>
                 <div className="flex items-center gap-2">
-                  {area.isPro && (
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-500/20">
-                      <DollarSign className="h-3 w-3 text-green-500" />
-                    </div>
-                  )}
-                  <span className="font-medium">{area.name}</span>
-                  {area.isPro && (
-                    <Badge variant="secondary" className="text-xs">
-                      PRO
-                    </Badge>
-                  )}
+                  <span className="font-medium">{team.name}</span>
                 </div>
               </TableCell>
+
               <TableCell>
-                <Badge variant="outline" className="text-xs">
-                  {area.visibility}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <span className="text-muted-foreground">
-                  {area.memberCount}
-                </span>
-              </TableCell>
-              <TableCell>
-                <span className="text-muted-foreground">{area.issueCount}</span>
-              </TableCell>
-              <TableCell>
-                {new Date(area.createdAt).toLocaleDateString(undefined, {
+                {new Date(team.created_at).toLocaleDateString(undefined, {
                   month: "short",
                   day: "numeric",
                 })}

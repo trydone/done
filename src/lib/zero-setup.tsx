@@ -31,6 +31,11 @@ authAtom.value =
 
 authAtom.onChange((auth) => {
   zeroAtom.value?.close();
+
+  if (typeof window === "undefined") {
+    return;
+  }
+
   const z = new Zero({
     logLevel: "info",
     server: process.env.NEXT_PUBLIC_SERVER,
@@ -44,6 +49,7 @@ authAtom.onChange((auth) => {
       return auth?.encoded;
     },
     schema,
+    kvStore: "mem",
   });
   zeroAtom.value = z;
 
@@ -52,7 +58,7 @@ authAtom.onChange((auth) => {
 
 let didPreload = false;
 
-export function preload(z: Zero<Schema>) {
+export const preload = (z: Zero<Schema>) => {
   if (didPreload) {
     return;
   }
@@ -70,23 +76,23 @@ export function preload(z: Zero<Schema>) {
       .related("creator")
       .related("assignee")
       .related("emoji", (emoji) =>
-        emoji.related("creator", (creator) => creator.one()),
+        emoji.related("creator", (creator) => creator.one())
       )
       .related("comments", (comments) =>
         comments
           .related("creator", (creator) => creator.one())
           .related("emoji", (emoji) =>
-            emoji.related("creator", (creator) => creator.one()),
+            emoji.related("creator", (creator) => creator.one())
           )
           .limit(INITIAL_COMMENT_LIMIT)
-          .orderBy("created_at", "desc"),
+          .orderBy("created_at", "desc")
       )
       .preload();
   });
 
   z.query.user.preload();
   z.query.tag.preload();
-}
+};
 
 // To enable accessing zero in the devtools easily.
 function exposeDevHooks(z: Zero<Schema>) {

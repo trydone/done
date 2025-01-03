@@ -2,6 +2,62 @@
   "permissions": {
     "workspace": {
       "row": {
+        "select": [
+          [
+            "allow",
+            {
+              "type": "correlatedSubquery",
+              "related": {
+                "system": "permissions",
+                "correlation": {
+                  "parentField": ["id"],
+                  "childField": ["workspace_id"]
+                },
+                "subquery": {
+                  "table": "workspace_member",
+                  "alias": "zsubq_sessionMembers",
+                  "orderBy": [
+                    ["workspace_id", "asc"],
+                    ["user_id", "asc"]
+                  ],
+                  "where": {
+                    "type": "correlatedSubquery",
+                    "related": {
+                      "system": "permissions",
+                      "correlation": {
+                        "parentField": ["user_id"],
+                        "childField": ["user_id"]
+                      },
+                      "subquery": {
+                        "table": "session",
+                        "alias": "zsubq_sessionMembers",
+                        "where": {
+                          "type": "simple",
+                          "left": {
+                            "type": "column",
+                            "name": "id"
+                          },
+                          "right": {
+                            "type": "static",
+                            "anchor": "authData",
+                            "field": "sub"
+                          },
+                          "op": "="
+                        },
+                        "orderBy": [
+                          ["id", "asc"],
+                          ["user_id", "asc"]
+                        ]
+                      }
+                    },
+                    "op": "EXISTS"
+                  }
+                }
+              },
+              "op": "EXISTS"
+            }
+          ]
+        ],
         "insert": [],
         "update": {
           "preMutation": []
@@ -11,6 +67,61 @@
     },
     "user": {
       "row": {
+        "select": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": null
+                  },
+                  "op": "IS NOT"
+                },
+                {
+                  "type": "correlatedSubquery",
+                  "related": {
+                    "system": "permissions",
+                    "correlation": {
+                      "parentField": ["id"],
+                      "childField": ["user_id"]
+                    },
+                    "subquery": {
+                      "table": "session",
+                      "alias": "zsubq_session",
+                      "where": {
+                        "type": "simple",
+                        "left": {
+                          "type": "column",
+                          "name": "id"
+                        },
+                        "right": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "op": "="
+                      },
+                      "orderBy": [
+                        ["id", "asc"],
+                        ["user_id", "asc"]
+                      ]
+                    }
+                  },
+                  "op": "EXISTS"
+                }
+              ]
+            }
+          ]
+        ],
         "insert": [],
         "update": {
           "preMutation": []
@@ -20,6 +131,61 @@
     },
     "task": {
       "row": {
+        "select": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": null
+                  },
+                  "op": "IS NOT"
+                },
+                {
+                  "type": "correlatedSubquery",
+                  "related": {
+                    "system": "permissions",
+                    "correlation": {
+                      "parentField": ["creator_id"],
+                      "childField": ["user_id"]
+                    },
+                    "subquery": {
+                      "table": "session",
+                      "alias": "zsubq_session",
+                      "where": {
+                        "type": "simple",
+                        "left": {
+                          "type": "column",
+                          "name": "id"
+                        },
+                        "right": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "op": "="
+                      },
+                      "orderBy": [
+                        ["id", "asc"],
+                        ["user_id", "asc"]
+                      ]
+                    }
+                  },
+                  "op": "EXISTS"
+                }
+              ]
+            }
+          ]
+        ],
         "insert": [
           [
             "allow",
@@ -348,12 +514,8 @@
                   "related": {
                     "system": "permissions",
                     "correlation": {
-                      "parentField": [
-                        "task_id"
-                      ],
-                      "childField": [
-                        "id"
-                      ]
+                      "parentField": ["task_id"],
+                      "childField": ["id"]
                     },
                     "subquery": {
                       "table": "task",
@@ -371,12 +533,7 @@
                         },
                         "op": "IS NOT"
                       },
-                      "orderBy": [
-                        [
-                          "id",
-                          "asc"
-                        ]
-                      ]
+                      "orderBy": [["id", "asc"]]
                     }
                   },
                   "op": "EXISTS"
@@ -462,12 +619,8 @@
                     "related": {
                       "system": "permissions",
                       "correlation": {
-                        "parentField": [
-                          "task_id"
-                        ],
-                        "childField": [
-                          "id"
-                        ]
+                        "parentField": ["task_id"],
+                        "childField": ["id"]
                       },
                       "subquery": {
                         "table": "task",
@@ -485,12 +638,7 @@
                           },
                           "op": "IS NOT"
                         },
-                        "orderBy": [
-                          [
-                            "id",
-                            "asc"
-                          ]
-                        ]
+                        "orderBy": [["id", "asc"]]
                       }
                     },
                     "op": "EXISTS"
@@ -545,12 +693,8 @@
                   "related": {
                     "system": "permissions",
                     "correlation": {
-                      "parentField": [
-                        "task_id"
-                      ],
-                      "childField": [
-                        "id"
-                      ]
+                      "parentField": ["task_id"],
+                      "childField": ["id"]
                     },
                     "subquery": {
                       "table": "task",
@@ -568,12 +712,7 @@
                         },
                         "op": "IS NOT"
                       },
-                      "orderBy": [
-                        [
-                          "id",
-                          "asc"
-                        ]
-                      ]
+                      "orderBy": [["id", "asc"]]
                     }
                   },
                   "op": "EXISTS"
@@ -803,12 +942,8 @@
                   "related": {
                     "system": "permissions",
                     "correlation": {
-                      "parentField": [
-                        "task_id"
-                      ],
-                      "childField": [
-                        "id"
-                      ]
+                      "parentField": ["task_id"],
+                      "childField": ["id"]
                     },
                     "subquery": {
                       "table": "task",
@@ -826,12 +961,7 @@
                         },
                         "op": "IS NOT"
                       },
-                      "orderBy": [
-                        [
-                          "id",
-                          "asc"
-                        ]
-                      ]
+                      "orderBy": [["id", "asc"]]
                     }
                   },
                   "op": "EXISTS"
@@ -875,12 +1005,8 @@
                       "related": {
                         "system": "permissions",
                         "correlation": {
-                          "parentField": [
-                            "task_id"
-                          ],
-                          "childField": [
-                            "id"
-                          ]
+                          "parentField": ["task_id"],
+                          "childField": ["id"]
                         },
                         "subquery": {
                           "table": "task",
@@ -916,12 +1042,7 @@
                               }
                             ]
                           },
-                          "orderBy": [
-                            [
-                              "id",
-                              "asc"
-                            ]
-                          ]
+                          "orderBy": [["id", "asc"]]
                         }
                       },
                       "op": "EXISTS"
@@ -946,12 +1067,8 @@
                   "related": {
                     "system": "permissions",
                     "correlation": {
-                      "parentField": [
-                        "task_id"
-                      ],
-                      "childField": [
-                        "id"
-                      ]
+                      "parentField": ["task_id"],
+                      "childField": ["id"]
                     },
                     "subquery": {
                       "table": "task",
@@ -969,12 +1086,7 @@
                         },
                         "op": "IS NOT"
                       },
-                      "orderBy": [
-                        [
-                          "id",
-                          "asc"
-                        ]
-                      ]
+                      "orderBy": [["id", "asc"]]
                     }
                   },
                   "op": "EXISTS"
@@ -1018,12 +1130,8 @@
                       "related": {
                         "system": "permissions",
                         "correlation": {
-                          "parentField": [
-                            "task_id"
-                          ],
-                          "childField": [
-                            "id"
-                          ]
+                          "parentField": ["task_id"],
+                          "childField": ["id"]
                         },
                         "subquery": {
                           "table": "task",
@@ -1059,12 +1167,7 @@
                               }
                             ]
                           },
-                          "orderBy": [
-                            [
-                              "id",
-                              "asc"
-                            ]
-                          ]
+                          "orderBy": [["id", "asc"]]
                         }
                       },
                       "op": "EXISTS"
@@ -1093,12 +1196,8 @@
                       "related": {
                         "system": "permissions",
                         "correlation": {
-                          "parentField": [
-                            "subject_id"
-                          ],
-                          "childField": [
-                            "id"
-                          ]
+                          "parentField": ["subject_id"],
+                          "childField": ["id"]
                         },
                         "subquery": {
                           "table": "task",
@@ -1116,12 +1215,7 @@
                             },
                             "op": "IS NOT"
                           },
-                          "orderBy": [
-                            [
-                              "id",
-                              "asc"
-                            ]
-                          ]
+                          "orderBy": [["id", "asc"]]
                         }
                       },
                       "op": "EXISTS"
@@ -1131,12 +1225,8 @@
                       "related": {
                         "system": "permissions",
                         "correlation": {
-                          "parentField": [
-                            "subject_id"
-                          ],
-                          "childField": [
-                            "id"
-                          ]
+                          "parentField": ["subject_id"],
+                          "childField": ["id"]
                         },
                         "subquery": {
                           "table": "task_comment",
@@ -1146,12 +1236,8 @@
                             "related": {
                               "system": "permissions",
                               "correlation": {
-                                "parentField": [
-                                  "task_id"
-                                ],
-                                "childField": [
-                                  "id"
-                                ]
+                                "parentField": ["task_id"],
+                                "childField": ["id"]
                               },
                               "subquery": {
                                 "table": "task",
@@ -1169,22 +1255,12 @@
                                   },
                                   "op": "IS NOT"
                                 },
-                                "orderBy": [
-                                  [
-                                    "id",
-                                    "asc"
-                                  ]
-                                ]
+                                "orderBy": [["id", "asc"]]
                               }
                             },
                             "op": "EXISTS"
                           },
-                          "orderBy": [
-                            [
-                              "id",
-                              "asc"
-                            ]
-                          ]
+                          "orderBy": [["id", "asc"]]
                         }
                       },
                       "op": "EXISTS"
@@ -1241,12 +1317,8 @@
                         "related": {
                           "system": "permissions",
                           "correlation": {
-                            "parentField": [
-                              "subject_id"
-                            ],
-                            "childField": [
-                              "id"
-                            ]
+                            "parentField": ["subject_id"],
+                            "childField": ["id"]
                           },
                           "subquery": {
                             "table": "task",
@@ -1264,12 +1336,7 @@
                               },
                               "op": "IS NOT"
                             },
-                            "orderBy": [
-                              [
-                                "id",
-                                "asc"
-                              ]
-                            ]
+                            "orderBy": [["id", "asc"]]
                           }
                         },
                         "op": "EXISTS"
@@ -1279,12 +1346,8 @@
                         "related": {
                           "system": "permissions",
                           "correlation": {
-                            "parentField": [
-                              "subject_id"
-                            ],
-                            "childField": [
-                              "id"
-                            ]
+                            "parentField": ["subject_id"],
+                            "childField": ["id"]
                           },
                           "subquery": {
                             "table": "task_comment",
@@ -1294,12 +1357,8 @@
                               "related": {
                                 "system": "permissions",
                                 "correlation": {
-                                  "parentField": [
-                                    "task_id"
-                                  ],
-                                  "childField": [
-                                    "id"
-                                  ]
+                                  "parentField": ["task_id"],
+                                  "childField": ["id"]
                                 },
                                 "subquery": {
                                   "table": "task",
@@ -1317,22 +1376,12 @@
                                     },
                                     "op": "IS NOT"
                                   },
-                                  "orderBy": [
-                                    [
-                                      "id",
-                                      "asc"
-                                    ]
-                                  ]
+                                  "orderBy": [["id", "asc"]]
                                 }
                               },
                               "op": "EXISTS"
                             },
-                            "orderBy": [
-                              [
-                                "id",
-                                "asc"
-                              ]
-                            ]
+                            "orderBy": [["id", "asc"]]
                           }
                         },
                         "op": "EXISTS"
@@ -1388,12 +1437,8 @@
                         "related": {
                           "system": "permissions",
                           "correlation": {
-                            "parentField": [
-                              "subject_id"
-                            ],
-                            "childField": [
-                              "id"
-                            ]
+                            "parentField": ["subject_id"],
+                            "childField": ["id"]
                           },
                           "subquery": {
                             "table": "task",
@@ -1411,12 +1456,7 @@
                               },
                               "op": "IS NOT"
                             },
-                            "orderBy": [
-                              [
-                                "id",
-                                "asc"
-                              ]
-                            ]
+                            "orderBy": [["id", "asc"]]
                           }
                         },
                         "op": "EXISTS"
@@ -1426,12 +1466,8 @@
                         "related": {
                           "system": "permissions",
                           "correlation": {
-                            "parentField": [
-                              "subject_id"
-                            ],
-                            "childField": [
-                              "id"
-                            ]
+                            "parentField": ["subject_id"],
+                            "childField": ["id"]
                           },
                           "subquery": {
                             "table": "task_comment",
@@ -1441,12 +1477,8 @@
                               "related": {
                                 "system": "permissions",
                                 "correlation": {
-                                  "parentField": [
-                                    "task_id"
-                                  ],
-                                  "childField": [
-                                    "id"
-                                  ]
+                                  "parentField": ["task_id"],
+                                  "childField": ["id"]
                                 },
                                 "subquery": {
                                   "table": "task",
@@ -1464,22 +1496,12 @@
                                     },
                                     "op": "IS NOT"
                                   },
-                                  "orderBy": [
-                                    [
-                                      "id",
-                                      "asc"
-                                    ]
-                                  ]
+                                  "orderBy": [["id", "asc"]]
                                 }
                               },
                               "op": "EXISTS"
                             },
-                            "orderBy": [
-                              [
-                                "id",
-                                "asc"
-                              ]
-                            ]
+                            "orderBy": [["id", "asc"]]
                           }
                         },
                         "op": "EXISTS"
@@ -1536,12 +1558,8 @@
                       "related": {
                         "system": "permissions",
                         "correlation": {
-                          "parentField": [
-                            "subject_id"
-                          ],
-                          "childField": [
-                            "id"
-                          ]
+                          "parentField": ["subject_id"],
+                          "childField": ["id"]
                         },
                         "subquery": {
                           "table": "task",
@@ -1559,12 +1577,7 @@
                             },
                             "op": "IS NOT"
                           },
-                          "orderBy": [
-                            [
-                              "id",
-                              "asc"
-                            ]
-                          ]
+                          "orderBy": [["id", "asc"]]
                         }
                       },
                       "op": "EXISTS"
@@ -1574,12 +1587,8 @@
                       "related": {
                         "system": "permissions",
                         "correlation": {
-                          "parentField": [
-                            "subject_id"
-                          ],
-                          "childField": [
-                            "id"
-                          ]
+                          "parentField": ["subject_id"],
+                          "childField": ["id"]
                         },
                         "subquery": {
                           "table": "task_comment",
@@ -1589,12 +1598,8 @@
                             "related": {
                               "system": "permissions",
                               "correlation": {
-                                "parentField": [
-                                  "task_id"
-                                ],
-                                "childField": [
-                                  "id"
-                                ]
+                                "parentField": ["task_id"],
+                                "childField": ["id"]
                               },
                               "subquery": {
                                 "table": "task",
@@ -1612,22 +1617,12 @@
                                   },
                                   "op": "IS NOT"
                                 },
-                                "orderBy": [
-                                  [
-                                    "id",
-                                    "asc"
-                                  ]
-                                ]
+                                "orderBy": [["id", "asc"]]
                               }
                             },
                             "op": "EXISTS"
                           },
-                          "orderBy": [
-                            [
-                              "id",
-                              "asc"
-                            ]
-                          ]
+                          "orderBy": [["id", "asc"]]
                         }
                       },
                       "op": "EXISTS"
@@ -1664,6 +1659,83 @@
                       "op": "="
                     }
                   ]
+                }
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "session": {
+      "row": {
+        "select": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": null
+                  },
+                  "op": "IS NOT"
+                },
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "column",
+                    "name": "id"
+                  },
+                  "right": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "op": "="
+                }
+              ]
+            }
+          ]
+        ],
+        "update": {},
+        "delete": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": null
+                  },
+                  "op": "IS NOT"
+                },
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "column",
+                    "name": "id"
+                  },
+                  "right": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "op": "="
                 }
               ]
             }
@@ -1755,9 +1827,7 @@
     "tables": {
       "emoji": {
         "tableName": "emoji",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "columns": {
           "annotation": {
             "type": "string",
@@ -1790,39 +1860,25 @@
         },
         "relationships": {
           "creator": {
-            "sourceField": [
-              "creator_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["creator_id"],
+            "destField": ["id"],
             "destSchema": "user"
           },
           "task": {
-            "sourceField": [
-              "subject_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["subject_id"],
+            "destField": ["id"],
             "destSchema": "task"
           },
           "task_comment": {
-            "sourceField": [
-              "subject_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["subject_id"],
+            "destField": ["id"],
             "destSchema": "task_comment"
           }
         }
       },
       "enterprise": {
         "tableName": "enterprise",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "columns": {
           "created_at": {
             "type": "number",
@@ -1849,9 +1905,7 @@
       },
       "project": {
         "tableName": "project",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "columns": {
           "created_at": {
             "type": "number",
@@ -1892,30 +1946,43 @@
         },
         "relationships": {
           "team": {
-            "sourceField": [
-              "team_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["team_id"],
+            "destField": ["id"],
             "destSchema": "team"
           },
           "workspace": {
-            "sourceField": [
-              "workspace_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["workspace_id"],
+            "destField": ["id"],
             "destSchema": "workspace"
           }
         }
       },
+      "session": {
+        "tableName": "session",
+        "primaryKey": ["id", "user_id"],
+        "columns": {
+          "created_at": {
+            "type": "number",
+            "optional": false
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "updated_at": {
+            "type": "number",
+            "optional": false
+          },
+          "user_id": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {}
+      },
       "tag": {
         "tableName": "tag",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "columns": {
           "id": {
             "type": "string",
@@ -1930,9 +1997,7 @@
       },
       "task": {
         "tableName": "task",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "columns": {
           "archived_at": {
             "type": "number",
@@ -2033,99 +2098,75 @@
           "updated_at": {
             "type": "number",
             "optional": false
+          },
+          "workspace_id": {
+            "type": "string",
+            "optional": false
           }
         },
         "relationships": {
           "assignee": {
-            "sourceField": [
-              "assignee_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["assignee_id"],
+            "destField": ["id"],
             "destSchema": "user"
           },
           "comments": {
-            "sourceField": [
-              "id"
-            ],
-            "destField": [
-              "task_id"
-            ],
+            "sourceField": ["id"],
+            "destField": ["task_id"],
             "destSchema": "task_comment"
           },
           "creator": {
-            "sourceField": [
-              "creator_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["creator_id"],
+            "destField": ["id"],
             "destSchema": "user"
           },
           "emoji": {
-            "sourceField": [
-              "id"
-            ],
-            "destField": [
-              "subject_id"
-            ],
+            "sourceField": ["id"],
+            "destField": ["subject_id"],
             "destSchema": "emoji"
           },
           "project": {
-            "sourceField": [
-              "project_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["project_id"],
+            "destField": ["id"],
             "destSchema": "project"
+          },
+          "session": {
+            "sourceField": ["creator_id"],
+            "destField": ["user_id"],
+            "destSchema": "session"
           },
           "tags": [
             {
-              "sourceField": [
-                "id"
-              ],
-              "destField": [
-                "task_id"
-              ],
+              "sourceField": ["id"],
+              "destField": ["task_id"],
               "destSchema": "task_tag"
             },
             {
-              "sourceField": [
-                "tag_id"
-              ],
-              "destField": [
-                "id"
-              ],
+              "sourceField": ["tag_id"],
+              "destField": ["id"],
               "destSchema": "tag"
             }
           ],
           "team": {
-            "sourceField": [
-              "team_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["team_id"],
+            "destField": ["id"],
             "destSchema": "team"
           },
           "view_state": {
-            "sourceField": [
-              "id"
-            ],
-            "destField": [
-              "task_id"
-            ],
+            "sourceField": ["id"],
+            "destField": ["task_id"],
             "destSchema": "view_state"
+          },
+          "workspace": {
+            "sourceField": ["workspace_id"],
+            "destField": ["id"],
+            "destSchema": "workspace"
           }
         }
       },
       "task_comment": {
         "tableName": "task_comment",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "columns": {
           "body": {
             "type": "string",
@@ -2150,40 +2191,25 @@
         },
         "relationships": {
           "creator": {
-            "sourceField": [
-              "creator_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["creator_id"],
+            "destField": ["id"],
             "destSchema": "user"
           },
           "emoji": {
-            "sourceField": [
-              "id"
-            ],
-            "destField": [
-              "subject_id"
-            ],
+            "sourceField": ["id"],
+            "destField": ["subject_id"],
             "destSchema": "emoji"
           },
           "task": {
-            "sourceField": [
-              "task_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["task_id"],
+            "destField": ["id"],
             "destSchema": "task"
           }
         }
       },
       "task_tag": {
         "tableName": "task_tag",
-        "primaryKey": [
-          "task_id",
-          "tag_id"
-        ],
+        "primaryKey": ["task_id", "tag_id"],
         "columns": {
           "tag_id": {
             "type": "string",
@@ -2196,21 +2222,15 @@
         },
         "relationships": {
           "task": {
-            "sourceField": [
-              "task_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["task_id"],
+            "destField": ["id"],
             "destSchema": "task"
           }
         }
       },
       "team": {
         "tableName": "team",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "columns": {
           "created_at": {
             "type": "number",
@@ -2239,22 +2259,15 @@
         },
         "relationships": {
           "workspace": {
-            "sourceField": [
-              "workspace_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["workspace_id"],
+            "destField": ["id"],
             "destSchema": "workspace"
           }
         }
       },
       "team_member": {
         "tableName": "team_member",
-        "primaryKey": [
-          "team_id",
-          "user_id"
-        ],
+        "primaryKey": ["team_id", "user_id"],
         "columns": {
           "created_at": {
             "type": "number",
@@ -2283,30 +2296,20 @@
         },
         "relationships": {
           "team": {
-            "sourceField": [
-              "team_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["team_id"],
+            "destField": ["id"],
             "destSchema": "team"
           },
           "user": {
-            "sourceField": [
-              "user_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["user_id"],
+            "destField": ["id"],
             "destSchema": "user"
           }
         }
       },
       "user": {
         "tableName": "user",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "columns": {
           "avatar": {
             "type": "string",
@@ -2316,7 +2319,7 @@
             "type": "number",
             "optional": false
           },
-          "githubID": {
+          "github_id": {
             "type": "number",
             "optional": false
           },
@@ -2324,7 +2327,7 @@
             "type": "string",
             "optional": false
           },
-          "login": {
+          "username": {
             "type": "string",
             "optional": false
           },
@@ -2341,14 +2344,34 @@
             "optional": false
           }
         },
-        "relationships": {}
+        "relationships": {
+          "session": {
+            "sourceField": ["id"],
+            "destField": ["user_id"],
+            "destSchema": "session"
+          },
+          "workspaceMembers": {
+            "sourceField": ["id"],
+            "destField": ["user_id"],
+            "destSchema": "workspace_member"
+          },
+          "workspaces": [
+            {
+              "sourceField": ["id"],
+              "destField": ["user_id"],
+              "destSchema": "workspace_member"
+            },
+            {
+              "sourceField": ["workspace_id"],
+              "destField": ["id"],
+              "destSchema": "workspace"
+            }
+          ]
+        }
       },
       "user_pref": {
         "tableName": "user_pref",
-        "primaryKey": [
-          "user_id",
-          "key"
-        ],
+        "primaryKey": ["user_id", "key"],
         "columns": {
           "key": {
             "type": "string",
@@ -2367,10 +2390,7 @@
       },
       "view_state": {
         "tableName": "view_state",
-        "primaryKey": [
-          "user_id",
-          "task_id"
-        ],
+        "primaryKey": ["user_id", "task_id"],
         "columns": {
           "task_id": {
             "type": "string",
@@ -2389,17 +2409,11 @@
       },
       "workspace": {
         "tableName": "workspace",
-        "primaryKey": [
-          "id"
-        ],
+        "primaryKey": ["id"],
         "columns": {
           "created_at": {
             "type": "number",
             "optional": false
-          },
-          "enterprise_id": {
-            "type": "string",
-            "optional": true
           },
           "id": {
             "type": "string",
@@ -2419,23 +2433,23 @@
           }
         },
         "relationships": {
-          "enterprise": {
-            "sourceField": [
-              "enterprise_id"
-            ],
-            "destField": [
-              "id"
-            ],
-            "destSchema": "enterprise"
-          }
+          "sessionMembers": [
+            {
+              "sourceField": ["id"],
+              "destField": ["workspace_id"],
+              "destSchema": "workspace_member"
+            },
+            {
+              "sourceField": ["user_id"],
+              "destField": ["user_id"],
+              "destSchema": "session"
+            }
+          ]
         }
       },
       "workspace_member": {
         "tableName": "workspace_member",
-        "primaryKey": [
-          "workspace_id",
-          "user_id"
-        ],
+        "primaryKey": ["workspace_id", "user_id"],
         "columns": {
           "created_at": {
             "type": "number",
@@ -2463,22 +2477,19 @@
           }
         },
         "relationships": {
+          "session": {
+            "sourceField": ["user_id"],
+            "destField": ["user_id"],
+            "destSchema": "session"
+          },
           "user": {
-            "sourceField": [
-              "user_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["user_id"],
+            "destField": ["id"],
             "destSchema": "user"
           },
           "workspace": {
-            "sourceField": [
-              "workspace_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["workspace_id"],
+            "destField": ["id"],
             "destSchema": "workspace"
           }
         }

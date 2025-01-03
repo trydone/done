@@ -7,7 +7,8 @@ import {
   createTableSchema,
   definePermissions,
 } from "@rocicorp/zero";
-import type { Condition } from "node_modules/@rocicorp/zero/out/zero-protocol/src/ast";
+// @ts-expect-error - no direct import available
+import type { Condition } from "@rocicorp/zero/out/zero-protocol/src/ast";
 
 export const enterpriseSchema = createTableSchema({
   tableName: "enterprise",
@@ -21,7 +22,7 @@ export const enterpriseSchema = createTableSchema({
   primaryKey: "id",
 });
 
-export const workspaceSchema = createTableSchema({
+export const workspaceSchema = {
   tableName: "workspace",
   columns: {
     id: "string",
@@ -29,17 +30,23 @@ export const workspaceSchema = createTableSchema({
     slug: "string",
     created_at: "number",
     updated_at: "number",
-    enterprise_id: { type: "string", optional: true },
   },
-  primaryKey: "id",
+  primaryKey: ["id"],
   relationships: {
-    enterprise: {
-      sourceField: "enterprise_id",
-      destField: "id",
-      destSchema: () => enterpriseSchema,
-    },
+    sessionMembers: [
+      {
+        sourceField: "id",
+        destField: "workspace_id",
+        destSchema: () => workspaceMemberSchema,
+      },
+      {
+        sourceField: "user_id",
+        destField: "user_id",
+        destSchema: () => sessionSchema,
+      },
+    ],
   },
-});
+} as const;
 
 export const teamSchema = createTableSchema({
   tableName: "team",
@@ -61,10 +68,10 @@ export const teamSchema = createTableSchema({
   },
 });
 
-export const workspaceMemberSchema = createTableSchema({
+export const workspaceMemberSchema = {
   tableName: "workspace_member",
   columns: {
-    id: "string",
+    id: { type: "string" },
     workspace_id: "string",
     user_id: "string",
     role: "string",
@@ -78,13 +85,18 @@ export const workspaceMemberSchema = createTableSchema({
       destField: "id",
       destSchema: () => workspaceSchema,
     },
+    session: {
+      sourceField: "user_id",
+      destField: "user_id",
+      destSchema: () => sessionSchema,
+    },
     user: {
       sourceField: "user_id",
       destField: "id",
       destSchema: () => userSchema,
     },
   },
-});
+} as const;
 
 export const teamMemberSchema = createTableSchema({
   tableName: "team_member",
@@ -139,20 +151,45 @@ export const projectSchema = createTableSchema({
   },
 });
 
-export const userSchema = createTableSchema({
+export const userSchema = {
   tableName: "user",
   columns: {
     id: "string",
-    login: "string",
+    username: "string",
+    email: { type: "string", optional: true },
     name: { type: "string", optional: true },
     avatar: { type: "string", optional: true },
     role: "string",
-    githubID: "number",
+    github_id: "number",
     created_at: "number",
     updated_at: "number",
   },
   primaryKey: "id",
-});
+  relationships: {
+    session: {
+      sourceField: "id",
+      destField: "user_id",
+      destSchema: () => sessionSchema,
+    },
+    workspaceMembers: {
+      sourceField: "id",
+      destField: "user_id",
+      destSchema: () => workspaceMemberSchema,
+    },
+    workspaces: [
+      {
+        sourceField: "id",
+        destField: "user_id",
+        destSchema: () => workspaceMemberSchema,
+      },
+      {
+        sourceField: "workspace_id",
+        destField: "id",
+        destSchema: () => workspaceSchema,
+      },
+    ],
+  },
+} as const;
 
 export const taskSchema = {
   tableName: "task",
@@ -161,6 +198,8 @@ export const taskSchema = {
     short_id: { type: "number", optional: true },
     title: "string",
     description: "string",
+
+    workspace_id: "string",
 
     // Organization & sorting
     sort_order: { type: "number", optional: true },
@@ -198,6 +237,16 @@ export const taskSchema = {
   },
   primaryKey: "id",
   relationships: {
+    session: {
+      sourceField: "creator_id",
+      destSchema: () => sessionSchema,
+      destField: "user_id",
+    },
+    workspace: {
+      sourceField: "workspace_id",
+      destField: "id",
+      destSchema: () => workspaceSchema,
+    },
     tags: [
       {
         sourceField: "id",
@@ -287,6 +336,33 @@ export const taskCommentSchema = {
   },
 } as const;
 
+export const checklistItemSchema = {
+  tableName: "checklist_item",
+  columns: {
+    id: "string",
+    task_id: "string",
+    title: "string",
+    sort_order: "number",
+    completed_at: { type: "number", optional: true },
+    created_at: "number",
+    updated_at: "number",
+    creator_id: "string",
+  },
+  primaryKey: "id",
+  relationships: {
+    task: {
+      sourceField: "task_id",
+      destField: "id",
+      destSchema: () => taskSchema,
+    },
+    creator: {
+      sourceField: "creator_id",
+      destField: "id",
+      destSchema: () => userSchema,
+    },
+  },
+} as const;
+
 export const tagSchema = createTableSchema({
   tableName: "tag",
   columns: {
@@ -343,6 +419,17 @@ export const emojiSchema = {
   },
 } as const;
 
+export const sessionSchema = createTableSchema({
+  tableName: "session",
+  columns: {
+    id: "string",
+    user_id: "string",
+    created_at: "number",
+    updated_at: "number",
+  },
+  primaryKey: ["id", "user_id"],
+});
+
 export const userPrefSchema = createTableSchema({
   tableName: "user_pref",
   columns: {
@@ -390,13 +477,14 @@ export const schema = createSchema({
     task_tag: taskTagSchema,
     view_state: viewStateSchema,
     emoji: emojiSchema,
+    session: sessionSchema,
     user_pref: userPrefSchema,
   },
 });
 
 type PermissionRule<TSchema extends TableSchema> = (
   authData: AuthData,
-  eb: ExpressionBuilder<TSchema>
+  eb: ExpressionBuilder<TSchema>,
 ) => Condition;
 
 function and<TSchema extends TableSchema>(
@@ -409,48 +497,82 @@ export const permissions: ReturnType<typeof definePermissions> =
   definePermissions<AuthData, Schema>(schema, () => {
     const userIsLoggedIn = (
       authData: AuthData,
-      { cmpLit }: ExpressionBuilder<TableSchema>
+      { cmpLit }: ExpressionBuilder<TableSchema>,
     ) => cmpLit(authData.sub, "IS NOT", null);
 
     const loggedInUserIsCreator = (
       authData: AuthData,
       eb: ExpressionBuilder<
         typeof taskCommentSchema | typeof emojiSchema | typeof taskSchema
-      >
+      >,
     ) =>
       eb.and(
         userIsLoggedIn(authData, eb),
-        eb.cmp("creator_id", "=", authData.sub)
+        eb.cmp("creator_id", "=", authData.sub),
       );
+
+    const allowYourSession = (
+      authData: AuthData,
+      eb: ExpressionBuilder<typeof sessionSchema>,
+    ) => eb.and(userIsLoggedIn(authData, eb), eb.cmp("id", "=", authData.sub));
 
     const loggedInUserIsAdmin = (
       authData: AuthData,
-      eb: ExpressionBuilder<TableSchema>
+      eb: ExpressionBuilder<TableSchema>,
     ) =>
       eb.and(
         userIsLoggedIn(authData, eb),
-        eb.cmpLit(authData.role, "=", "admin")
+        eb.cmpLit(authData.role, "=", "admin"),
       );
 
     const allowIfUserIDMatchesLoggedInUser = (
       authData: AuthData,
-      { cmp }: ExpressionBuilder<typeof viewStateSchema | typeof userPrefSchema>
+      {
+        cmp,
+      }: ExpressionBuilder<typeof viewStateSchema | typeof userPrefSchema>,
     ) => cmp("user_id", "=", authData.sub);
 
     const allowIfAdminOrTaskCreator = (
       authData: AuthData,
-      eb: ExpressionBuilder<typeof taskTagSchema>
+      eb: ExpressionBuilder<typeof taskTagSchema>,
     ) =>
       eb.or(
         loggedInUserIsAdmin(authData, eb),
         eb.exists("task", (iq) =>
-          iq.where((eb) => loggedInUserIsCreator(authData, eb))
-        )
+          iq.where((eb) => loggedInUserIsCreator(authData, eb)),
+        ),
+      );
+
+    const allowTask = (
+      authData: AuthData,
+      eb: ExpressionBuilder<typeof taskSchema>,
+    ) =>
+      eb.and(
+        userIsLoggedIn(authData, eb),
+        eb.exists("session", (session) =>
+          session.where("id", "=", authData.sub),
+        ),
+      );
+
+    const allowWorkspace = (
+      authData: AuthData,
+      eb: ExpressionBuilder<typeof workspaceSchema>,
+    ) => eb.exists("sessionMembers", (q) => q.where("id", "=", authData.sub));
+
+    const allowUser = (
+      authData: AuthData,
+      eb: ExpressionBuilder<typeof userSchema>,
+    ) =>
+      eb.and(
+        userIsLoggedIn(authData, eb),
+        eb.exists("session", (session) =>
+          session.where("id", "=", authData.sub),
+        ),
       );
 
     const canSeeTask = (
       authData: AuthData,
-      eb: ExpressionBuilder<typeof taskSchema>
+      eb: ExpressionBuilder<typeof taskSchema>,
     ) => userIsLoggedIn(authData, eb);
 
     /**
@@ -458,7 +580,7 @@ export const permissions: ReturnType<typeof definePermissions> =
      */
     const canSeeComment = (
       authData: AuthData,
-      eb: ExpressionBuilder<typeof taskCommentSchema>
+      eb: ExpressionBuilder<typeof taskCommentSchema>,
     ) => eb.exists("task", (q) => q.where((eb) => canSeeTask(authData, eb)));
 
     /**
@@ -466,7 +588,7 @@ export const permissions: ReturnType<typeof definePermissions> =
      */
     const canSeeTaskTag = (
       authData: AuthData,
-      eb: ExpressionBuilder<typeof taskTagSchema>
+      eb: ExpressionBuilder<typeof taskTagSchema>,
     ) => eb.exists("task", (q) => q.where((eb) => canSeeTask(authData, eb)));
 
     /**
@@ -474,7 +596,7 @@ export const permissions: ReturnType<typeof definePermissions> =
      */
     const canSeeEmoji = (
       authData: AuthData,
-      { exists, or }: ExpressionBuilder<typeof emojiSchema>
+      { exists, or }: ExpressionBuilder<typeof emojiSchema>,
     ) =>
       or(
         exists("task", (q) => {
@@ -482,7 +604,7 @@ export const permissions: ReturnType<typeof definePermissions> =
         }),
         exists("task_comment", (q) => {
           return q.where((eb) => canSeeComment(authData, eb));
-        })
+        }),
       );
 
     return {
@@ -494,16 +616,17 @@ export const permissions: ReturnType<typeof definePermissions> =
             preMutation: NOBODY_CAN,
           },
           delete: NOBODY_CAN,
+          select: [allowWorkspace],
         },
       },
       user: {
-        // Only the authentication system can write to the user table.
         row: {
           insert: NOBODY_CAN,
           update: {
             preMutation: NOBODY_CAN,
           },
           delete: NOBODY_CAN,
+          select: [allowUser],
         },
       },
       task: {
@@ -518,7 +641,7 @@ export const permissions: ReturnType<typeof definePermissions> =
             postMutation: [loggedInUserIsCreator, loggedInUserIsAdmin],
           },
           delete: [loggedInUserIsCreator, loggedInUserIsAdmin],
-          // select: [canSeeTask],
+          select: [allowTask],
         },
       },
       task_comment: {
@@ -578,6 +701,12 @@ export const permissions: ReturnType<typeof definePermissions> =
             postMutation: [and(canSeeEmoji, loggedInUserIsCreator)],
           },
           delete: [and(canSeeEmoji, loggedInUserIsCreator)],
+        },
+      },
+      session: {
+        row: {
+          delete: [allowYourSession],
+          select: [allowYourSession],
         },
       },
       user_pref: {

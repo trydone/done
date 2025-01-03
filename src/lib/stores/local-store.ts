@@ -4,167 +4,179 @@ import { isHydrated, makePersistable } from "mobx-persist-store";
 import type { RootStore } from "./root-store";
 
 export class LocalStore {
-	rootStore: RootStore;
+  rootStore: RootStore;
 
-	// Selection and View States
-	selectedTaskId: string | null = null;
-	isDetailViewOpen = false;
-	sidebarCollapsed = false;
+  selectedUserId?: string;
+  selectedWorkspaceId?: string;
 
-	// Search State
-	quickSearchQuery = "";
-	quickSearchActive = false;
+  // Selection and View States
+  selectedTaskIds: string[] = [];
+  openTaskId: string | null = null;
+  sidebarCollapsed = false;
 
-	// UI Interaction States
-	draggedTaskId: string | null = null;
-	contextMenuPosition: { x: number; y: number } | null = null;
-	completionAnimationTasks: Set<string> = new Set();
-	checklistExpanded: Record<string, boolean> = {};
+  // Search State
+  quickSearchQuery = "";
+  quickSearchActive = false;
 
-	// Button States
-	buttonStates = {
-		newTask: true,
-		move: false,
-		quickSearch: true,
-		delete: false,
-		repeat: false,
-		duplicate: false,
-		convertToProject: false,
-		share: false,
-	};
+  // UI Interaction States
+  draggedTaskId: string | null = null;
+  contextMenuPosition: { x: number; y: number } | null = null;
+  completionAnimationTasks: Set<string> = new Set();
+  checklistExpanded: Record<string, boolean> = {};
 
-	// User Preferences
-	userPreferences = {
-		showCompletedTasks: false,
-		showChecklistProgress: true,
-		sortOrder: "manual" as "manual" | "deadline" | "title",
-	};
+  // Button States
+  buttonStates = {
+    newTask: true,
+    move: false,
+    quickSearch: true,
+    delete: false,
+    repeat: false,
+    duplicate: false,
+    convertToProject: false,
+    share: false,
+  };
 
-	constructor(rootStore: RootStore) {
-		makeAutoObservable(this, undefined, { autoBind: true });
-		makePersistable(this, {
-			name: "things-local-store",
-			properties: ["sidebarCollapsed", "userPreferences", "checklistExpanded"],
-			storage: typeof window !== "undefined" ? window.localStorage : undefined,
-		});
-		this.rootStore = rootStore;
-	}
+  // User Preferences
+  userPreferences = {
+    showCompletedTasks: false,
+    showChecklistProgress: true,
+    sortOrder: "manual" as "manual" | "deadline" | "title",
+  };
 
-	// Selection Actions
-	setSelectedTaskId(taskId: string | null) {
-		this.selectedTaskId = taskId;
-		if (taskId) {
-			this.updateButtonStates({
-				move: true,
-				delete: true,
-				repeat: true,
-				duplicate: true,
-				convertToProject: true,
-				share: true,
-			});
-		} else {
-			this.updateButtonStates({
-				move: false,
-				delete: false,
-				repeat: false,
-				duplicate: false,
-				convertToProject: false,
-				share: false,
-			});
-		}
-	}
+  constructor(rootStore: RootStore) {
+    makeAutoObservable(this, undefined, { autoBind: true });
+    makePersistable(this, {
+      name: "things-local-store",
+      properties: ["sidebarCollapsed", "userPreferences", "checklistExpanded"],
+      storage: typeof window !== "undefined" ? window.localStorage : undefined,
+    });
+    this.rootStore = rootStore;
+  }
 
-	// View Actions
-	setDetailViewOpen(isOpen: boolean) {
-		this.isDetailViewOpen = isOpen;
-		this.updateButtonStates({
-			newTask: !isOpen,
-			quickSearch: !isOpen,
-		});
-	}
+  clearWorkspace() {
+    this.selectedUserId = undefined;
+    this.selectedWorkspaceId = undefined;
+  }
 
-	setSidebarCollapsed(collapsed: boolean) {
-		this.sidebarCollapsed = collapsed;
-	}
+  changeWorkspace(params: { userId: string; workspaceId: string }) {
+    this.selectedUserId = params.userId;
+    this.selectedWorkspaceId = params.workspaceId;
+  }
 
-	// Search Actions
-	setQuickSearchQuery(query: string) {
-		this.quickSearchQuery = query;
-		this.quickSearchActive = query.length > 0;
-	}
+  // Selection Actions
+  setSelectedTaskIds(taskIds: string[]) {
+    this.selectedTaskIds = taskIds;
+    if (taskIds) {
+      this.updateButtonStates({
+        move: true,
+        delete: true,
+        repeat: true,
+        duplicate: true,
+        convertToProject: true,
+        share: true,
+      });
+    } else {
+      this.updateButtonStates({
+        move: false,
+        delete: false,
+        repeat: false,
+        duplicate: false,
+        convertToProject: false,
+        share: false,
+      });
+    }
+  }
 
-	// UI Interaction Actions
-	setDraggedTaskId(taskId: string | null) {
-		this.draggedTaskId = taskId;
-	}
+  // View Actions
+  setOpenTaskId(openTaskId: string | null) {
+    this.openTaskId = openTaskId;
+    this.updateButtonStates({
+      newTask: !openTaskId,
+      quickSearch: !openTaskId,
+    });
+  }
 
-	setContextMenuPosition(position: { x: number; y: number } | null) {
-		this.contextMenuPosition = position;
-	}
+  setSidebarCollapsed(collapsed: boolean) {
+    this.sidebarCollapsed = collapsed;
+  }
 
-	startTaskCompletionAnimation(taskId: string) {
-		this.completionAnimationTasks.add(taskId);
-		setTimeout(() => {
-			this.completionAnimationTasks.delete(taskId);
-			if (this.selectedTaskId === taskId) {
-				this.setSelectedTaskId(null);
-			}
-		}, 5000);
-	}
+  // Search Actions
+  setQuickSearchQuery(query: string) {
+    this.quickSearchQuery = query;
+    this.quickSearchActive = query.length > 0;
+  }
 
-	toggleChecklistExpanded(taskId: string) {
-		this.checklistExpanded[taskId] = !this.checklistExpanded[taskId];
-	}
+  // UI Interaction Actions
+  setDraggedTaskId(taskId: string | null) {
+    this.draggedTaskId = taskId;
+  }
 
-	// Button State Actions
-	updateButtonStates(newStates: Partial<typeof this.buttonStates>) {
-		this.buttonStates = { ...this.buttonStates, ...newStates };
-	}
+  setContextMenuPosition(position: { x: number; y: number } | null) {
+    this.contextMenuPosition = position;
+  }
 
-	// Preference Actions
-	updateUserPreferences(newPrefs: Partial<typeof this.userPreferences>) {
-		this.userPreferences = { ...this.userPreferences, ...newPrefs };
-	}
+  startTaskCompletionAnimation(taskId: string) {
+    this.completionAnimationTasks.add(taskId);
+    setTimeout(() => {
+      this.completionAnimationTasks.delete(taskId);
+      this.setSelectedTaskIds(
+        this.selectedTaskIds.filter((id) => id !== taskId)
+      );
+    }, 5000);
+  }
 
-	// Computed Properties
-	get isHydrated() {
-		return isHydrated(this);
-	}
+  toggleChecklistExpanded(taskId: string) {
+    this.checklistExpanded[taskId] = !this.checklistExpanded[taskId];
+  }
+  // Button State Actions
+  updateButtonStates(newStates: Partial<typeof this.buttonStates>) {
+    this.buttonStates = { ...this.buttonStates, ...newStates };
+  }
 
-	get hasSelectedTask() {
-		return this.selectedTaskId !== null;
-	}
+  // Preference Actions
+  updateUserPreferences(newPrefs: Partial<typeof this.userPreferences>) {
+    this.userPreferences = { ...this.userPreferences, ...newPrefs };
+  }
 
-	get isSearching() {
-		return this.quickSearchActive;
-	}
+  // Computed Properties
+  get isHydrated() {
+    return isHydrated(this);
+  }
 
-	get isDragging() {
-		return this.draggedTaskId !== null;
-	}
+  get hasSelectedTask() {
+    return this.selectedTaskIds.length > 0;
+  }
 
-	get hasContextMenu() {
-		return this.contextMenuPosition !== null;
-	}
+  get isSearching() {
+    return this.quickSearchActive;
+  }
 
-	// Reset State
-	reset() {
-		this.selectedTaskId = null;
-		this.isDetailViewOpen = false;
-		this.quickSearchQuery = "";
-		this.quickSearchActive = false;
-		this.draggedTaskId = null;
-		this.contextMenuPosition = null;
-		this.completionAnimationTasks.clear();
-		this.buttonStates = {
-			newTask: true,
-			move: false,
-			quickSearch: true,
-			delete: false,
-			repeat: false,
-			duplicate: false,
-			convertToProject: false,
-			share: false,
-		};
-	}
+  get isDragging() {
+    return this.draggedTaskId !== null;
+  }
+
+  get hasContextMenu() {
+    return this.contextMenuPosition !== null;
+  }
+
+  // Reset State
+  reset() {
+    this.selectedTaskIds = [];
+    this.openTaskId = null;
+    this.quickSearchQuery = "";
+    this.quickSearchActive = false;
+    this.draggedTaskId = null;
+    this.contextMenuPosition = null;
+    this.completionAnimationTasks.clear();
+    this.buttonStates = {
+      newTask: true,
+      move: false,
+      quickSearch: true,
+      delete: false,
+      repeat: false,
+      duplicate: false,
+      convertToProject: false,
+      share: false,
+    };
+  }
 }

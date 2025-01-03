@@ -1,4 +1,4 @@
-table "area" {
+table "team" {
   schema = schema.public
   column "id" {
     null = false
@@ -29,24 +29,24 @@ table "area" {
   primary_key {
     columns = [column.id]
   }
-  foreign_key "area_workspace_id_fk" {
+  foreign_key "team_workspace_id_fk" {
     columns     = [column.workspace_id]
     ref_columns = [table.workspace.column.id]
     on_update   = NO_ACTION
     on_delete   = CASCADE
   }
-  index "area_workspace_slug_idx" {
+  index "team_workspace_slug_idx" {
     unique  = true
     columns = [column.workspace_id, column.slug]
   }
 }
-table "area_member" {
+table "team_member" {
   schema = schema.public
   column "id" {
     null = false
     type = uuid
   }
-  column "area_id" {
+  column "team_id" {
     null = false
     type = uuid
   }
@@ -72,23 +72,312 @@ table "area_member" {
   primary_key {
     columns = [column.id]
   }
-  foreign_key "area_member_area_id_fk" {
-    columns     = [column.area_id]
-    ref_columns = [table.area.column.id]
+  foreign_key "team_member_team_id_fk" {
+    columns     = [column.team_id]
+    ref_columns = [table.team.column.id]
     on_update   = NO_ACTION
     on_delete   = CASCADE
   }
-  foreign_key "area_member_user_id_fk" {
+  foreign_key "team_member_user_id_fk" {
     columns     = [column.user_id]
     ref_columns = [table.user.column.id]
     on_update   = NO_ACTION
     on_delete   = CASCADE
   }
-  index "area_member_area_user_idx" {
+  index "team_member_team_user_idx" {
     unique  = true
-    columns = [column.area_id, column.user_id]
+    columns = [column.team_id, column.user_id]
   }
 }
+
+table "project" {
+  schema = schema.public
+
+  column "id" {
+    type = uuid
+    null = false
+  }
+
+  column "name" {
+    type = text
+    null = false
+  }
+
+  column "description" {
+    type = text
+    null = true
+  }
+
+  column "slug" {
+    type = text
+    null = false
+  }
+
+  column "workspace_id" {
+    type = uuid
+    null = false
+  }
+
+  column "lead_id" {
+    type = uuid
+    null = false
+  }
+
+  column "created_at" {
+    type = timestamptz
+    null = false
+    default = sql("now()")
+  }
+
+  column "updated_at" {
+    type = timestamptz
+    null = false
+    default = sql("now()")
+  }
+
+  primary_key {
+    columns = [column.id]
+  }
+
+  foreign_key "project_workspace_id_fk" {
+    columns = [column.workspace_id]
+    ref_columns = [table.workspace.column.id]
+    on_delete = CASCADE
+  }
+
+  foreign_key "project_lead_id_fk" {
+    columns = [column.lead_id]
+    ref_columns = [table.user.column.id]
+    on_delete = RESTRICT
+  }
+
+  index "project_workspace_slug_idx" {
+    columns = [column.workspace_id, column.slug]
+    unique = true
+  }
+}
+
+table "project_team" {
+  schema = schema.public
+
+  column "project_id" {
+    type = uuid
+    null = false
+  }
+
+  column "team_id" {
+    type = uuid
+    null = false
+  }
+
+  column "created_at" {
+    type = timestamptz
+    null = false
+    default = sql("now()")
+  }
+
+  primary_key {
+    columns = [column.project_id, column.team_id]
+  }
+
+  foreign_key "project_team_project_id_fk" {
+    columns = [column.project_id]
+    ref_columns = [table.project.column.id]
+    on_delete = CASCADE
+  }
+
+  foreign_key "project_team_team_id_fk" {
+    columns = [column.team_id]
+    ref_columns = [table.team.column.id]
+    on_delete = CASCADE
+  }
+}
+
+table "task" {
+  schema = schema.public
+
+  column "id" {
+    type = uuid
+    null = false
+  }
+
+  column "title" {
+    type = text
+    null = false
+  }
+
+  column "description" {
+    type = text
+    null = true
+  }
+
+  column "workspace_id" {
+    type = uuid
+    null = false
+  }
+
+  column "project_id" {
+    type = uuid
+    null = true
+  }
+
+  column "team_id" {
+    type = uuid
+    null = true
+  }
+
+  column "creator_id" {
+    type = uuid
+    null = false
+  }
+
+  column "assignee_id" {
+    type = uuid
+    null = true
+  }
+
+  column "sort_order" {
+    null = false
+    type = double_precision
+    default = 0
+  }
+
+  column "start" {
+    type = text // not_started | started | postponed
+    null = false
+    default = "not_started"
+  }
+
+  column "start_date" {
+    type = timestamptz
+    null = true
+  }
+
+  column "start_bucket" {
+    type = text // today | evening
+    null = false
+    default = "today"
+  }
+
+  column "due_date" {
+    type = timestamptz
+    null = true
+  }
+
+  column "completed_at" {
+    type = timestamptz
+    null = true
+  }
+
+  column "archived_at" {
+    type = timestamptz
+    null = true
+  }
+
+  column "created_at" {
+    type = timestamptz
+    null = false
+    default = sql("now()")
+  }
+
+  column "updated_at" {
+    type = timestamptz
+    null = false
+    default = sql("now()")
+  }
+
+  primary_key {
+    columns = [column.id]
+  }
+
+  foreign_key "task_workspace_id_fk" {
+    columns = [column.workspace_id]
+    ref_columns = [table.workspace.column.id]
+    on_delete = CASCADE
+  }
+
+  foreign_key "task_project_id_fk" {
+    columns = [column.project_id]
+    ref_columns = [table.project.column.id]
+    on_delete = NO_ACTION
+  }
+
+  foreign_key "task_team_id_fk" {
+    columns = [column.team_id]
+    ref_columns = [table.team.column.id]
+    on_delete = NO_ACTION
+  }
+
+  foreign_key "task_creator_id_fk" {
+    columns = [column.creator_id]
+    ref_columns = [table.user.column.id]
+    on_delete = RESTRICT
+  }
+
+  foreign_key "task_assignee_id_fk" {
+    columns = [column.assignee_id]
+    ref_columns = [table.user.column.id]
+    on_delete = NO_ACTION
+  }
+
+  index "task_workspace_start_idx" {
+    columns = [column.workspace_id, column.start]
+  }
+
+  index "task_workspace_start_bucket_idx" {
+    columns = [column.workspace_id, column.start_bucket]
+  }
+
+  index "task_sort_order_idx" {
+    columns = [column.sort_order]
+  }
+}
+
+table "checklist_item" {
+  schema = schema.public
+  column "id" {
+    type = uuid
+    null = false
+  }
+  column "task_id" {
+    type = uuid
+    null = false
+  }
+  column "title" {
+    type = text
+    null = false
+  }
+  column "sort_order" {
+    type = float8
+    null = false
+  }
+  column "completed_at" {
+    type = timestamptz
+    null = true
+  }
+  column "created_at" {
+    type = timestamptz
+    null = false
+    default = sql("now()")
+  }
+  column "updated_at" {
+    type = timestamptz
+    null = false
+    default = sql("now()")
+  }
+  primary_key {
+    columns = [column.id]
+  }
+  foreign_key "checklist_item_task_id_fk" {
+    columns = [column.task_id]
+    ref_columns = [table.task.column.id]
+    on_delete = CASCADE
+  }
+  index "checklist_item_sort_order_idx" {
+    columns = [column.sort_order]
+  }
+}
+
 table "emoji" {
   schema = schema.public
   column "id" {
@@ -140,6 +429,7 @@ table "emoji" {
     columns = [column.subject_id, column.creator_id, column.value]
   }
 }
+
 table "enterprise" {
   schema = schema.public
   column "id" {
@@ -172,93 +462,7 @@ table "enterprise" {
     columns = [column.slug]
   }
 }
-table "project" {
-  schema = schema.public
-  column "id" {
-    null = false
-    type = uuid
-  }
-  column "name" {
-    null = false
-    type = text
-  }
-  column "description" {
-    null = true
-    type = text
-  }
-  column "slug" {
-    null = false
-    type = text
-  }
-  column "workspace_id" {
-    null = false
-    type = uuid
-  }
-  column "lead_id" {
-    null = false
-    type = uuid
-  }
-  column "created_at" {
-    null    = false
-    type    = timestamptz
-    default = sql("now()")
-  }
-  column "updated_at" {
-    null    = false
-    type    = timestamptz
-    default = sql("now()")
-  }
-  primary_key {
-    columns = [column.id]
-  }
-  foreign_key "project_lead_id_fk" {
-    columns     = [column.lead_id]
-    ref_columns = [table.user.column.id]
-    on_update   = NO_ACTION
-    on_delete   = RESTRICT
-  }
-  foreign_key "project_workspace_id_fk" {
-    columns     = [column.workspace_id]
-    ref_columns = [table.workspace.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  index "project_workspace_slug_idx" {
-    unique  = true
-    columns = [column.workspace_id, column.slug]
-  }
-}
-table "project_area" {
-  schema = schema.public
-  column "project_id" {
-    null = false
-    type = uuid
-  }
-  column "area_id" {
-    null = false
-    type = uuid
-  }
-  column "created_at" {
-    null    = false
-    type    = timestamptz
-    default = sql("now()")
-  }
-  primary_key {
-    columns = [column.project_id, column.area_id]
-  }
-  foreign_key "project_area_area_id_fk" {
-    columns     = [column.area_id]
-    ref_columns = [table.area.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  foreign_key "project_area_project_id_fk" {
-    columns     = [column.project_id]
-    ref_columns = [table.project.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-}
+
 table "tag" {
   schema = schema.public
   column "id" {
@@ -301,123 +505,7 @@ table "tag" {
     columns = [column.workspace_id, column.name]
   }
 }
-table "task" {
-  schema = schema.public
-  column "id" {
-    null = false
-    type = uuid
-  }
-  column "title" {
-    null = false
-    type = text
-  }
-  column "description" {
-    null = true
-    type = text
-  }
-  column "workspace_id" {
-    null = false
-    type = uuid
-  }
-  column "project_id" {
-    null = true
-    type = uuid
-  }
-  column "area_id" {
-    null = true
-    type = uuid
-  }
-  column "creator_id" {
-    null = false
-    type = uuid
-  }
-  column "assignee_id" {
-    null = true
-    type = uuid
-  }
-  column "sort_order" {
-    null = false
-    type = double_precision
-  }
-  column "start" {
-    null    = false
-    type    = text
-    default = "not_started"
-  }
-  column "start_date" {
-    null = true
-    type = timestamptz
-  }
-  column "start_bucket" {
-    null    = false
-    type    = text
-    default = "today"
-  }
-  column "due_date" {
-    null = true
-    type = timestamptz
-  }
-  column "completed_at" {
-    null = true
-    type = timestamptz
-  }
-  column "archived_at" {
-    null = true
-    type = timestamptz
-  }
-  column "created_at" {
-    null    = false
-    type    = timestamptz
-    default = sql("now()")
-  }
-  column "updated_at" {
-    null    = false
-    type    = timestamptz
-    default = sql("now()")
-  }
-  primary_key {
-    columns = [column.id]
-  }
-  foreign_key "task_area_id_fk" {
-    columns     = [column.area_id]
-    ref_columns = [table.area.column.id]
-    on_update   = NO_ACTION
-    on_delete   = NO_ACTION
-  }
-  foreign_key "task_assignee_id_fk" {
-    columns     = [column.assignee_id]
-    ref_columns = [table.user.column.id]
-    on_update   = NO_ACTION
-    on_delete   = NO_ACTION
-  }
-  foreign_key "task_creator_id_fk" {
-    columns     = [column.creator_id]
-    ref_columns = [table.user.column.id]
-    on_update   = NO_ACTION
-    on_delete   = RESTRICT
-  }
-  foreign_key "task_project_id_fk" {
-    columns     = [column.project_id]
-    ref_columns = [table.project.column.id]
-    on_update   = NO_ACTION
-    on_delete   = NO_ACTION
-  }
-  foreign_key "task_workspace_id_fk" {
-    columns     = [column.workspace_id]
-    ref_columns = [table.workspace.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  index "task_sort_order_idx" {
-    columns = [column.sort_order]
-  }
-  index "task_workspace_start_bucket_idx" {
-    columns = [column.workspace_id, column.start_bucket]
-  }
-  index "task_workspace_start_idx" {
-    columns = [column.workspace_id, column.start]
-  }
-}
+
 table "task_comment" {
   schema = schema.public
   column "id" {
@@ -462,6 +550,7 @@ table "task_comment" {
     on_delete   = CASCADE
   }
 }
+
 table "task_tag" {
   schema = schema.public
   column "task_id" {
@@ -493,14 +582,19 @@ table "task_tag" {
     on_delete   = CASCADE
   }
 }
+
 table "user" {
   schema = schema.public
   column "id" {
     null = false
     type = uuid
   }
-  column "login" {
+  column "username" {
     null = false
+    type = text
+  }
+  column "email" {
+    null = true
     type = text
   }
   column "name" {
@@ -516,8 +610,8 @@ table "user" {
     type    = text
     default = "user"
   }
-  column "githubID" {
-    null = false
+  column "github_id" {
+    null = true
     type = integer
   }
   column "created_at" {
@@ -533,11 +627,12 @@ table "user" {
   primary_key {
     columns = [column.id]
   }
-  index "user_login_idx" {
-    unique  = true
-    columns = [column.login]
-  }
+  # index "user_username_idx" {
+  #   unique  = true
+  #   columns = [column.username]
+  # }
 }
+
 table "view_state" {
   schema = schema.public
   column "user_id" {
@@ -568,6 +663,7 @@ table "view_state" {
     on_delete   = CASCADE
   }
 }
+
 table "workspace" {
   schema = schema.public
   column "id" {
@@ -610,12 +706,9 @@ table "workspace" {
     columns = [column.slug]
   }
 }
+
 table "workspace_member" {
   schema = schema.public
-  column "id" {
-    null = false
-    type = uuid
-  }
   column "workspace_id" {
     null = false
     type = uuid
@@ -640,7 +733,7 @@ table "workspace_member" {
     default = sql("now()")
   }
   primary_key {
-    columns = [column.id]
+    columns = [column.workspace_id, column.user_id]
   }
   foreign_key "workspace_member_user_id_fk" {
     columns     = [column.user_id]
@@ -659,6 +752,38 @@ table "workspace_member" {
     columns = [column.workspace_id, column.user_id]
   }
 }
+
+table "session" {
+  schema = schema.public
+  column "id" {
+    null = false
+    type = uuid
+  }
+  column "user_id" {
+    null = false
+    type = uuid
+  }
+  column "created_at" {
+    null    = false
+    type    = timestamptz
+    default = sql("now()")
+  }
+  column "updated_at" {
+    null    = false
+    type    = timestamptz
+    default = sql("now()")
+  }
+  primary_key {
+    columns = [column.id, column.user_id]
+  }
+  foreign_key "session_user_id_fk" {
+    columns     = [column.user_id]
+    ref_columns = [table.user.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+}
+
 table "schemaVersions" {
   schema = schema.zero
   column "minSupportedVersion" {
@@ -681,6 +806,7 @@ table "schemaVersions" {
     expr = "lock"
   }
 }
+
 table "clients" {
   schema = schema.zero_0
   column "clientGroupID" {
@@ -703,6 +829,7 @@ table "clients" {
     columns = [column.clientGroupID, column.clientID]
   }
 }
+
 table "shardConfig" {
   schema = schema.zero_0
   column "publications" {
@@ -729,6 +856,7 @@ table "shardConfig" {
     expr = "lock"
   }
 }
+
 table "versionHistory" {
   schema = schema.zero_0
   column "dataVersion" {
@@ -755,10 +883,13 @@ table "versionHistory" {
     expr = "(lock = 'v'::bpchar)"
   }
 }
+
 schema "public" {
   comment = "standard public schema"
 }
+
 schema "zero" {
 }
+
 schema "zero_0" {
 }

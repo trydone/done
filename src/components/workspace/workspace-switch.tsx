@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Schema, WorkspaceRow, UserRow, WorkspaceMemberRow } from "@/schema";
 import { RootStoreContext } from "@/lib/stores/root-store";
 import { H2 } from "@/components/shared/typography";
+import { WorkspaceSignout } from "./workspace-signout";
 
 type ExtendedWorkspaceMemberRow = WorkspaceMemberRow & {
   workspace: readonly WorkspaceRow[];
@@ -27,6 +28,7 @@ interface Compound
       workspaceId: string;
     }) => void;
     onAllWorkspacesClick?: () => void;
+    renderUserTitle?: (user: ExtendedUserRow) => React.ReactNode;
   }> {
   AllWorkspaces: React.FC<{
     active: boolean;
@@ -41,6 +43,7 @@ export const WorkspaceSwitch: Compound = ({
   selectedWorkspaceId,
   onWorkspaceChange,
   onAllWorkspacesClick,
+  renderUserTitle,
 }) => (
   <>
     <AllWorkspaces
@@ -49,7 +52,8 @@ export const WorkspaceSwitch: Compound = ({
     />
     {users?.map((user) => (
       <div key={user.id}>
-        <H2>{user.login}</H2>
+        {renderUserTitle ? renderUserTitle(user) : <H2>{user.login}</H2>}
+
         <RadioGroup
           value={selectedUserId === user.id ? selectedWorkspaceId : ``}
           onValueChange={(value) =>
@@ -113,6 +117,12 @@ const Block: Compound["Block"] = observer(() => {
       users={users}
       onWorkspaceChange={changeWorkspace}
       onAllWorkspacesClick={clearWorkspace}
+      renderUserTitle={(user) => (
+        <div className="flex flex-row gap-2">
+          <H2>{user.login}</H2>
+          <WorkspaceSignout.Block userId={user.id} />
+        </div>
+      )}
     />
   );
 });

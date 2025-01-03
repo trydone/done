@@ -483,6 +483,11 @@ export const permissions: ReturnType<typeof definePermissions> =
         eb.cmp("creator_id", "=", authData.sub)
       );
 
+    const allowYourSession = (
+      authData: AuthData,
+      eb: ExpressionBuilder<typeof sessionSchema>
+    ) => eb.and(userIsLoggedIn(authData, eb), eb.cmp("id", "=", authData.sub));
+
     const loggedInUserIsAdmin = (
       authData: AuthData,
       eb: ExpressionBuilder<TableSchema>
@@ -666,6 +671,12 @@ export const permissions: ReturnType<typeof definePermissions> =
             postMutation: [and(canSeeEmoji, loggedInUserIsCreator)],
           },
           delete: [and(canSeeEmoji, loggedInUserIsCreator)],
+        },
+      },
+      session: {
+        row: {
+          delete: [allowYourSession],
+          select: [allowYourSession],
         },
       },
       user_pref: {

@@ -106,8 +106,6 @@ const Block: Compound["Block"] = observer(() => {
     },
   } = React.useContext(RootStoreContext);
 
-  console.log({ selectedWorkspaceId, selectedUserId });
-
   return (
     <WorkspaceSwitch
       selectedWorkspaceId={selectedWorkspaceId}

@@ -1,28 +1,22 @@
-import React, { ReactNode, useCallback, useState } from 'react'
-import { useController } from 'react-hook-form'
+import React, { ReactNode } from "react";
+import { useController } from "react-hook-form";
 
-import { FormControl } from '@/components/ui/form-control'
-import { Textarea, TextareaProps } from '@/components/ui/textarea'
-import { useErrorState } from '@/lib/hooks/use-error-state'
-
-import { AskAI } from '../ai/ask-ai'
-import { AskAiButton } from '../ai/ask-ai-button'
-import { ListMenuContent } from '../ui/list'
+import { FormControl } from "@/components/ui/form-control";
+import { Textarea, TextareaProps } from "@/components/ui/textarea";
+import { useErrorState } from "@/hooks/use-error-state";
 
 interface Props extends TextareaProps {
-  name: string
-  label?: ReactNode
-  caption?: ReactNode
-  control: any
-  minRows?: number
-  ai?: boolean
-  setValue?: any
-  suggestions?: string[][]
-  format?: string
-  className?: string
-  captionClassName?: string
-  inputClassName?: string
-  labelClassName?: string
+  name: string;
+  label?: ReactNode;
+  caption?: ReactNode;
+  control: any;
+  minRows?: number;
+  setValue?: any;
+  format?: string;
+  className?: string;
+  captionClassName?: string;
+  inputClassName?: string;
+  labelClassName?: string;
 }
 
 export const TextareaField = ({
@@ -31,9 +25,7 @@ export const TextareaField = ({
   caption,
   control,
   disabled,
-  ai,
   setValue,
-  suggestions,
   format,
   className,
   labelClassName,
@@ -41,19 +33,8 @@ export const TextareaField = ({
   captionClassName,
   ...rest
 }: Props) => {
-  const [open, setOpen] = useState(false)
-  const [isCompleting, setIsCompleting] = useState(false)
-  const { field, fieldState } = useController({ name, control })
-  const hasError = useErrorState(fieldState, control)
-
-  const watchContent = field.value
-
-  const setContent = useCallback(
-    (content: string) => {
-      setValue(name, content)
-    },
-    [name, setValue],
-  )
+  const { field, fieldState } = useController({ name, control });
+  const hasError = useErrorState(fieldState, control);
 
   return (
     <FormControl
@@ -61,7 +42,6 @@ export const TextareaField = ({
       caption={caption}
       error={hasError ? fieldState.error?.message : null}
       name={name}
-      labelRight={ai && <AskAiButton open={open} setOpen={setOpen} />}
       captionClassName={captionClassName}
       className={className}
       labelClassName={labelClassName}
@@ -71,22 +51,9 @@ export const TextareaField = ({
         {...rest}
         id={name}
         hasError={hasError}
-        disabled={disabled || isCompleting}
+        disabled={disabled}
         className={inputClassName}
       />
-
-      {ai && open && (
-        <ListMenuContent className="mb-3 mt-1 rounded-2xl">
-          <AskAI
-            content={watchContent}
-            setContent={setContent}
-            setIsCompleting={setIsCompleting}
-            suggestions={suggestions}
-            format={format}
-            setOpen={setOpen}
-          />
-        </ListMenuContent>
-      )}
     </FormControl>
-  )
-}
+  );
+};

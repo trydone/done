@@ -10,7 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils/cn";
+import { cn } from "@/lib/utils";
 
 type Props = {
   date: DateRange | undefined;

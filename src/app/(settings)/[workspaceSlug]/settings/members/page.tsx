@@ -45,7 +45,7 @@ export default function Page({ params: { workspaceSlug } }: Props) {
     return members.filter((member) => {
       const matchesSearch =
         member.name.toLowerCase().includes(search.toLowerCase()) ||
-        member.email.toLowerCase().includes(search.toLowerCase());
+        member.username.toLowerCase().includes(search.toLowerCase());
       const matchesFilter = filter === "All" || member.role === filter;
       return matchesSearch && matchesFilter;
     });
@@ -57,7 +57,7 @@ export default function Page({ params: { workspaceSlug } }: Props) {
       ...filteredMembers.map((member) => [
         member.name,
         member.username,
-        member.email,
+        member.username,
         member.role,
         new Date(member.joinedAt).toLocaleDateString(),
       ]),
@@ -149,7 +149,7 @@ export default function Page({ params: { workspaceSlug } }: Props) {
                 <div className="flex items-center gap-3">
                   <div className="relative">
                     <Avatar>
-                      <AvatarImage src={member.avatarUrl} />
+                      <AvatarImage src={member.avatar} />
                       <AvatarFallback>
                         {member.name
                           .split(" ")
@@ -169,7 +169,7 @@ export default function Page({ params: { workspaceSlug } }: Props) {
                   </div>
                 </div>
               </TableCell>
-              <TableCell>{member.email}</TableCell>
+              <TableCell>{member.user.username}</TableCell>
               <TableCell>
                 <span
                   className={cn(

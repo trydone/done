@@ -1,26 +1,26 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode } from "react";
 
-import { Label } from '@/components/ui/label'
-import { cn } from '@/lib/utils/cn'
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
-import { Validation } from './validation'
+import { Validation } from "./validation";
 
 export type FormControlProps = {
-  name: string
-  label?: ReactNode
-  labelRight?: ReactNode
-  error?: ReactNode
-  success?: ReactNode
-  warning?: ReactNode
-  loading?: ReactNode
-  caption?: ReactNode
-  controlLeft?: ReactNode
-  children: ReactNode
-  className?: string
-  validationPosition?: 'left' | 'right'
-  captionClassName?: string
-  labelClassName?: string
-}
+  name: string;
+  label?: ReactNode;
+  labelRight?: ReactNode;
+  error?: ReactNode;
+  success?: ReactNode;
+  warning?: ReactNode;
+  loading?: ReactNode;
+  caption?: ReactNode;
+  controlLeft?: ReactNode;
+  children: ReactNode;
+  className?: string;
+  validationPosition?: "left" | "right";
+  captionClassName?: string;
+  labelClassName?: string;
+};
 
 export const FormControl = ({
   label,
@@ -34,19 +34,19 @@ export const FormControl = ({
   warning,
   children,
   className,
-  validationPosition = 'left',
+  validationPosition = "left",
   captionClassName,
   labelClassName,
 }: FormControlProps) => {
   return (
-    <div className={cn('mb-4 flex flex-col', className)}>
+    <div className={cn("mb-4 flex flex-col", className)}>
       {(label || labelRight) && (
         <div className="mb-2 flex justify-between">
           <div>
             {label && (
               <Label
                 htmlFor={name}
-                className={cn('cursor-pointer', labelClassName)}
+                className={cn("cursor-pointer", labelClassName)}
               >
                 {label}
               </Label>
@@ -61,7 +61,7 @@ export const FormControl = ({
 
       {caption && (
         <span
-          className={cn('mt-1 text-sm text-muted-foreground', captionClassName)}
+          className={cn("mt-1 text-sm text-muted-foreground", captionClassName)}
         >
           {caption}
         </span>
@@ -70,9 +70,9 @@ export const FormControl = ({
       {controlLeft && <div className="mt-1">{controlLeft}</div>}
 
       <div
-        className={cn('flex flex-row', {
-          'justify-end': validationPosition === 'right',
-          'justify-start': validationPosition === 'left',
+        className={cn("flex flex-row", {
+          "justify-end": validationPosition === "right",
+          "justify-start": validationPosition === "left",
         })}
       >
         {success && <Validation variant="success">{success}</Validation>}
@@ -81,5 +81,5 @@ export const FormControl = ({
         {loading && <Validation variant="loading">{loading}</Validation>}
       </div>
     </div>
-  )
-}
+  );
+};

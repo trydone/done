@@ -1,11 +1,11 @@
 import {
-  ArrowCornerDownLeftIcon,
+  CornerDownLeft,
   ArrowDownIcon,
-  ArrowLeftXIcon,
+  Delete,
   ArrowUpIcon,
-  ArrowWall2RightIcon,
-  CmdIcon,
-  ShiftIcon,
+  ArrowRightToLineIcon,
+  CommandIcon,
+  ArrowBigUpIcon,
 } from "lucide-react";
 import * as React from "react";
 
@@ -29,14 +29,14 @@ interface KbdProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const iconMap: Record<KbdIcon, React.ReactNode> = {
-  mod: <CmdIcon className="size-3" />,
-  shift: <ShiftIcon className="size-3" />,
-  enter: <ArrowCornerDownLeftIcon className="size-3" />,
-  command: <CmdIcon className="size-3" />,
+  mod: <CommandIcon className="size-3" />,
+  shift: <ArrowBigUpIcon className="size-3" />,
+  enter: <CornerDownLeft className="size-3" />,
+  command: <CommandIcon className="size-3" />,
   ctrl: "Ctrl",
   alt: "Alt",
-  tab: <ArrowWall2RightIcon className="size-3" />,
-  backspace: <ArrowLeftXIcon className="size-3" />,
+  tab: <ArrowRightToLineIcon className="size-3" />,
+  backspace: <Delete className="size-3" />,
   up: <ArrowUpIcon className="size-3" />,
   down: <ArrowDownIcon className="size-3" />,
 };

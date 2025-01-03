@@ -1,7 +1,5 @@
 import { useContext, useEffect, useRef } from "react";
 import { observer } from "mobx-react-lite";
-import { useClickOutside } from "@/hooks/useClickOutside";
-import { taskStore, uiStore } from "@/stores";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +11,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { TimePicker } from "@/components/ui/time-picker";
 import { Badge } from "@/components/ui/badge";
 import { Plus, X, Calendar as CalendarIcon, Clock } from "lucide-react";
 import { RootStoreContext } from "@/lib/stores/root-store";

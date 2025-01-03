@@ -49,7 +49,7 @@ export default function SettingsPage() {
       // Implement your file upload logic here
       await z.mutate.user.update({
         id: user?.id,
-        avatarUrl: "uploaded-url",
+        avatar: "uploaded-url",
       });
       toast.success("Profile picture updated successfully");
     } catch (error) {
@@ -106,7 +106,7 @@ export default function SettingsPage() {
                 <TooltipTrigger asChild>
                   <div className="relative">
                     <Avatar className="h-20 w-20">
-                      <AvatarImage src={user?.avatarUrl} />
+                      <AvatarImage src={user?.avatar} />
                       <AvatarFallback>
                         {user?.name ? getInitials(user.name) : "?"}
                       </AvatarFallback>
@@ -151,7 +151,7 @@ export default function SettingsPage() {
                 <Mail className="w-4 h-4" />
                 <h3 className="font-medium">Email</h3>
               </div>
-              <p className="text-sm text-muted-foreground">{user?.login}</p>
+              <p className="text-sm text-muted-foreground">{user?.username}</p>
             </div>
             <Button variant="outline" onClick={handleEmailChange}>
               Change email

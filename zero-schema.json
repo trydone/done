@@ -10,37 +10,23 @@
               "related": {
                 "system": "permissions",
                 "correlation": {
-                  "parentField": [
-                    "id"
-                  ],
-                  "childField": [
-                    "workspace_id"
-                  ]
+                  "parentField": ["id"],
+                  "childField": ["workspace_id"]
                 },
                 "subquery": {
                   "table": "workspace_member",
                   "alias": "zsubq_sessionMembers",
                   "orderBy": [
-                    [
-                      "workspace_id",
-                      "asc"
-                    ],
-                    [
-                      "user_id",
-                      "asc"
-                    ]
+                    ["workspace_id", "asc"],
+                    ["user_id", "asc"]
                   ],
                   "where": {
                     "type": "correlatedSubquery",
                     "related": {
                       "system": "permissions",
                       "correlation": {
-                        "parentField": [
-                          "user_id"
-                        ],
-                        "childField": [
-                          "user_id"
-                        ]
+                        "parentField": ["user_id"],
+                        "childField": ["user_id"]
                       },
                       "subquery": {
                         "table": "session",
@@ -59,14 +45,8 @@
                           "op": "="
                         },
                         "orderBy": [
-                          [
-                            "id",
-                            "asc"
-                          ],
-                          [
-                            "user_id",
-                            "asc"
-                          ]
+                          ["id", "asc"],
+                          ["user_id", "asc"]
                         ]
                       }
                     },
@@ -111,12 +91,8 @@
                   "related": {
                     "system": "permissions",
                     "correlation": {
-                      "parentField": [
-                        "id"
-                      ],
-                      "childField": [
-                        "user_id"
-                      ]
+                      "parentField": ["id"],
+                      "childField": ["user_id"]
                     },
                     "subquery": {
                       "table": "session",
@@ -135,14 +111,8 @@
                         "op": "="
                       },
                       "orderBy": [
-                        [
-                          "id",
-                          "asc"
-                        ],
-                        [
-                          "user_id",
-                          "asc"
-                        ]
+                        ["id", "asc"],
+                        ["user_id", "asc"]
                       ]
                     }
                   },
@@ -185,12 +155,8 @@
                   "related": {
                     "system": "permissions",
                     "correlation": {
-                      "parentField": [
-                        "creator_id"
-                      ],
-                      "childField": [
-                        "user_id"
-                      ]
+                      "parentField": ["creator_id"],
+                      "childField": ["user_id"]
                     },
                     "subquery": {
                       "table": "session",
@@ -209,14 +175,8 @@
                         "op": "="
                       },
                       "orderBy": [
-                        [
-                          "id",
-                          "asc"
-                        ],
-                        [
-                          "user_id",
-                          "asc"
-                        ]
+                        ["id", "asc"],
+                        ["user_id", "asc"]
                       ]
                     }
                   },
@@ -1999,10 +1959,7 @@
       },
       "session": {
         "tableName": "session",
-        "primaryKey": [
-          "id",
-          "user_id"
-        ],
+        "primaryKey": ["id", "user_id"],
         "columns": {
           "created_at": {
             "type": "number",
@@ -2174,12 +2131,8 @@
             "destSchema": "project"
           },
           "session": {
-            "sourceField": [
-              "creator_id"
-            ],
-            "destField": [
-              "user_id"
-            ],
+            "sourceField": ["creator_id"],
+            "destField": ["user_id"],
             "destSchema": "session"
           },
           "tags": [
@@ -2205,12 +2158,8 @@
             "destSchema": "view_state"
           },
           "workspace": {
-            "sourceField": [
-              "workspace_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["workspace_id"],
+            "destField": ["id"],
             "destSchema": "workspace"
           }
         }
@@ -2378,7 +2327,7 @@
             "type": "string",
             "optional": false
           },
-          "login": {
+          "username": {
             "type": "string",
             "optional": false
           },
@@ -2397,40 +2346,24 @@
         },
         "relationships": {
           "session": {
-            "sourceField": [
-              "id"
-            ],
-            "destField": [
-              "user_id"
-            ],
+            "sourceField": ["id"],
+            "destField": ["user_id"],
             "destSchema": "session"
           },
           "workspaceMembers": {
-            "sourceField": [
-              "id"
-            ],
-            "destField": [
-              "user_id"
-            ],
+            "sourceField": ["id"],
+            "destField": ["user_id"],
             "destSchema": "workspace_member"
           },
           "workspaces": [
             {
-              "sourceField": [
-                "id"
-              ],
-              "destField": [
-                "user_id"
-              ],
+              "sourceField": ["id"],
+              "destField": ["user_id"],
               "destSchema": "workspace_member"
             },
             {
-              "sourceField": [
-                "workspace_id"
-              ],
-              "destField": [
-                "id"
-              ],
+              "sourceField": ["workspace_id"],
+              "destField": ["id"],
               "destSchema": "workspace"
             }
           ]
@@ -2502,21 +2435,13 @@
         "relationships": {
           "sessionMembers": [
             {
-              "sourceField": [
-                "id"
-              ],
-              "destField": [
-                "workspace_id"
-              ],
+              "sourceField": ["id"],
+              "destField": ["workspace_id"],
               "destSchema": "workspace_member"
             },
             {
-              "sourceField": [
-                "user_id"
-              ],
-              "destField": [
-                "user_id"
-              ],
+              "sourceField": ["user_id"],
+              "destField": ["user_id"],
               "destSchema": "session"
             }
           ]
@@ -2553,12 +2478,8 @@
         },
         "relationships": {
           "session": {
-            "sourceField": [
-              "user_id"
-            ],
-            "destField": [
-              "user_id"
-            ],
+            "sourceField": ["user_id"],
+            "destField": ["user_id"],
             "destSchema": "session"
           },
           "user": {
@@ -2567,12 +2488,8 @@
             "destSchema": "user"
           },
           "workspace": {
-            "sourceField": [
-              "workspace_id"
-            ],
-            "destField": [
-              "id"
-            ],
+            "sourceField": ["workspace_id"],
+            "destField": ["id"],
             "destSchema": "workspace"
           }
         }

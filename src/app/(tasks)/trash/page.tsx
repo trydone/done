@@ -1,7 +1,7 @@
 "use client";
 import { useQuery, useZero } from "@rocicorp/zero/react";
 
-import { TaskList } from "@/components/task-list";
+import { TaskList } from "@/components/task/task-list";
 import { WorkspaceSwitch } from "@/components/workspace/workspace-switch";
 import { Page } from "@/components/shared/page";
 import { Section } from "@/components/shared/section";
@@ -25,7 +25,7 @@ const SectionInbox = () => {
       .where("start", "=", "not_started")
       .where("archived_at", "IS", null)
       .where("completed_at", "IS", null)
-      .orderBy("sort_order", "asc")
+      .orderBy("sort_order", "asc"),
   );
 
   return (

@@ -32,15 +32,6 @@ import { Schema } from "@/schema";
 import { toast } from "sonner";
 import Link from "next/link";
 
-interface Member {
-  id: string;
-  name: string;
-  username: string;
-  email: string;
-  role: "Admin" | "Member";
-  avatarUrl?: string;
-}
-
 type Props = {
   params: { workspaceSlug: string; teamSlug: string };
 };
@@ -55,7 +46,7 @@ export default function Page({ params: { workspaceSlug, teamSlug } }: Props) {
     return members.filter(
       (member) =>
         member.user.name.toLowerCase().includes(search.toLowerCase()) ||
-        member.user.login.toLowerCase().includes(search.toLowerCase()),
+        member.user.email.toLowerCase().includes(search.toLowerCase()),
     );
   }, [members, search]);
 
@@ -131,7 +122,7 @@ export default function Page({ params: { workspaceSlug, teamSlug } }: Props) {
               <TableCell>
                 <div className="flex items-center gap-3">
                   <Avatar>
-                    <AvatarImage src={member.avatarUrl} />
+                    <AvatarImage src={member.avatar} />
                     <AvatarFallback>
                       {member.name
                         .split(" ")
@@ -148,7 +139,7 @@ export default function Page({ params: { workspaceSlug, teamSlug } }: Props) {
                 </div>
               </TableCell>
               <TableCell className="text-muted-foreground">
-                {member.user.login}
+                {member.user.email}
               </TableCell>
               <TableCell>{member.role}</TableCell>
               <TableCell>

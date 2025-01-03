@@ -1,4 +1,4 @@
-import { Calendar1Icon, CircleXFilledIcon } from "lucide-react";
+import { Calendar1Icon, CircleXIcon } from "lucide-react";
 import { format } from "date-fns";
 import * as React from "react";
 import { useCallback } from "react";
@@ -11,7 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils/cn";
+import { cn } from "@/lib/utils";
 
 type Props = CalendarProps & {
   date?: Date;
@@ -66,7 +66,7 @@ export const DatePicker = ({
                 onClick={() => setDate(undefined)}
                 className="absolute right-0 top-0 flex flex-row gap-1 pr-3"
               >
-                <CircleXFilledIcon
+                <CircleXIcon
                   width={20}
                   height={20}
                   className="text-muted-foreground/50"

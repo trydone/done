@@ -1,4 +1,4 @@
-import { ChevronRightIcon, DotGrid1x3HorizontalIcon } from "lucide-react";
+import { ChevronRightIcon, EllipsisIcon } from "lucide-react";
 import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
 
@@ -101,7 +101,7 @@ const BreadcrumbEllipsis = ({
     className={cn("flex h-9 w-9 items-center justify-center", className)}
     {...props}
   >
-    <DotGrid1x3HorizontalIcon className="size-4" />
+    <EllipsisIcon className="size-4" />
     <span className="sr-only">More</span>
   </span>
 );

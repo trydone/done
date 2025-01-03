@@ -52,7 +52,7 @@ export const WorkspaceSwitch: Compound = ({
     />
     {users?.map((user) => (
       <div key={user.id}>
-        {renderUserTitle ? renderUserTitle(user) : <H2>{user.login}</H2>}
+        {renderUserTitle ? renderUserTitle(user) : <H2>{user.email}</H2>}
 
         <RadioGroup
           value={selectedUserId === user.id ? selectedWorkspaceId : ``}
@@ -98,7 +98,7 @@ const Block: Compound["Block"] = observer(() => {
   const zero = useZero<Schema>();
 
   const [users] = useQuery(
-    zero.query.user.related("workspaceMembers", (q) => q.related("workspace"))
+    zero.query.user.related("workspaceMembers", (q) => q.related("workspace")),
   );
 
   const {
@@ -119,7 +119,7 @@ const Block: Compound["Block"] = observer(() => {
       onAllWorkspacesClick={clearWorkspace}
       renderUserTitle={(user) => (
         <div className="flex flex-row gap-2">
-          <H2>{user.login}</H2>
+          <H2>{user.email}</H2>
           <WorkspaceSignout.Block userId={user.id} />
         </div>
       )}

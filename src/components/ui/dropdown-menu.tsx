@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  CheckIcon,
-  ChevronRightIcon,
-  CirclePlaceholderOnIcon,
-} from "lucide-react";
+import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import * as React from "react";
 
@@ -134,7 +130,7 @@ const DropdownMenuRadioItem = React.forwardRef<
   >
     <span className="absolute left-3 flex size-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <CirclePlaceholderOnIcon className="size-2 fill-current" />
+        <CircleIcon className="size-2 fill-current" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}

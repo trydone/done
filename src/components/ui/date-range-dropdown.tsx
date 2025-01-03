@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils/cn";
+import { cn } from "@/lib/utils";
 
 export type DateRangeOption = { id: string; label: string; value: DateRange };
 

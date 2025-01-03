@@ -1,4 +1,4 @@
-import { CircleXFilledIcon } from "lucide-react";
+import { CircleXIcon } from "lucide-react";
 import * as React from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
@@ -75,7 +75,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
               onClick={() => onClear?.()}
               aria-label="clear input"
             >
-              <CircleXFilledIcon
+              <CircleXIcon
                 width={16}
                 height={16}
                 className="text-muted-foreground/50"

@@ -17,6 +17,9 @@ import {
 } from "@/components/ui/sidebar";
 
 import { AppSidebarItem } from "./app-sidebar-item";
+import { useLogin } from "@/hooks/use-login";
+import { useZero } from "@/hooks/use-zero";
+import { useQuery } from "@rocicorp/zero/react";
 
 const items = [
   {
@@ -57,6 +60,21 @@ const items = [
 ];
 
 export const AppSidebar = () => {
+  const login = useLogin();
+
+  const zero = useZero();
+  const [user] = useQuery(
+    zero.query.user.where("id", login.loginState?.decoded.sub ?? "").one(),
+  );
+
+  const loginHref =
+    "/api/auth/github?redirect=" +
+    encodeURIComponent(
+      window.location.search
+        ? window.location.pathname + window.location.search
+        : window.location.pathname,
+    );
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -66,6 +84,17 @@ export const AppSidebar = () => {
               {items.map((item, index) => (
                 <AppSidebarItem item={item} key={index} />
               ))}
+
+              {login.loginState === undefined ? (
+                <a href={loginHref}>Login</a>
+              ) : (
+                <img
+                  src={user?.avatar || ""}
+                  className="issue-creator-avatar"
+                  alt={user?.name ?? undefined}
+                  title={user?.username}
+                />
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

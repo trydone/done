@@ -1,6 +1,6 @@
 "use client";
 
-import { CrossLargeIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import * as React from "react";
 
@@ -46,7 +46,7 @@ const DialogContent = React.forwardRef<
 
       {!hideClose && (
         <DialogPrimitive.Close className="pointer-events-auto fixed right-4 top-4 z-[101] rounded-full bg-muted p-2 text-muted-foreground ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-primary data-[state=open]:text-muted-foreground">
-          <CrossLargeIcon className="size-5" />
+          <XIcon className="size-5" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
       )}

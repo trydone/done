@@ -155,7 +155,8 @@ export const userSchema = {
   tableName: "user",
   columns: {
     id: "string",
-    login: "string",
+    username: "string",
+    email: { type: "string", optional: true },
     name: { type: "string", optional: true },
     avatar: { type: "string", optional: true },
     role: "string",
@@ -512,7 +513,7 @@ export const permissions: ReturnType<typeof definePermissions> =
 
     const allowYourSession = (
       authData: AuthData,
-      eb: ExpressionBuilder<typeof sessionSchema>
+      eb: ExpressionBuilder<typeof sessionSchema>,
     ) => eb.and(userIsLoggedIn(authData, eb), eb.cmp("id", "=", authData.sub));
 
     const loggedInUserIsAdmin = (
@@ -544,29 +545,29 @@ export const permissions: ReturnType<typeof definePermissions> =
 
     const allowTask = (
       authData: AuthData,
-      eb: ExpressionBuilder<typeof taskSchema>
+      eb: ExpressionBuilder<typeof taskSchema>,
     ) =>
       eb.and(
         userIsLoggedIn(authData, eb),
         eb.exists("session", (session) =>
-          session.where("id", "=", authData.sub)
-        )
+          session.where("id", "=", authData.sub),
+        ),
       );
 
     const allowWorkspace = (
       authData: AuthData,
-      eb: ExpressionBuilder<typeof workspaceSchema>
+      eb: ExpressionBuilder<typeof workspaceSchema>,
     ) => eb.exists("sessionMembers", (q) => q.where("id", "=", authData.sub));
 
     const allowUser = (
       authData: AuthData,
-      eb: ExpressionBuilder<typeof userSchema>
+      eb: ExpressionBuilder<typeof userSchema>,
     ) =>
       eb.and(
         userIsLoggedIn(authData, eb),
         eb.exists("session", (session) =>
-          session.where("id", "=", authData.sub)
-        )
+          session.where("id", "=", authData.sub),
+        ),
       );
 
     const canSeeTask = (

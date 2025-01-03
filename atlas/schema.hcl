@@ -589,8 +589,12 @@ table "user" {
     null = false
     type = uuid
   }
-  column "login" {
+  column "username" {
     null = false
+    type = text
+  }
+  column "email" {
+    null = true
     type = text
   }
   column "name" {
@@ -623,9 +627,9 @@ table "user" {
   primary_key {
     columns = [column.id]
   }
-  # index "user_login_idx" {
+  # index "user_username_idx" {
   #   unique  = true
-  #   columns = [column.login]
+  #   columns = [column.username]
   # }
 }
 

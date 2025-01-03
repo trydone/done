@@ -1,6 +1,6 @@
 "use client";
 
-import { CrossLargeIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
@@ -81,7 +81,7 @@ const SheetContent = React.forwardRef<
       {!hideOverlay && <SheetOverlay className={overlayClassName} />}
       {!hideClose && (
         <SheetPrimitive.Close className="pointer-events-auto fixed right-4 top-4 z-[101] rounded-full bg-muted p-2 text-muted-foreground ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-muted">
-          <CrossLargeIcon width={20} height={20} />
+          <XIcon width={20} height={20} />
           <span className="sr-only">Close</span>
         </SheetPrimitive.Close>
       )}

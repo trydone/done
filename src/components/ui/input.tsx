@@ -1,4 +1,4 @@
-import { CircleXFilledIcon } from "lucide-react";
+import { CircleXIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -74,7 +74,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 onClick={() => onClear?.()}
                 aria-label="clear input"
               >
-                <CircleXFilledIcon
+                <CircleXIcon
                   width={20}
                   height={20}
                   className="text-muted-foreground/50"

@@ -15,18 +15,9 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Footer } from "@/components/nav/footer";
 import { DndProvider } from "@/components/dnd/dnd-context";
-import localFont from "next/font/local";
+import { Inter } from "next/font/google";
 
-const glide = localFont({
-  src: [
-    {
-      path: "../public/fonts/Glide-Variable.woff2",
-    },
-  ],
-  variable: "--font-glide",
-  weight: "400 900",
-  display: "swap",
-});
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export default function RootLayout({
   children,
@@ -45,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <meta name="apple-mobile-web-app-title" content="Done" />
-      <body className={`${glide.variable} antialiased`}>
+      <body className={`${inter.variable} font-sans antialiased`}>
         <ZeroProvider zero={z}>
           <RootStoreProvider>
             <LoginProvider>

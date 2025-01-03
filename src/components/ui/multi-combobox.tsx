@@ -1,4 +1,4 @@
-import { ChevronDownIcon, CrossLargeIcon } from "lucide-react";
+import { ChevronDownIcon, XIcon } from "lucide-react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import {
   useCombobox,
@@ -15,7 +15,7 @@ import React, {
   useState,
 } from "react";
 
-import { cn } from "@/lib/utils/cn";
+import { cn } from "@/lib/utils";
 
 import { Badge, BadgeProps } from "./badge";
 import { ComboboxOption } from "./combobox";
@@ -216,7 +216,7 @@ export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
                             removeSelectedItem(selectedItemForRender);
                           }}
                         >
-                          <CrossLargeIcon width={14} height={14} />
+                          <XIcon width={14} height={14} />
                         </span>
                       </Badge>
                     );

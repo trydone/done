@@ -1,10 +1,10 @@
-import { EyeOpenIcon, EyeSlashIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 import React, { ReactNode, useState } from "react";
 import { useController } from "react-hook-form";
 
 import { FormControl } from "@/components/ui/form-control";
 import { Input, InputProps } from "@/components/ui/input";
-import { useErrorState } from "@/lib/hooks/use-error-state";
+import { useErrorState } from "@/hooks/use-error-state";
 
 interface Props extends Exclude<InputProps, "type"> {
   name: string;
@@ -64,9 +64,9 @@ export const PasswordField = ({
           className="absolute inset-y-0 right-0 flex h-[52px] items-center rounded-r-2xl border border-input bg-muted px-3 text-sm text-foreground"
         >
           {passwordType === "password" ? (
-            <EyeOpenIcon className="size-6" />
+            <EyeIcon className="size-6" />
           ) : (
-            <EyeSlashIcon className="size-6" />
+            <EyeOffIcon className="size-6" />
           )}
         </button>
       </div>

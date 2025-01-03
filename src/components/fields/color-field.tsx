@@ -1,26 +1,26 @@
-import React, { ReactNode, useState } from 'react'
-import { HexColorPicker } from 'react-colorful'
-import { useController } from 'react-hook-form'
+import React, { ReactNode, useState } from "react";
+import { HexColorPicker } from "react-colorful";
+import { useController } from "react-hook-form";
 
-import { FormControl } from '@/components/ui/form-control'
-import { Input, InputProps } from '@/components/ui/input'
+import { FormControl } from "@/components/ui/form-control";
+import { Input, InputProps } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
-import { useErrorState } from '@/lib/hooks/use-error-state'
+} from "@/components/ui/popover";
+import { useErrorState } from "@/hooks/use-error-state";
 
 interface Props extends InputProps {
-  name: string
-  label?: ReactNode
-  caption?: ReactNode
-  control: any
-  onChange: (value: any) => void
-  clearable?: boolean
-  className?: string
-  inputClassName?: string
-  onClose?: () => void
+  name: string;
+  label?: ReactNode;
+  caption?: ReactNode;
+  control: any;
+  onChange: (value: any) => void;
+  clearable?: boolean;
+  className?: string;
+  inputClassName?: string;
+  onClose?: () => void;
 }
 
 export const ColorField = ({
@@ -29,15 +29,15 @@ export const ColorField = ({
   control,
   caption,
   onChange,
-  placeholder = 'E.g. #F0F0FA',
+  placeholder = "E.g. #F0F0FA",
   className,
   inputClassName,
   onClose,
   ...rest
 }: Props) => {
-  const [open, setOpen] = useState(false)
-  const { field, fieldState } = useController({ control, name })
-  const hasError = useErrorState(fieldState, control)
+  const [open, setOpen] = useState(false);
+  const { field, fieldState } = useController({ control, name });
+  const hasError = useErrorState(fieldState, control);
 
   return (
     <FormControl
@@ -52,12 +52,12 @@ export const ColorField = ({
           <Popover
             open={open}
             onOpenChange={(open) => {
-              setOpen(open)
+              setOpen(open);
               if (open) {
-                return
+                return;
               }
 
-              onClose?.()
+              onClose?.();
             }}
           >
             <PopoverTrigger asChild>
@@ -82,10 +82,10 @@ export const ColorField = ({
           id={name}
           hasError={hasError}
           placeholder={placeholder}
-          onClear={() => onChange('')}
+          onClear={() => onChange("")}
           className={inputClassName}
         />
       </label>
     </FormControl>
-  )
-}
+  );
+};

@@ -14,6 +14,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { Plus, X, Calendar as CalendarIcon, Clock } from "lucide-react";
 import { RootStoreContext } from "@/lib/stores/root-store";
+import { format } from "date-fns";
 
 export const TaskDetails = observer(() => {
   const {
@@ -94,7 +95,7 @@ export const TaskDetails = observer(() => {
 
           <div className="flex flex-wrap gap-2">
             {task.tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="gap-1">
+              <Badge key={tag} variant="default" className="gap-1">
                 {tag}
                 <button
                   onClick={() => removeTag(tag)}
@@ -152,12 +153,12 @@ export const TaskDetails = observer(() => {
                     : "Set reminder"}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
+              {/* <PopoverContent className="w-auto p-0">
                 <TimePicker
                   value={task.reminder}
                   onChange={(time) => updateTask({ reminder: time })}
                 />
-              </PopoverContent>
+              </PopoverContent> */}
             </Popover>
           </div>
         </DialogHeader>

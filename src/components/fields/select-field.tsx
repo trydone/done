@@ -1,46 +1,46 @@
-import React, { ReactNode, useRef } from 'react'
-import { useController } from 'react-hook-form'
+import React, { ReactNode, useRef } from "react";
+import { useController } from "react-hook-form";
 
-import { Button } from '@/components/ui/button'
-import { FormControl } from '@/components/ui/form-control'
+import { Button } from "@/components/ui/button";
+import { FormControl } from "@/components/ui/form-control";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectTrigger,
-} from '@/components/ui/select'
-import { useDimensions } from '@/lib/hooks/use-dimensions'
-import { useErrorState } from '@/lib/hooks/use-error-state'
+} from "@/components/ui/select";
+import { useDimensions } from "@/hooks/use-dimensions";
+import { useErrorState } from "@/hooks/use-error-state";
 
 type SelectOption = {
-  id: string | number
-  label: string | ReactNode
-  description?: string
-  caption?: string
-}
+  id: string | number;
+  label: string | ReactNode;
+  description?: string;
+  caption?: string;
+};
 
 type Props = {
-  name: string
-  label?: ReactNode
-  caption?: ReactNode
-  control: any
-  placeholder?: ReactNode
-  className?: string
-  options: SelectOption[]
-  maxDropdownHeight?: number
-  onValueChange?: (value: string | number) => void
-  clearable?: boolean
-  isInt?: boolean
-  disabled?: boolean
-}
+  name: string;
+  label?: ReactNode;
+  caption?: ReactNode;
+  control: any;
+  placeholder?: ReactNode;
+  className?: string;
+  options: SelectOption[];
+  maxDropdownHeight?: number;
+  onValueChange?: (value: string | number) => void;
+  clearable?: boolean;
+  isInt?: boolean;
+  disabled?: boolean;
+};
 
 export const SelectField = ({
   name,
   label,
   caption,
   options,
-  placeholder = 'Please select an option',
+  placeholder = "Please select an option",
   control,
   className,
   maxDropdownHeight = 250,
@@ -49,10 +49,10 @@ export const SelectField = ({
   isInt,
   ...props
 }: Props) => {
-  const { field, fieldState } = useController({ name, control })
-  const hasError = useErrorState(fieldState, control)
-  const ref = useRef<HTMLDivElement>(null)
-  const { width } = useDimensions(ref)
+  const { field, fieldState } = useController({ name, control });
+  const hasError = useErrorState(fieldState, control);
+  const ref = useRef<HTMLDivElement>(null);
+  const { width } = useDimensions(ref);
 
   return (
     <div ref={ref}>
@@ -70,9 +70,9 @@ export const SelectField = ({
           defaultValue={isInt ? String(field.value) : field.value}
           // error={hasError}
           onValueChange={(value) => {
-            field.onBlur()
-            field.onChange(isInt ? parseInt(value) : value)
-            onValueChange?.(isInt ? parseInt(value) : value)
+            field.onBlur();
+            field.onChange(isInt ? parseInt(value) : value);
+            onValueChange?.(isInt ? parseInt(value) : value);
           }}
         >
           <SelectTrigger>
@@ -104,7 +104,7 @@ export const SelectField = ({
                       </div>
                     )}
                   </SelectItem>
-                )
+                );
               })}
             </SelectGroup>
 
@@ -115,10 +115,10 @@ export const SelectField = ({
                   variant="secondary"
                   size="sm"
                   onClick={(e) => {
-                    e.stopPropagation()
-                    field.onBlur()
-                    field.onChange('')
-                    onValueChange?.('')
+                    e.stopPropagation();
+                    field.onBlur();
+                    field.onChange("");
+                    onValueChange?.("");
                   }}
                   type="button"
                 >
@@ -130,5 +130,5 @@ export const SelectField = ({
         </Select>
       </FormControl>
     </div>
-  )
-}
+  );
+};

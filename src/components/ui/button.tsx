@@ -37,22 +37,12 @@ const buttonVariants = cva(
         info: "border-blue-600 bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 dark:active:bg-blue-300",
         infoSecondary:
           "border border-blue-300 bg-background text-blue-600 hover:bg-blue-100 active:bg-blue-200 dark:border-blue-600 dark:text-blue-300 dark:hover:bg-blue-900 dark:active:bg-blue-800",
-        magic:
-          "bg-magic border-0 border-transparent text-primary-foreground shadow-[0px_0px_15px_0px_rgba(91,57,227,0.47)] hover:opacity-90 active:opacity-80",
-        blockPrimary:
-          "shadow-page-primary-button border-page-primary-button bg-page-primary-button-background !font-page-body font-page-primary-button-weight text-page-primary-button-text backdrop-blur-page-primary-button hover:opacity-80",
-        blockSecondary:
-          "bg-page-secondary-button-background shadow-page-secondary-button border-page-secondary-button !font-page-body font-page-secondary-button-weight text-page-secondary-button-text backdrop-blur-page-secondary-button hover:opacity-80",
       },
       size: {
         lg: "h-[60px] rounded-[18px] px-4 text-lg font-semibold tracking-tight md:text-xl",
         default: "h-[52px] rounded-[16px] px-4 py-2 font-semibold",
         sm: "h-[36px] rounded-[12px] px-3 text-sm font-medium",
         xs: "h-[30px] rounded-[8px] px-2 text-xs font-medium",
-        block:
-          "rounded-page-widget-block h-[calc(48px*var(--scale-factor))] shrink-0 px-fluid-3 py-fluid-1 text-fluid-base",
-        blockSm:
-          "rounded-page-widget-block h-[calc(32px*var(--scale-factor))] shrink-0 px-fluid-3 py-fluid-1 text-fluid-base",
       },
     },
     defaultVariants: {

@@ -41,8 +41,6 @@ const SectionWorkspaces = () => {
     <Section>
       <H1>Workspaces</H1>
       <WorkspaceSwitch.Block />
-      <WorkspaceSwitch.Block />
-      <WorkspaceSwitch.Block />
     </Section>
   );
 };

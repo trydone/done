@@ -6,7 +6,7 @@ import type { RootStore } from "./root-store";
 export class LocalStore {
   rootStore: RootStore;
 
-  // workspace
+  selectedUserId?: string;
   selectedWorkspaceId?: string;
 
   // Selection and View States
@@ -53,8 +53,14 @@ export class LocalStore {
     this.rootStore = rootStore;
   }
 
-  changeWorkspace(workspaceId: string) {
-    this.selectedWorkspaceId = workspaceId;
+  clearWorkspace() {
+    this.selectedUserId = undefined;
+    this.selectedWorkspaceId = undefined;
+  }
+
+  changeWorkspace(params: { userId: string; workspaceId: string }) {
+    this.selectedUserId = params.userId;
+    this.selectedWorkspaceId = params.workspaceId;
   }
 
   // Selection Actions

@@ -87,6 +87,71 @@
     },
     "user": {
       "row": {
+        "select": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": null
+                  },
+                  "op": "IS NOT"
+                },
+                {
+                  "type": "correlatedSubquery",
+                  "related": {
+                    "system": "permissions",
+                    "correlation": {
+                      "parentField": [
+                        "id"
+                      ],
+                      "childField": [
+                        "user_id"
+                      ]
+                    },
+                    "subquery": {
+                      "table": "session",
+                      "alias": "zsubq_session",
+                      "where": {
+                        "type": "simple",
+                        "left": {
+                          "type": "column",
+                          "name": "id"
+                        },
+                        "right": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "op": "="
+                      },
+                      "orderBy": [
+                        [
+                          "id",
+                          "asc"
+                        ],
+                        [
+                          "user_id",
+                          "asc"
+                        ]
+                      ]
+                    }
+                  },
+                  "op": "EXISTS"
+                }
+              ]
+            }
+          ]
+        ],
         "insert": [],
         "update": {
           "preMutation": []
@@ -2530,7 +2595,46 @@
             "optional": false
           }
         },
-        "relationships": {}
+        "relationships": {
+          "session": {
+            "sourceField": [
+              "id"
+            ],
+            "destField": [
+              "user_id"
+            ],
+            "destSchema": "session"
+          },
+          "workspaceMembers": {
+            "sourceField": [
+              "id"
+            ],
+            "destField": [
+              "user_id"
+            ],
+            "destSchema": "workspace_member"
+          },
+          "workspaces": [
+            {
+              "sourceField": [
+                "id"
+              ],
+              "destField": [
+                "user_id"
+              ],
+              "destSchema": "workspace_member"
+            },
+            {
+              "sourceField": [
+                "workspace_id"
+              ],
+              "destField": [
+                "id"
+              ],
+              "destSchema": "workspace"
+            }
+          ]
+        }
       },
       "user_pref": {
         "tableName": "user_pref",
@@ -2604,15 +2708,6 @@
           }
         },
         "relationships": {
-          "members": {
-            "sourceField": [
-              "id"
-            ],
-            "destField": [
-              "workspace_id"
-            ],
-            "destSchema": "workspace_member"
-          },
           "sessionMembers": [
             {
               "sourceField": [
@@ -2685,6 +2780,15 @@
               "id"
             ],
             "destSchema": "user"
+          },
+          "workspace": {
+            "sourceField": [
+              "workspace_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "workspace"
           }
         }
       }

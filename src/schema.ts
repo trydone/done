@@ -33,11 +33,6 @@ export const workspaceSchema = {
   },
   primaryKey: ["id"],
   relationships: {
-    members: {
-      sourceField: "id",
-      destField: "workspace_id",
-      destSchema: () => workspaceMemberSchema,
-    },
     sessionMembers: [
       {
         sourceField: "id",
@@ -51,7 +46,7 @@ export const workspaceSchema = {
       },
     ],
   },
-} as const satisfies TableSchema;
+} as const;
 
 export const teamSchema = createTableSchema({
   tableName: "team",
@@ -85,6 +80,11 @@ export const workspaceMemberSchema = {
   },
   primaryKey: ["workspace_id", "user_id"],
   relationships: {
+    workspace: {
+      sourceField: "workspace_id",
+      destField: "id",
+      destSchema: () => workspaceSchema,
+    },
     session: {
       sourceField: "user_id",
       destField: "user_id",
@@ -96,7 +96,7 @@ export const workspaceMemberSchema = {
       destSchema: () => userSchema,
     },
   },
-} as const satisfies TableSchema;
+} as const;
 
 export const teamMemberSchema = createTableSchema({
   tableName: "team_member",
@@ -151,7 +151,7 @@ export const projectSchema = createTableSchema({
   },
 });
 
-export const userSchema = createTableSchema({
+export const userSchema = {
   tableName: "user",
   columns: {
     id: "string",
@@ -164,7 +164,31 @@ export const userSchema = createTableSchema({
     updated_at: "number",
   },
   primaryKey: "id",
-});
+  relationships: {
+    session: {
+      sourceField: "id",
+      destField: "user_id",
+      destSchema: () => sessionSchema,
+    },
+    workspaceMembers: {
+      sourceField: "id",
+      destField: "user_id",
+      destSchema: () => workspaceMemberSchema,
+    },
+    workspaces: [
+      {
+        sourceField: "id",
+        destField: "user_id",
+        destSchema: () => workspaceMemberSchema,
+      },
+      {
+        sourceField: "workspace_id",
+        destField: "id",
+        destSchema: () => workspaceSchema,
+      },
+    ],
+  },
+} as const;
 
 export const taskSchema = {
   tableName: "task",
@@ -500,6 +524,17 @@ export const permissions: ReturnType<typeof definePermissions> =
       eb: ExpressionBuilder<typeof workspaceSchema>
     ) => eb.exists("sessionMembers", (q) => q.where("id", "=", authData.sub));
 
+    const allowUser = (
+      authData: AuthData,
+      eb: ExpressionBuilder<typeof userSchema>
+    ) =>
+      eb.and(
+        userIsLoggedIn(authData, eb),
+        eb.exists("session", (session) =>
+          session.where("id", "=", authData.sub)
+        )
+      );
+
     const canSeeTask = (
       authData: AuthData,
       eb: ExpressionBuilder<typeof taskSchema>
@@ -550,13 +585,13 @@ export const permissions: ReturnType<typeof definePermissions> =
         },
       },
       user: {
-        // Only the authentication system can write to the user table.
         row: {
           insert: NOBODY_CAN,
           update: {
             preMutation: NOBODY_CAN,
           },
           delete: NOBODY_CAN,
+          select: [allowUser],
         },
       },
       task: {

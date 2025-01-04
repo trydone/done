@@ -24,12 +24,12 @@ export default function RootLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
-  const z = useSyncExternalStore(
+  const zero = useSyncExternalStore(
     zeroRef.onChange,
     useCallback(() => zeroRef.value, []),
   );
 
-  if (!z) {
+  if (!zero) {
     return null;
   }
 
@@ -37,7 +37,7 @@ export default function RootLayout({
     <html lang="en">
       <meta name="apple-mobile-web-app-title" content="Done" />
       <body className={`${inter.variable} font-sans antialiased`}>
-        <ZeroProvider zero={z}>
+        <ZeroProvider zero={zero}>
           <RootStoreProvider>
             <LoginProvider>
               <DndProvider>

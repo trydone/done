@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useZero } from "@rocicorp/zero/react";
+import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -39,14 +39,14 @@ type Props = {
 };
 
 export default function Page({ params: { workspaceSlug } }: Props) {
-  const z = useZero<Schema>();
-  const [workspace] = useQuery(z.query.workspace);
+  const zero = useZero();
+  const [workspace] = useQuery(zero.query.workspace);
   const [isUploading, setIsUploading] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
 
   const handleNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      await z.mutate.workspace.update({
+      await zero.mutate.workspace.update({
         id: workspace?.id,
         name: e.target.value,
       });
@@ -58,7 +58,7 @@ export default function Page({ params: { workspaceSlug } }: Props) {
 
   const handleDelete = useCallback(async () => {
     try {
-      await z.mutate.workspace.delete({ id: workspace?.id });
+      await zero.mutate.workspace.delete({ id: workspace?.id });
       toast.success("Workspace scheduled for deletion");
       setDeleteDialogOpen(false);
     } catch (error) {

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useZero } from "@rocicorp/zero/react";
+import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,15 +17,15 @@ import { Schema } from "@/schema";
 import { toast } from "sonner";
 
 export default function Page() {
-  const z = useZero<Schema>();
+  const zero = useZero();
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState(true);
 
-  const [workspaces] = useQuery(z.query.workspace);
+  const [workspaces] = useQuery(zero.query.workspace);
 
   const handleLeave = async (workspaceId: string) => {
     try {
-      await z.mutate.workspace.delete({ id: workspaceId });
+      await zero.mutate.workspace.delete({ id: workspaceId });
       toast.success("Left workspace successfully");
     } catch (error) {
       toast.error("Failed to leave workspace");

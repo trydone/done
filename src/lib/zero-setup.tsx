@@ -36,7 +36,9 @@ authAtom.onChange((auth) => {
     return;
   }
 
-  const z = new Zero({
+  console.log({ userID: auth?.decoded?.sub });
+
+  const zero = new Zero({
     logLevel: "info",
     server: process.env.NEXT_PUBLIC_SERVER,
     userID: auth?.decoded?.sub ?? "anon",
@@ -51,23 +53,23 @@ authAtom.onChange((auth) => {
     schema,
     kvStore: "mem",
   });
-  zeroAtom.value = z;
+  zeroAtom.value = zero;
 
-  exposeDevHooks(z);
+  exposeDevHooks(zero);
 });
 
 let didPreload = false;
 
-export const preload = (z: Zero<Schema>) => {
+export const preload = (zero: Zero<Schema>) => {
   if (didPreload) {
     return;
   }
 
   didPreload = true;
 
-  const baseTaskQuery = z.query.task
+  const baseTaskQuery = zero.query.task
     .related("tags")
-    .related("view_state", (q) => q.where("user_id", z.userID).one());
+    .related("view_state", (q) => q.where("user_id", zero.userID).one());
 
   const { cleanup, complete } = baseTaskQuery.preload();
   complete.then(() => {
@@ -76,30 +78,30 @@ export const preload = (z: Zero<Schema>) => {
       .related("creator")
       .related("assignee")
       .related("emoji", (emoji) =>
-        emoji.related("creator", (creator) => creator.one())
+        emoji.related("creator", (creator) => creator.one()),
       )
       .related("comments", (comments) =>
         comments
           .related("creator", (creator) => creator.one())
           .related("emoji", (emoji) =>
-            emoji.related("creator", (creator) => creator.one())
+            emoji.related("creator", (creator) => creator.one()),
           )
           .limit(INITIAL_COMMENT_LIMIT)
-          .orderBy("created_at", "desc")
+          .orderBy("created_at", "desc"),
       )
       .preload();
   });
 
-  z.query.user.preload();
-  z.query.tag.preload();
+  zero.query.user.preload();
+  zero.query.tag.preload();
 };
 
 // To enable accessing zero in the devtools easily.
-function exposeDevHooks(z: Zero<Schema>) {
+function exposeDevHooks(zero: Zero<Schema>) {
   const casted = window as unknown as {
     z?: Zero<Schema>;
   };
-  casted.z = z;
+  casted.z = zero;
 }
 
 export { authAtom as authRef, zeroAtom as zeroRef };

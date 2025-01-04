@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useZero } from "@rocicorp/zero/react";
+import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,12 +22,12 @@ type Props = {
 };
 
 export default function Page({ params: { workspaceSlug, teamSlug } }: Props) {
-  const z = useZero<Schema>();
-  const [team] = useQuery(z.query.team);
+  const zero = useZero();
+  const [team] = useQuery(zero.query.team);
 
   const handleDeleteTeam = async () => {
     try {
-      await z.mutate.team.delete({ id: team?.id });
+      await zero.mutate.team.delete({ id: team?.id });
       toast.success("Team scheduled for deletion");
     } catch (error) {
       toast.error("Failed to delete team");

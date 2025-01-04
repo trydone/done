@@ -1,8 +1,9 @@
-import { deleteCookie, getCookie } from "cookies-next/client";
+import { deleteCookie, getCookie } from "cookies-next";
 import { decodeJwt } from "jose";
 
 export const getJwt = () => {
   const token = getRawJwt();
+
   if (!token) {
     return undefined;
   }

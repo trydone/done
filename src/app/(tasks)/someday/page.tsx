@@ -1,12 +1,12 @@
 "use client";
 
 import { TaskList } from "@/components/task/task-list";
-import { useQuery, useZero } from "@rocicorp/zero/react";
+import { useQuery } from "@rocicorp/zero/react";
 
 export default function Page() {
-  const z = useZero();
+  const zero = useZero();
 
-  const q = z.query.task;
+  const q = zero.query.task;
 
   const [tasks] = useQuery(
     q

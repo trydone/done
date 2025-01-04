@@ -116,7 +116,6 @@ export async function GET(request: NextRequest) {
     cookies().set("jwt", jwt, {
       path: "/",
       expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
     });

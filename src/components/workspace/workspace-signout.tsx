@@ -1,10 +1,11 @@
 "use client";
 import * as React from "react";
-import { useQuery, useZero } from "@rocicorp/zero/react";
+import { useQuery } from "@rocicorp/zero/react";
 import { Schema } from "@/schema";
 import { Button } from "@/components/ui/button";
 import { RootStoreContext } from "@/lib/stores/root-store";
 import { observer } from "mobx-react-lite";
+import { useZero } from "@/hooks/use-zero";
 
 interface Compound
   extends React.FC<{
@@ -22,7 +23,7 @@ export const WorkspaceSignout: Compound = ({ onSignout }) => (
 );
 
 const Block: Compound["Block"] = observer(({ userId }) => {
-  const zero = useZero<Schema>();
+  const zero = useZero();
 
   const [sessions] = useQuery(zero.query.session);
 

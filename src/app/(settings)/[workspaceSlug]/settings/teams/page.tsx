@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useZero } from "@rocicorp/zero/react";
+import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -23,9 +23,9 @@ type Props = {
 };
 
 export default function Page({ params: { workspaceSlug } }: Props) {
-  const z = useZero<Schema>();
+  const zero = useZero();
   const router = useRouter();
-  const [teams] = useQuery(z.query.team);
+  const [teams] = useQuery(zero.query.team);
   const [search, setSearch] = React.useState("");
 
   const filteredTeams = React.useMemo(() => {

@@ -28,7 +28,7 @@ type Props = {
 };
 
 export const NewTaskDialog = ({ open, onClose }: Props) => {
-  const z = useZero();
+  const zero = useZero();
 
   const form = useForm<TaskFormValues>({
     resolver: zodResolver(taskFormSchema),
@@ -40,13 +40,13 @@ export const NewTaskDialog = ({ open, onClose }: Props) => {
 
   const onSubmit = (data: TaskFormValues) => {
     const id = v4();
-    z.mutate.task.insert({
+    zero.mutate.task.insert({
       id,
       workspace_id: `b1b6643f-e485-4a11-947c-af24dc7d17ee`,
       title: data.title,
-      description: data.description,
+      description: data?.description || "",
       created_at: Date.now(),
-      creator_id: z.userID,
+      creator_id: zero.userID,
       updated_at: Date.now(),
       start: "not_started",
       start_bucket: "inbox",

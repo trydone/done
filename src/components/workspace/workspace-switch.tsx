@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { observer } from "mobx-react-lite";
-import { useQuery, useZero } from "@rocicorp/zero/react";
+import { useQuery } from "@rocicorp/zero/react";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,7 @@ import { Schema, WorkspaceRow, UserRow, WorkspaceMemberRow } from "@/schema";
 import { RootStoreContext } from "@/lib/stores/root-store";
 import { H2 } from "@/components/shared/typography";
 import { WorkspaceSignout } from "./workspace-signout";
+import { useZero } from "@/hooks/use-zero";
 
 type ExtendedWorkspaceMemberRow = WorkspaceMemberRow & {
   workspace: readonly WorkspaceRow[];
@@ -95,7 +96,7 @@ const AllWorkspaces: Compound["AllWorkspaces"] = ({ active, onClick }) => (
 WorkspaceSwitch.AllWorkspaces = AllWorkspaces;
 
 const Block: Compound["Block"] = observer(() => {
-  const zero = useZero<Schema>();
+  const zero = useZero();
 
   const [users] = useQuery(
     zero.query.user.related("workspaceMembers", (q) => q.related("workspace")),

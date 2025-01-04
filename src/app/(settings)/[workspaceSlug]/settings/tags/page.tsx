@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useZero } from "@rocicorp/zero/react";
+import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -28,8 +28,8 @@ type Props = {
 };
 
 export default function Page({ params: { workspaceSlug } }: Props) {
-  const z = useZero<Schema>();
-  const [tags] = useQuery(z.query.tag);
+  const zero = useZero();
+  const [tags] = useQuery(zero.query.tag);
   const [search, setSearch] = React.useState("");
 
   const filteredTags = React.useMemo(() => {

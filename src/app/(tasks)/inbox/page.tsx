@@ -1,22 +1,15 @@
 "use client";
 
 import { TaskList } from "@/components/task/task-list";
-import { useQuery, useZero } from "@rocicorp/zero/react";
+import { useZero } from "@/hooks/use-zero";
+import { useQuery } from "@rocicorp/zero/react";
 
 export default function Page() {
-  const z = useZero();
+  const zero = useZero();
 
-  const q = z.query.task;
+  const [tasks] = useQuery(zero.query.task);
 
-  const [tasks] = useQuery(
-    q
-      .where("start", "=", "not_started")
-      .where("archived_at", "IS", null)
-      .where("completed_at", "IS", null)
-      .orderBy("sort_order", "asc"),
-  );
-
-  console.log(tasks);
+  console.log({ tasks });
 
   return (
     <div>

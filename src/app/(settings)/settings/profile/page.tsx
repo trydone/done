@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useZero } from "@rocicorp/zero/react";
 import { useQuery } from "@rocicorp/zero/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,15 +21,22 @@ import {
 import { Lock, Mail, Shield } from "lucide-react";
 import { Schema } from "@/schema";
 import { toast } from "sonner";
+import { useZero } from "@/hooks/use-zero";
+import { useLogin } from "@/hooks/use-login";
 
-export default function SettingsPage() {
-  const z = useZero<Schema>();
-  const [user] = useQuery(z.query.user);
+export default function Page() {
+  const login = useLogin();
+  const zero = useZero();
+  const [user] = useQuery(
+    zero.query.user.where("id", login.loginState?.decoded.sub || "").one(),
+  );
   const [isUploading, setIsUploading] = React.useState(false);
+
+  console.log({ login, sub: login.loginState?.decoded.sub, user });
 
   const handleNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      await z.mutate.user.update({
+      await zero.mutate.user.update({
         id: user?.id,
         name: e.target.value,
       });
@@ -47,7 +53,7 @@ export default function SettingsPage() {
     try {
       const file = e.target.files[0];
       // Implement your file upload logic here
-      await z.mutate.user.update({
+      await zero.mutate.user.update({
         id: user?.id,
         avatar: "uploaded-url",
       });

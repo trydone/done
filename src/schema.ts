@@ -31,7 +31,7 @@ export const workspaceSchema = {
     created_at: "number",
     updated_at: "number",
   },
-  primaryKey: ["id"],
+  primaryKey: "id",
   relationships: {
     sessionMembers: [
       {
@@ -71,14 +71,14 @@ export const teamSchema = createTableSchema({
 export const workspaceMemberSchema = {
   tableName: "workspace_member",
   columns: {
-    id: { type: "string" },
+    id: "string",
     workspace_id: "string",
     user_id: "string",
     role: "string",
     created_at: "number",
     updated_at: "number",
   },
-  primaryKey: ["workspace_id", "user_id"],
+  primaryKey: "id",
   relationships: {
     workspace: {
       sourceField: "workspace_id",
@@ -108,7 +108,7 @@ export const teamMemberSchema = createTableSchema({
     created_at: "number",
     updated_at: "number",
   },
-  primaryKey: ["team_id", "user_id"],
+  primaryKey: "id",
   relationships: {
     team: {
       sourceField: "team_id",
@@ -300,11 +300,12 @@ export const taskSchema = {
 export const viewStateSchema = createTableSchema({
   tableName: "view_state",
   columns: {
+    id: "string",
     task_id: "string",
     user_id: "string",
     viewed_at: "number",
   },
-  primaryKey: ["user_id", "task_id"],
+  primaryKey: "id",
 });
 
 export const taskCommentSchema = {
@@ -375,10 +376,11 @@ export const tagSchema = createTableSchema({
 export const taskTagSchema = {
   tableName: "task_tag",
   columns: {
+    id: "string",
     task_id: "string",
     tag_id: "string",
   },
-  primaryKey: ["task_id", "tag_id"],
+  primaryKey: "id",
   relationships: {
     task: {
       sourceField: "task_id",
@@ -430,16 +432,6 @@ export const sessionSchema = createTableSchema({
   primaryKey: ["id", "user_id"],
 });
 
-export const userPrefSchema = createTableSchema({
-  tableName: "user_pref",
-  columns: {
-    key: "string",
-    user_id: "string",
-    value: "string",
-  },
-  primaryKey: ["user_id", "key"],
-});
-
 export type EnterpriseRow = Row<typeof enterpriseSchema>;
 export type WorkspaceRow = Row<typeof workspaceSchema>;
 export type TeamRow = Row<typeof teamSchema>;
@@ -478,7 +470,6 @@ export const schema = createSchema({
     view_state: viewStateSchema,
     emoji: emojiSchema,
     session: sessionSchema,
-    user_pref: userPrefSchema,
   },
 });
 
@@ -498,7 +489,10 @@ export const permissions: ReturnType<typeof definePermissions> =
     const userIsLoggedIn = (
       authData: AuthData,
       { cmpLit }: ExpressionBuilder<TableSchema>,
-    ) => cmpLit(authData.sub, "IS NOT", null);
+    ) => {
+      console.log({ authData });
+      return cmpLit(authData.sub, "IS NOT", null);
+    };
 
     const loggedInUserIsCreator = (
       authData: AuthData,
@@ -527,9 +521,7 @@ export const permissions: ReturnType<typeof definePermissions> =
 
     const allowIfUserIDMatchesLoggedInUser = (
       authData: AuthData,
-      {
-        cmp,
-      }: ExpressionBuilder<typeof viewStateSchema | typeof userPrefSchema>,
+      { cmp }: ExpressionBuilder<typeof viewStateSchema>,
     ) => cmp("user_id", "=", authData.sub);
 
     const allowIfAdminOrTaskCreator = (
@@ -707,16 +699,6 @@ export const permissions: ReturnType<typeof definePermissions> =
         row: {
           delete: [allowYourSession],
           select: [allowYourSession],
-        },
-      },
-      user_pref: {
-        row: {
-          insert: [allowIfUserIDMatchesLoggedInUser],
-          update: {
-            preMutation: [allowIfUserIDMatchesLoggedInUser],
-            postMutation: [allowIfUserIDMatchesLoggedInUser],
-          },
-          delete: [allowIfUserIDMatchesLoggedInUser],
         },
       },
     };

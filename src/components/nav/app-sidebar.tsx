@@ -20,41 +20,42 @@ import { AppSidebarItem } from "./app-sidebar-item";
 import { useLogin } from "@/hooks/use-login";
 import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
+import { WorkspaceSwitch } from "../workspace/workspace-switch";
 
 const items = [
   {
     title: "Inbox",
-    url: "inbox",
+    url: "/inbox",
     icon: InboxIcon,
   },
   {
     title: "Today",
-    url: "today",
+    url: "/today",
     icon: StarIcon,
   },
   {
     title: "Upcoming",
-    url: "upcoming",
+    url: "/upcoming",
     icon: CalendarIcon,
   },
   {
     title: "Anytime",
-    url: "anytime",
+    url: "/anytime",
     icon: LayersIcon,
   },
   {
     title: "Someday",
-    url: "someday",
+    url: "/someday",
     icon: ArchiveIcon,
   },
   {
     title: "Logbook",
-    url: "logbook",
+    url: "/logbook",
     icon: BookCheckIcon,
   },
   {
     title: "Trash",
-    url: "trash",
+    url: "/trash",
     icon: TrashIcon,
   },
 ];
@@ -81,6 +82,8 @@ export const AppSidebar = () => {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
+              <WorkspaceSwitch.Block />
+
               {items.map((item, index) => (
                 <AppSidebarItem item={item} key={index} />
               ))}

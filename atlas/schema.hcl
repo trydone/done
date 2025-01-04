@@ -3,6 +3,7 @@ table "team" {
   column "id" {
     null = false
     type = uuid
+    default = sql("gen_random_uuid()")
   }
   column "name" {
     null = false
@@ -40,11 +41,13 @@ table "team" {
     columns = [column.workspace_id, column.slug]
   }
 }
+
 table "team_member" {
   schema = schema.public
   column "id" {
     null = false
     type = uuid
+    default = sql("gen_random_uuid()")
   }
   column "team_id" {
     null = false
@@ -94,8 +97,9 @@ table "project" {
   schema = schema.public
 
   column "id" {
-    type = uuid
     null = false
+    type = uuid
+    default = sql("gen_random_uuid()")
   }
 
   column "name" {
@@ -160,6 +164,12 @@ table "project" {
 table "project_team" {
   schema = schema.public
 
+  column "id" {
+    null = false
+    type = uuid
+    default = sql("gen_random_uuid()")
+  }
+
   column "project_id" {
     type = uuid
     null = false
@@ -177,7 +187,7 @@ table "project_team" {
   }
 
   primary_key {
-    columns = [column.project_id, column.team_id]
+    columns = [column.id]
   }
 
   foreign_key "project_team_project_id_fk" {
@@ -197,8 +207,9 @@ table "task" {
   schema = schema.public
 
   column "id" {
-    type = uuid
     null = false
+    type = uuid
+    default = sql("gen_random_uuid()")
   }
 
   column "title" {
@@ -336,8 +347,9 @@ table "task" {
 table "checklist_item" {
   schema = schema.public
   column "id" {
-    type = uuid
     null = false
+    type = uuid
+    default = sql("gen_random_uuid()")
   }
   column "task_id" {
     type = uuid
@@ -383,6 +395,7 @@ table "emoji" {
   column "id" {
     null = false
     type = uuid
+    default = sql("gen_random_uuid()")
   }
   column "value" {
     null = false
@@ -435,6 +448,7 @@ table "enterprise" {
   column "id" {
     null = false
     type = uuid
+    default = sql("gen_random_uuid()")
   }
   column "name" {
     null = false
@@ -468,6 +482,7 @@ table "tag" {
   column "id" {
     null = false
     type = uuid
+    default = sql("gen_random_uuid()")
   }
   column "name" {
     null = false
@@ -511,6 +526,7 @@ table "task_comment" {
   column "id" {
     null = false
     type = uuid
+    default = sql("gen_random_uuid()")
   }
   column "task_id" {
     null = false
@@ -553,6 +569,12 @@ table "task_comment" {
 
 table "task_tag" {
   schema = schema.public
+  column "id" {
+    null = false
+    type = uuid
+    default = sql("gen_random_uuid()")
+  }
+
   column "task_id" {
     null = false
     type = uuid
@@ -567,7 +589,7 @@ table "task_tag" {
     default = sql("now()")
   }
   primary_key {
-    columns = [column.task_id, column.tag_id]
+    columns = [column.id]
   }
   foreign_key "task_tag_tag_id_fk" {
     columns     = [column.tag_id]
@@ -588,6 +610,7 @@ table "user" {
   column "id" {
     null = false
     type = uuid
+    default = sql("gen_random_uuid()")
   }
   column "username" {
     null = false
@@ -635,6 +658,11 @@ table "user" {
 
 table "view_state" {
   schema = schema.public
+  column "id" {
+    null = false
+    type = uuid
+    default = sql("gen_random_uuid()")
+  }
   column "user_id" {
     null = false
     type = uuid
@@ -648,7 +676,7 @@ table "view_state" {
     type = timestamptz
   }
   primary_key {
-    columns = [column.user_id, column.task_id]
+    columns = [column.id]
   }
   foreign_key "view_state_task_id_fk" {
     columns     = [column.task_id]
@@ -669,6 +697,7 @@ table "workspace" {
   column "id" {
     null = false
     type = uuid
+    default = sql("gen_random_uuid()")
   }
   column "name" {
     null = false
@@ -709,6 +738,11 @@ table "workspace" {
 
 table "workspace_member" {
   schema = schema.public
+  column "id" {
+    null = false
+    type = uuid
+    default = sql("gen_random_uuid()")
+  }
   column "workspace_id" {
     null = false
     type = uuid
@@ -733,7 +767,7 @@ table "workspace_member" {
     default = sql("now()")
   }
   primary_key {
-    columns = [column.workspace_id, column.user_id]
+    columns = [column.id]
   }
   foreign_key "workspace_member_user_id_fk" {
     columns     = [column.user_id]
@@ -758,6 +792,7 @@ table "session" {
   column "id" {
     null = false
     type = uuid
+    default = sql("gen_random_uuid()")
   }
   column "user_id" {
     null = false

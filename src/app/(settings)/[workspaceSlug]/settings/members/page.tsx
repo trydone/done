@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useZero } from "@rocicorp/zero/react";
+import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -36,8 +36,8 @@ type Props = {
 };
 
 export default function Page({ params: { workspaceSlug } }: Props) {
-  const z = useZero<Schema>();
-  const [members] = useQuery(z.query.workspace_member);
+  const zero = useZero();
+  const [members] = useQuery(zero.query.workspace_member);
   const [search, setSearch] = React.useState("");
   const [filter, setFilter] = React.useState<"All" | "Admin" | "Member">("All");
 

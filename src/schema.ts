@@ -1,4 +1,5 @@
 import {
+  ANYONE_CAN,
   type ExpressionBuilder,
   NOBODY_CAN,
   type Row,
@@ -430,6 +431,13 @@ export const sessionSchema = createTableSchema({
     updated_at: "number",
   },
   primaryKey: ["id", "user_id"],
+  relationships: {
+    user: {
+      sourceField: "user_id",
+      destField: "id",
+      destSchema: userSchema,
+    },
+  },
 });
 
 export type EnterpriseRow = Row<typeof enterpriseSchema>;
@@ -490,7 +498,6 @@ export const permissions: ReturnType<typeof definePermissions> =
       authData: AuthData,
       { cmpLit }: ExpressionBuilder<TableSchema>,
     ) => {
-      console.log({ authData });
       return cmpLit(authData.sub, "IS NOT", null);
     };
 
@@ -613,12 +620,16 @@ export const permissions: ReturnType<typeof definePermissions> =
       },
       user: {
         row: {
-          insert: NOBODY_CAN,
-          update: {
-            preMutation: NOBODY_CAN,
-          },
-          delete: NOBODY_CAN,
-          select: [allowUser],
+          insert: ANYONE_CAN,
+          update: ANYONE_CAN,
+          delete: ANYONE_CAN,
+          // select: [allowUser],
+          // insert: NOBODY_CAN,
+          // update: {
+          //   preMutation: NOBODY_CAN,
+          // },
+          // delete: NOBODY_CAN,
+          // select: [allowUser],
         },
       },
       task: {

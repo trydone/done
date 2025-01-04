@@ -16,8 +16,6 @@ export default function Page() {
       .orderBy("sort_order", "asc"),
   );
 
-  console.log(tasks);
-
   return (
     <div>
       <h1>Someday</h1>

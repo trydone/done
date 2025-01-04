@@ -83,76 +83,7 @@
     },
     "user": {
       "row": {
-        "select": [
-          [
-            "allow",
-            {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "simple",
-                  "left": {
-                    "type": "static",
-                    "anchor": "authData",
-                    "field": "sub"
-                  },
-                  "right": {
-                    "type": "literal",
-                    "value": null
-                  },
-                  "op": "IS NOT"
-                },
-                {
-                  "type": "correlatedSubquery",
-                  "related": {
-                    "system": "permissions",
-                    "correlation": {
-                      "parentField": [
-                        "id"
-                      ],
-                      "childField": [
-                        "user_id"
-                      ]
-                    },
-                    "subquery": {
-                      "table": "session",
-                      "alias": "zsubq_session",
-                      "where": {
-                        "type": "simple",
-                        "left": {
-                          "type": "column",
-                          "name": "id"
-                        },
-                        "right": {
-                          "type": "static",
-                          "anchor": "authData",
-                          "field": "sub"
-                        },
-                        "op": "="
-                      },
-                      "orderBy": [
-                        [
-                          "id",
-                          "asc"
-                        ],
-                        [
-                          "user_id",
-                          "asc"
-                        ]
-                      ]
-                    }
-                  },
-                  "op": "EXISTS"
-                }
-              ]
-            }
-          ]
-        ],
-        "insert": [],
-        "update": {
-          "preMutation": []
-        },
-        "delete": []
+        "update": {}
       }
     },
     "task": {
@@ -2136,7 +2067,17 @@
             "optional": false
           }
         },
-        "relationships": {}
+        "relationships": {
+          "user": {
+            "sourceField": [
+              "user_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "user"
+          }
+        }
       },
       "tag": {
         "tableName": "tag",

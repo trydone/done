@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { SignJWT } from "jose";
+import { decodeJwt, SignJWT } from "jose";
 import { Octokit } from "@octokit/core";
 import postgres from "postgres";
 import { NextRequest, NextResponse } from "next/server";
@@ -96,14 +96,36 @@ export async function GET(request: NextRequest) {
         )`;
     }
 
-    // Get user role
-    const userRows = await sql`SELECT * FROM "user" WHERE "id" = ${userId}`;
+    // Handle session creation/lookup
+    const cookieStore = await cookies();
+    const token = cookieStore.get("jwt");
+    let sessionId = v4();
 
-    // Create JWT
+    if (token) {
+      const payload = decodeJwt(token.value);
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (payload.exp && payload.exp >= currentTime && payload.sub) {
+        sessionId = payload.sub;
+      }
+    }
+
+    // Check for existing session
+    const existingSessionId =
+      await sql`SELECT id FROM "session" WHERE "id" = ${sessionId} AND "user_id" = ${userId}`;
+
+    if (existingSessionId.length === 0) {
+      await sql`
+         INSERT INTO "session" ("id", "user_id")
+         VALUES (${sessionId}, ${userId})
+       `;
+    }
+
+    // Get user role and create JWT
+    const userRows = await sql`SELECT * FROM "user" WHERE "id" = ${userId}`;
     const jwtPayload = {
-      sub: userId,
+      sub: sessionId,
       iat: Math.floor(Date.now() / 1000),
-      role: userRows[0].role,
+      role: userRows[0].role || "user",
       name: userDetails.data.login,
     };
 
@@ -113,15 +135,15 @@ export async function GET(request: NextRequest) {
       .sign(new TextEncoder().encode(AUTH_SECRET));
 
     // Set cookie
-    cookies().set("jwt", jwt, {
+    cookieStore.set("jwt", jwt, {
       path: "/",
-      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      maxAge: 60 * 60 * 24 * 30,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
     });
 
-    // Redirect to specified page or home
-    const redirectUrl = state || "/";
+    // Redirect
+    const redirectUrl = state ? decodeURIComponent(state) : "/";
     return NextResponse.redirect(new URL(redirectUrl, request.url));
   } catch (error) {
     console.error("Authentication error:", error);

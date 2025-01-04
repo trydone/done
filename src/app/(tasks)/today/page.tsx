@@ -26,8 +26,6 @@ export default function Page() {
       .orderBy("sort_order", "asc"),
   );
 
-  console.log(todayTasks, eveningTasks);
-
   return (
     <div>
       <h1>Today</h1>

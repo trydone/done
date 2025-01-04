@@ -9,8 +9,6 @@ export default function Page() {
 
   const [tasks] = useQuery(zero.query.task);
 
-  console.log({ tasks });
-
   return (
     <div>
       <h1>Inbox</h1>

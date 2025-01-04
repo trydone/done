@@ -36,8 +36,6 @@ authAtom.onChange((auth) => {
     return;
   }
 
-  console.log({ userID: auth?.decoded?.sub });
-
   const zero = new Zero({
     logLevel: "info",
     server: process.env.NEXT_PUBLIC_SERVER,

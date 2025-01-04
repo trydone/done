@@ -19,7 +19,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Lock, Mail, Shield } from "lucide-react";
-import { Schema } from "@/schema";
 import { toast } from "sonner";
 import { useZero } from "@/hooks/use-zero";
 import { useLogin } from "@/hooks/use-login";
@@ -27,12 +26,15 @@ import { useLogin } from "@/hooks/use-login";
 export default function Page() {
   const login = useLogin();
   const zero = useZero();
-  const [user] = useQuery(
-    zero.query.user.where("id", login.loginState?.decoded.sub || "").one(),
+  const [session] = useQuery(
+    zero.query.session
+      .where("id", login.loginState?.decoded.sub || "")
+      .one()
+      .related("user"),
   );
   const [isUploading, setIsUploading] = React.useState(false);
 
-  console.log({ login, sub: login.loginState?.decoded.sub, user });
+  const user = session?.user?.[0];
 
   const handleNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {

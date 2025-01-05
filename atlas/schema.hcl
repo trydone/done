@@ -222,6 +222,82 @@ table "task" {
     null = true
   }
 
+  column "sort_order" {
+    null = false
+    type = double_precision
+    default = 0
+  }
+
+  column "today_sort_order" {
+    null = false
+    type = double_precision
+    default = 0
+  }
+
+  column "today_index_reference_date" {
+    type = timestamptz
+    null = true
+  }
+
+  column "created_at" {
+    type = timestamptz
+    null = false
+    default = sql("now()")
+  }
+
+  column "updated_at" {
+    type = timestamptz
+    null = false
+    default = sql("now()")
+  }
+
+  column "completed_at" {
+    type = timestamptz
+    null = true
+  }
+
+  column "archived_at" {
+    type = timestamptz
+    null = true
+  }
+
+  column "start" {
+    type = text // not_started | started | postponed
+    null = false
+    default = "not_started"
+  }
+
+  column "start_date" {
+    type = timestamptz
+    null = true
+  }
+
+  column "start_bucket" {
+    type = text // today | evening
+    null = false
+    default = "today"
+  }
+
+  column "deadline_at" {
+    type = timestamptz
+    null = true
+  }
+
+  column "deadline_suppression_at" {
+    type = timestamptz
+    null = true
+  }
+
+  column "reminder_at" {
+    type = timestamptz
+    null = true
+  }
+
+  column "last_reminder_interaction_at" {
+    type = timestamptz
+    null = true
+  }
+
   column "workspace_id" {
     type = uuid
     null = false
@@ -245,56 +321,6 @@ table "task" {
   column "assignee_id" {
     type = uuid
     null = true
-  }
-
-  column "sort_order" {
-    null = false
-    type = double_precision
-    default = 0
-  }
-
-  column "start" {
-    type = text // not_started | started | postponed
-    null = false
-    default = "not_started"
-  }
-
-  column "start_date" {
-    type = timestamptz
-    null = true
-  }
-
-  column "start_bucket" {
-    type = text // today | evening
-    null = false
-    default = "today"
-  }
-
-  column "due_date" {
-    type = timestamptz
-    null = true
-  }
-
-  column "completed_at" {
-    type = timestamptz
-    null = true
-  }
-
-  column "archived_at" {
-    type = timestamptz
-    null = true
-  }
-
-  column "created_at" {
-    type = timestamptz
-    null = false
-    default = sql("now()")
-  }
-
-  column "updated_at" {
-    type = timestamptz
-    null = false
-    default = sql("now()")
   }
 
   primary_key {

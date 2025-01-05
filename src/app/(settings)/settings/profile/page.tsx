@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useQuery } from "@rocicorp/zero/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +21,7 @@ import { Lock, Mail, Shield } from "lucide-react";
 import { toast } from "sonner";
 import { useZero } from "@/hooks/use-zero";
 import { useLogin } from "@/hooks/use-login";
+import { ChangeEvent, useState } from "react";
 
 export default function Page() {
   const login = useLogin();
@@ -32,11 +32,11 @@ export default function Page() {
       .one()
       .related("user"),
   );
-  const [isUploading, setIsUploading] = React.useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const user = session?.user?.[0];
 
-  const handleNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNameChange = async (e: ChangeEvent<HTMLInputElement>) => {
     try {
       await zero.mutate.user.update({
         id: user?.id,
@@ -48,7 +48,7 @@ export default function Page() {
     }
   };
 
-  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.[0]) return;
     setIsUploading(true);
 

@@ -88,319 +88,7 @@
     },
     "task": {
       "row": {
-        "select": [
-          [
-            "allow",
-            {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "simple",
-                  "left": {
-                    "type": "static",
-                    "anchor": "authData",
-                    "field": "sub"
-                  },
-                  "right": {
-                    "type": "literal",
-                    "value": null
-                  },
-                  "op": "IS NOT"
-                },
-                {
-                  "type": "correlatedSubquery",
-                  "related": {
-                    "system": "permissions",
-                    "correlation": {
-                      "parentField": [
-                        "creator_id"
-                      ],
-                      "childField": [
-                        "user_id"
-                      ]
-                    },
-                    "subquery": {
-                      "table": "session",
-                      "alias": "zsubq_session",
-                      "where": {
-                        "type": "simple",
-                        "left": {
-                          "type": "column",
-                          "name": "id"
-                        },
-                        "right": {
-                          "type": "static",
-                          "anchor": "authData",
-                          "field": "sub"
-                        },
-                        "op": "="
-                      },
-                      "orderBy": [
-                        [
-                          "id",
-                          "asc"
-                        ],
-                        [
-                          "user_id",
-                          "asc"
-                        ]
-                      ]
-                    }
-                  },
-                  "op": "EXISTS"
-                }
-              ]
-            }
-          ]
-        ],
-        "insert": [
-          [
-            "allow",
-            {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "simple",
-                  "left": {
-                    "type": "static",
-                    "anchor": "authData",
-                    "field": "sub"
-                  },
-                  "right": {
-                    "type": "literal",
-                    "value": null
-                  },
-                  "op": "IS NOT"
-                },
-                {
-                  "type": "simple",
-                  "left": {
-                    "type": "column",
-                    "name": "creator_id"
-                  },
-                  "right": {
-                    "type": "static",
-                    "anchor": "authData",
-                    "field": "sub"
-                  },
-                  "op": "="
-                }
-              ]
-            }
-          ]
-        ],
-        "update": {
-          "preMutation": [
-            [
-              "allow",
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "simple",
-                    "left": {
-                      "type": "static",
-                      "anchor": "authData",
-                      "field": "sub"
-                    },
-                    "right": {
-                      "type": "literal",
-                      "value": null
-                    },
-                    "op": "IS NOT"
-                  },
-                  {
-                    "type": "simple",
-                    "left": {
-                      "type": "column",
-                      "name": "creator_id"
-                    },
-                    "right": {
-                      "type": "static",
-                      "anchor": "authData",
-                      "field": "sub"
-                    },
-                    "op": "="
-                  }
-                ]
-              }
-            ],
-            [
-              "allow",
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "simple",
-                    "left": {
-                      "type": "static",
-                      "anchor": "authData",
-                      "field": "sub"
-                    },
-                    "right": {
-                      "type": "literal",
-                      "value": null
-                    },
-                    "op": "IS NOT"
-                  },
-                  {
-                    "type": "simple",
-                    "left": {
-                      "type": "static",
-                      "anchor": "authData",
-                      "field": "role"
-                    },
-                    "right": {
-                      "type": "literal",
-                      "value": "admin"
-                    },
-                    "op": "="
-                  }
-                ]
-              }
-            ]
-          ],
-          "postMutation": [
-            [
-              "allow",
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "simple",
-                    "left": {
-                      "type": "static",
-                      "anchor": "authData",
-                      "field": "sub"
-                    },
-                    "right": {
-                      "type": "literal",
-                      "value": null
-                    },
-                    "op": "IS NOT"
-                  },
-                  {
-                    "type": "simple",
-                    "left": {
-                      "type": "column",
-                      "name": "creator_id"
-                    },
-                    "right": {
-                      "type": "static",
-                      "anchor": "authData",
-                      "field": "sub"
-                    },
-                    "op": "="
-                  }
-                ]
-              }
-            ],
-            [
-              "allow",
-              {
-                "type": "and",
-                "conditions": [
-                  {
-                    "type": "simple",
-                    "left": {
-                      "type": "static",
-                      "anchor": "authData",
-                      "field": "sub"
-                    },
-                    "right": {
-                      "type": "literal",
-                      "value": null
-                    },
-                    "op": "IS NOT"
-                  },
-                  {
-                    "type": "simple",
-                    "left": {
-                      "type": "static",
-                      "anchor": "authData",
-                      "field": "role"
-                    },
-                    "right": {
-                      "type": "literal",
-                      "value": "admin"
-                    },
-                    "op": "="
-                  }
-                ]
-              }
-            ]
-          ]
-        },
-        "delete": [
-          [
-            "allow",
-            {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "simple",
-                  "left": {
-                    "type": "static",
-                    "anchor": "authData",
-                    "field": "sub"
-                  },
-                  "right": {
-                    "type": "literal",
-                    "value": null
-                  },
-                  "op": "IS NOT"
-                },
-                {
-                  "type": "simple",
-                  "left": {
-                    "type": "column",
-                    "name": "creator_id"
-                  },
-                  "right": {
-                    "type": "static",
-                    "anchor": "authData",
-                    "field": "sub"
-                  },
-                  "op": "="
-                }
-              ]
-            }
-          ],
-          [
-            "allow",
-            {
-              "type": "and",
-              "conditions": [
-                {
-                  "type": "simple",
-                  "left": {
-                    "type": "static",
-                    "anchor": "authData",
-                    "field": "sub"
-                  },
-                  "right": {
-                    "type": "literal",
-                    "value": null
-                  },
-                  "op": "IS NOT"
-                },
-                {
-                  "type": "simple",
-                  "left": {
-                    "type": "static",
-                    "anchor": "authData",
-                    "field": "role"
-                  },
-                  "right": {
-                    "type": "literal",
-                    "value": "admin"
-                  },
-                  "op": "="
-                }
-              ]
-            }
-          ]
-        ]
+        "update": {}
       }
     },
     "task_comment": {
@@ -1885,6 +1573,53 @@
   "schema": {
     "version": 1,
     "tables": {
+      "checklist_item": {
+        "tableName": "checklist_item",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "completed_at": {
+            "type": "number",
+            "optional": true
+          },
+          "created_at": {
+            "type": "number",
+            "optional": false
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "sort_order": {
+            "type": "number",
+            "optional": false
+          },
+          "task_id": {
+            "type": "string",
+            "optional": false
+          },
+          "title": {
+            "type": "string",
+            "optional": false
+          },
+          "updated_at": {
+            "type": "number",
+            "optional": false
+          }
+        },
+        "relationships": {
+          "task": {
+            "sourceField": [
+              "task_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "task"
+          }
+        }
+      },
       "emoji": {
         "tableName": "emoji",
         "primaryKey": [
@@ -2122,15 +1857,11 @@
             "type": "string",
             "optional": false
           },
-          "deadline": {
+          "deadline_at": {
             "type": "number",
             "optional": true
           },
-          "deadline_offset": {
-            "type": "number",
-            "optional": true
-          },
-          "deadline_suppression_date": {
+          "deadline_suppression_at": {
             "type": "number",
             "optional": true
           },
@@ -2142,11 +1873,7 @@
             "type": "string",
             "optional": false
           },
-          "index": {
-            "type": "number",
-            "optional": true
-          },
-          "last_reminder_interaction_date": {
+          "last_reminder_interaction_at": {
             "type": "number",
             "optional": true
           },
@@ -2154,11 +1881,7 @@
             "type": "string",
             "optional": true
           },
-          "reminder_time": {
-            "type": "number",
-            "optional": true
-          },
-          "short_id": {
+          "reminder_at": {
             "type": "number",
             "optional": true
           },
@@ -2186,10 +1909,6 @@
             "type": "string",
             "optional": false
           },
-          "today_index": {
-            "type": "number",
-            "optional": true
-          },
           "today_index_reference_date": {
             "type": "number",
             "optional": true
@@ -2216,6 +1935,15 @@
               "id"
             ],
             "destSchema": "user"
+          },
+          "checklistItems": {
+            "sourceField": [
+              "id"
+            ],
+            "destField": [
+              "task_id"
+            ],
+            "destSchema": "checklist_item"
           },
           "comments": {
             "sourceField": [

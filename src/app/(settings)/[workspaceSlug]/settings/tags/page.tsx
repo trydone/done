@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
 import { Input } from "@/components/ui/input";
@@ -22,6 +21,7 @@ import {
 import { Search, MoreHorizontal, Plus, FolderPlus } from "lucide-react";
 import { Schema } from "@/schema";
 import { toast } from "sonner";
+import { useMemo, useState } from "react";
 
 type Props = {
   params: { workspaceSlug: string };
@@ -30,9 +30,9 @@ type Props = {
 export default function Page({ params: { workspaceSlug } }: Props) {
   const zero = useZero();
   const [tags] = useQuery(zero.query.tag);
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = useState("");
 
-  const filteredTags = React.useMemo(() => {
+  const filteredTags = useMemo(() => {
     return tags.filter((tag) =>
       tag.name.toLowerCase().includes(search.toLowerCase()),
     );

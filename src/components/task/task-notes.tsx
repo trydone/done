@@ -27,7 +27,7 @@ export const TaskNotes = ({ task }: Props) => {
       onChange={handleDescriptionChange}
       placeholder="Notes"
       minRows={1}
-      className="w-full resize-none p-0 text-sm leading-relaxed bg-transparent border-none outline-none focus:outline-none focus:ring-0 placeholder:text-muted-foreground"
+      className="w-full resize-none p-0 pb-4 pl-5 text-sm leading-relaxed bg-transparent border-none outline-none focus:outline-none focus:ring-0 placeholder:text-muted-foreground"
       spellCheck="false"
     />
   );

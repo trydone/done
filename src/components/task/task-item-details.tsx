@@ -16,9 +16,9 @@ type Props = {
 
 export const TaskItemDetails = ({ task, checked, onComplete }: Props) => {
   return (
-    <div className="flex flex-col h-full bg-background rounded-lg border">
+    <div className="flex flex-col h-full bg-background rounded-lg shadow-md">
       <TaskHeader task={task} checked={checked} onComplete={onComplete} />
-      <div className="flex-1 overflow-y-auto p-3 space-y-4">
+      <div className="flex-1 overflow-y-auto pt-1 p-4">
         <TaskNotes task={task} />
         <ChecklistList task={task} />
         <TagList task={task} />

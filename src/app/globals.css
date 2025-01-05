@@ -33,13 +33,13 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 210 20% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
+    --sidebar-border: 220 13% 96%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
@@ -98,7 +98,7 @@ body {
 
 .ft-checkbox::after {
   content: "";
-  @apply bg-primary rounded-[6px] opacity-0 scale-50 transition-all ease-linear duration-200 origin-center absolute inset-0;
+  @apply bg-blue-600 rounded-[3px] opacity-0 scale-50 transition-all ease-linear duration-200 origin-center absolute inset-0;
 }
 
 .ft-checkbox[data-state="checked"]::after {
@@ -107,5 +107,5 @@ body {
 
 .ft-checkbox::before {
   content: "";
-  @apply border-[1.5px] border-ring rounded-[6px] transition-all origin-center absolute inset-0;
+  @apply border border-gray-400 rounded-[3px] transition-all origin-center absolute inset-0;
 }

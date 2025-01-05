@@ -25,9 +25,9 @@ export default function Page() {
 
   return (
     <PageContainer>
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-2 items-center mx-4 mb-6">
         <InboxIcon className="size-6" />
-        <h1 className="text-2xl font-bold tracking-tight">Inbox</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Inbox</h1>
       </div>
 
       <TaskList tasks={tasks} />

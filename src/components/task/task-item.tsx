@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useRef, useState } from "react";
 import { RootStoreContext } from "@/lib/stores/root-store";
 import { TaskItemContent } from "./task-item-content";
 import { cn } from "@/lib/utils";
@@ -19,6 +19,7 @@ type Props = {
 export const TaskItem = observer(
   ({ task, isDragging: isOverlayDragging, isSelected }: Props) => {
     const zero = useZero();
+    const timeoutRef = useRef<NodeJS.Timeout>();
     const [isCheckedLocally, setIsCheckedLocally] = useState(
       !!task.completed_at,
     );
@@ -94,8 +95,11 @@ export const TaskItem = observer(
     const handleComplete = useCallback(async (checked: boolean) => {
       setIsCheckedLocally(checked);
 
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
       if (!checked) {
-        // If unchecking, update immediately
         await zero.mutate.task.update({
           id: task.id,
           completed_at: null,
@@ -103,9 +107,7 @@ export const TaskItem = observer(
         return;
       }
 
-      // If checking, show visual feedback immediately but wait to update the server
-      // You might want to add some local state to show the checkbox as checked
-      setTimeout(async () => {
+      timeoutRef.current = setTimeout(async () => {
         await zero.mutate.task.update({
           id: task.id,
           completed_at: Math.floor(Date.now() / 1000),
@@ -124,27 +126,29 @@ export const TaskItem = observer(
     }
 
     return (
-      <div
-        ref={setNodeRef}
-        style={style}
-        {...attributes}
-        {...listeners}
-        className={cn(
-          "group relative flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 ease-in-out hover:bg-gray-50",
-          {
-            "!bg-blue-50 border-blue-200": isSelected,
-            "shadow-lg": isDragging,
-            "opacity-50": isContextDragging && !isSelected,
-          },
-        )}
-        onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
-      >
-        <TaskItemContent
-          task={task}
-          onComplete={handleComplete}
-          checked={isCheckedLocally}
-        />
+      <div className="mx-2">
+        <div
+          ref={setNodeRef}
+          style={style}
+          {...attributes}
+          {...listeners}
+          className={cn(
+            "group relative flex items-center gap-2 p-2 rounded-lg transition-all duration-200 ease-in-out hover:bg-gray-200",
+            {
+              "!bg-blue-200": isSelected,
+              "shadow-lg": isDragging,
+              "opacity-50": isContextDragging && !isSelected,
+            },
+          )}
+          onClick={handleClick}
+          onDoubleClick={handleDoubleClick}
+        >
+          <TaskItemContent
+            task={task}
+            onComplete={handleComplete}
+            checked={isCheckedLocally}
+          />
+        </div>
       </div>
     );
   },

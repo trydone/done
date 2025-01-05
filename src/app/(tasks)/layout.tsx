@@ -49,7 +49,7 @@ const Layout = observer(
             <div
               onClick={handleBackgroundClick}
               className={cn("flex flex-1 flex-col gap-4 px-4 py-10", {
-                "bg-muted": !!openTaskId,
+                "bg-[#F9FAFB]": !!openTaskId,
               })}
             >
               {children}

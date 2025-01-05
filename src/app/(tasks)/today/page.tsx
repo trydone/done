@@ -18,7 +18,7 @@ export default function Page() {
       .where("completed_at", "IS", null)
       .orderBy("sort_order", "asc")
       .related("tags")
-      .related("checklistItems"),
+      .related("checklistItems", (q) => q.orderBy("sort_order", "asc")),
   );
 
   const [eveningTasks] = useQuery(
@@ -29,7 +29,7 @@ export default function Page() {
       .where("completed_at", "IS", null)
       .orderBy("sort_order", "asc")
       .related("tags")
-      .related("checklistItems"),
+      .related("checklistItems", (q) => q.orderBy("sort_order", "asc")),
   );
 
   return (

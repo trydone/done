@@ -17,14 +17,18 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${inter.variable} h-full font-sans font-normal antialiased`}
+      suppressHydrationWarning
+    >
       <meta name="apple-mobile-web-app-title" content="Done" />
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className="h-full bg-background">
         <ZeroProvider zero={zero}>
           <RootStoreProvider>{children}</RootStoreProvider>
         </ZeroProvider>
 
-        <Toaster />
+        <Toaster position="bottom-right" duration={2000} closeButton />
       </body>
     </html>
   );

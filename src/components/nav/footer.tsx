@@ -75,7 +75,7 @@ export const Footer = observer(() => {
 
   return (
     <>
-      <footer className="flex items-center justify-between gap-1 p-2 w-full border-t bg-white">
+      <footer className="flex items-center justify-between gap-1 p-2 w-full border-t bg-background">
         <FooterButton
           icon={PlusIcon}
           title="New To-Do"
@@ -179,20 +179,17 @@ export const Footer = observer(() => {
               />
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent
-              align="end"
-              className="w-48 bg-[#2D2D2D] text-white rounded-lg p-1"
-            >
-              <DropdownMenuItem className="text-sm px-3 py-1.5 focus:bg-[#454545] rounded-md cursor-pointer">
+            <DropdownMenuContent align="end" className="w-48 rounded-lg p-1">
+              <DropdownMenuItem className="text-sm px-3 py-1.5 rounded-md cursor-pointer">
                 Repeat...
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-sm px-3 py-1.5 focus:bg-[#454545] rounded-md cursor-pointer">
+              <DropdownMenuItem className="text-sm px-3 py-1.5 rounded-md cursor-pointer">
                 Duplicate
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-sm px-3 py-1.5 focus:bg-[#454545] rounded-md cursor-pointer">
+              <DropdownMenuItem className="text-sm px-3 py-1.5 rounded-md cursor-pointer">
                 Convert to Project...
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-sm px-3 py-1.5 focus:bg-[#454545] rounded-md cursor-pointer">
+              <DropdownMenuItem className="text-sm px-3 py-1.5 rounded-md cursor-pointer">
                 Share...
               </DropdownMenuItem>
             </DropdownMenuContent>

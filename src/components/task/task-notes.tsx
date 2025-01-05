@@ -1,8 +1,10 @@
-import TextareaAutosize from "react-textarea-autosize";
 import { cn } from "@/lib/utils";
 import { TaskRow } from "@/schema";
-import { ChangeEvent, useCallback } from "react";
 import { useZero } from "@/hooks/use-zero";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Typography from "@tiptap/extension-typography";
+import Highlight from "@tiptap/extension-highlight";
 
 type Props = {
   task: TaskRow;
@@ -11,24 +13,25 @@ type Props = {
 export const TaskNotes = ({ task }: Props) => {
   const zero = useZero();
 
-  const handleDescriptionChange = useCallback(
-    (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const editor = useEditor({
+    extensions: [StarterKit, Typography, Highlight],
+    content: task.description || "",
+    editorProps: {
+      attributes: {
+        class: cn(
+          "w-full resize-none p-0 pb-4 pl-10 text-sm text-current leading-relaxed",
+          "bg-transparent outline-none focus:outline-none focus:ring-0",
+          "prose prose-sm max-w-none",
+        ),
+      },
+    },
+    onUpdate: ({ editor }) => {
       zero.mutate.task.update({
         id: task.id,
-        description: e.target.value,
+        description: editor.getText(),
       });
     },
-    [task.id, zero.mutate.task],
-  );
+  });
 
-  return (
-    <TextareaAutosize
-      value={task.description || ""}
-      onChange={handleDescriptionChange}
-      placeholder="Notes"
-      minRows={1}
-      className="w-full resize-none p-0 pb-4 pl-5 text-sm leading-relaxed bg-transparent border-none outline-none focus:outline-none focus:ring-0 placeholder:text-muted-foreground"
-      spellCheck="false"
-    />
-  );
+  return <EditorContent editor={editor} className="w-full" />;
 };

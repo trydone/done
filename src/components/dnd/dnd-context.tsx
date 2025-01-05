@@ -14,7 +14,7 @@ import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { observer } from "mobx-react-lite";
 import { RootStoreContext } from "@/lib/stores/root-store";
 import { TaskItem } from "../task/task-item";
-import { MultipleTasksOverlay } from "../task/multiple-tasl-overlay";
+import { MultipleTasksOverlay } from "../task/multiple-task-overlay";
 
 interface DragState {
   activeId: UniqueIdentifier | null;
@@ -109,13 +109,13 @@ export const DndProvider = observer(({ children }: { children: ReactNode }) => {
       >
         {children}
         <DragOverlay>
-          {/* {activeId && activeType === "task" && (
+          {activeId && activeType === "task" && (
             <TaskItem
               task={taskStore.tasks.get(activeId as string)!}
               isSelected={false}
               isDragging
             />
-          )} */}
+          )}
           {activeId && activeType === "multiple-tasks" && (
             <MultipleTasksOverlay count={selectedTaskIds.length} />
           )}

@@ -1,4 +1,3 @@
-// components/DatePicker/WhenPicker.tsx
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import { Button } from "@/components/ui/button";
@@ -9,39 +8,29 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { TaskRow } from "@/schema";
 
-interface WhenPickerProps {
-  selected?: Date;
-  onSelect?: (date: Date | undefined) => void;
-  className?: string;
-}
+type Props = {
+  task: TaskRow;
+};
 
-export const WhenPicker = ({
-  selected,
-  onSelect,
-  className,
-}: WhenPickerProps) => {
+export const WhenPicker = ({ task }: Props) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          className={cn(
-            "flex items-center gap-2 px-2 py-1 h-auto text-sm",
-            "bg-gray-100 hover:bg-gray-200",
-            className,
-          )}
+          className="flex items-center gap-2 px-2 py-1 h-auto text-sm bg-gray-100 hover:bg-gray-200"
         >
           <span className="text-amber-400">★</span>
           Today
           <span className="text-gray-400">×</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      {/* <PopoverContent className="w-auto p-0" align="start">
         <div className="bg-gray-900 text-white rounded-lg p-4 min-w-[280px]">
           <div className="text-gray-400 mb-2">When</div>
 
-          {/* Quick Options */}
           <div className="space-y-1 mb-4">
             <Button
               variant="ghost"
@@ -49,7 +38,7 @@ export const WhenPicker = ({
             >
               <span className="mr-2">★</span>
               Today
-              {selected &&
+              {tas.selected &&
                 format(selected, "M/d") === format(new Date(), "M/d") && (
                   <span className="ml-auto">✓</span>
                 )}
@@ -63,9 +52,8 @@ export const WhenPicker = ({
             </Button>
           </div>
 
-          {/* Calendar */}
           <DayPicker
-            selected={selected}
+            selected={task.start_date}
             onSelect={onSelect}
             showOutsideDays={false}
             className="custom-calendar"
@@ -103,7 +91,6 @@ export const WhenPicker = ({
             }}
           />
 
-          {/* Someday Option */}
           <Button
             variant="ghost"
             className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800 mt-2"
@@ -112,7 +99,6 @@ export const WhenPicker = ({
             Someday
           </Button>
 
-          {/* Add Reminder */}
           <Button
             variant="ghost"
             className="w-full justify-start text-gray-500 hover:text-gray-300 hover:bg-gray-800 mt-1"
@@ -121,7 +107,6 @@ export const WhenPicker = ({
             Add Reminder
           </Button>
 
-          {/* Clear Button */}
           <Button
             variant="secondary"
             className="w-full mt-4 bg-gray-800 hover:bg-gray-700 text-gray-300"
@@ -129,26 +114,7 @@ export const WhenPicker = ({
             Clear
           </Button>
         </div>
-      </PopoverContent>
+      </PopoverContent> */}
     </Popover>
   );
 };
-
-// Add these styles to your global CSS
-const globalStyles = `
-.custom-calendar .rdp-months {
-  background: transparent;
-}
-
-.custom-calendar .rdp-day_selected:not([disabled]) {
-  font-weight: normal;
-  color: white;
-  background-color: rgb(59, 130, 246);
-}
-
-.custom-calendar .rdp-day_today:not(.rdp-day_selected) {
-  font-weight: normal;
-  color: white;
-  background-color: rgb(31, 41, 55);
-}
-`;

@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
 import { Button } from "@/components/ui/button";
@@ -15,11 +14,12 @@ import { Settings2, LogOut, MoreVertical, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Schema } from "@/schema";
 import { toast } from "sonner";
+import { useState } from "react";
 
 export default function Page() {
   const zero = useZero();
   const router = useRouter();
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [workspaces] = useQuery(zero.query.workspace);
 

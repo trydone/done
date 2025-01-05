@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+
 import { observer } from "mobx-react-lite";
 import { useQuery } from "@rocicorp/zero/react";
 
@@ -10,6 +10,7 @@ import { RootStoreContext } from "@/lib/stores/root-store";
 import { H2 } from "@/components/shared/typography";
 import { WorkspaceSignout } from "./workspace-signout";
 import { useZero } from "@/hooks/use-zero";
+import { FC, ReactNode, useContext } from "react";
 
 type ExtendedWorkspaceMemberRow = WorkspaceMemberRow & {
   workspace: readonly WorkspaceRow[];
@@ -20,7 +21,7 @@ type ExtendedUserRow = UserRow & {
 };
 
 interface Compound
-  extends React.FC<{
+  extends FC<{
     users?: readonly ExtendedUserRow[];
     selectedUserId?: string;
     selectedWorkspaceId?: string;
@@ -29,13 +30,13 @@ interface Compound
       workspaceId: string;
     }) => void;
     onAllWorkspacesClick?: () => void;
-    renderUserTitle?: (user: ExtendedUserRow) => React.ReactNode;
+    renderUserTitle?: (user: ExtendedUserRow) => ReactNode;
   }> {
-  AllWorkspaces: React.FC<{
+  AllWorkspaces: FC<{
     active: boolean;
     onClick?: () => void;
   }>;
-  Block: React.FC;
+  Block: FC;
 }
 
 export const WorkspaceSwitch: Compound = ({
@@ -53,8 +54,6 @@ export const WorkspaceSwitch: Compound = ({
     />
     {users?.map((user) => (
       <div key={user.id}>
-        {renderUserTitle ? renderUserTitle(user) : <H2>{user.email}</H2>}
-
         <RadioGroup
           value={selectedUserId === user.id ? selectedWorkspaceId : ``}
           onValueChange={(value) =>
@@ -109,7 +108,7 @@ const Block: Compound["Block"] = observer(() => {
       selectedWorkspaceId,
       selectedUserId,
     },
-  } = React.useContext(RootStoreContext);
+  } = useContext(RootStoreContext);
 
   return (
     <WorkspaceSwitch

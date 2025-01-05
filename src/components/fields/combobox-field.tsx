@@ -8,7 +8,7 @@ import { useErrorState } from "@/hooks/use-error-state";
 
 import { Combobox, ComboboxOption } from "../ui/combobox";
 
-interface Props {
+type Props = {
   name: string;
   label?: ReactNode;
   caption?: ReactNode;
@@ -30,7 +30,7 @@ interface Props {
   autoFocus?: boolean;
   maxDropdownHeight?: number;
   labelClassName?: string;
-}
+};
 
 export const ComboboxField = ({
   name,

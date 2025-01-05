@@ -3,6 +3,8 @@ import { isHydrated, makePersistable } from "mobx-persist-store";
 
 import type { RootStore } from "./root-store";
 
+export type ButtonState = "visible" | "hidden" | "disabled";
+
 export class LocalStore {
   rootStore: RootStore;
 
@@ -21,33 +23,22 @@ export class LocalStore {
   // UI Interaction States
   draggedTaskId: string | null = null;
   contextMenuPosition: { x: number; y: number } | null = null;
-  completionAnimationTasks: Set<string> = new Set();
-  checklistExpanded: Record<string, boolean> = {};
 
   // Button States
   buttonStates = {
-    newTask: true,
-    move: false,
-    quickSearch: true,
-    delete: false,
-    repeat: false,
-    duplicate: false,
-    convertToProject: false,
-    share: false,
-  };
-
-  // User Preferences
-  userPreferences = {
-    showCompletedTasks: false,
-    showChecklistProgress: true,
-    sortOrder: "manual" as "manual" | "deadline" | "title",
+    newTask: "visible" as ButtonState,
+    when: "disabled" as ButtonState,
+    move: "disabled" as ButtonState,
+    quickSearch: "visible" as ButtonState,
+    delete: "hidden" as ButtonState,
+    moreActions: "hidden" as ButtonState,
   };
 
   constructor(rootStore: RootStore) {
     makeAutoObservable(this, undefined, { autoBind: true });
     makePersistable(this, {
       name: "things-local-store",
-      properties: ["sidebarCollapsed", "userPreferences", "checklistExpanded"],
+      properties: ["sidebarCollapsed"],
       storage: typeof window !== "undefined" ? window.localStorage : undefined,
     });
     this.rootStore = rootStore;
@@ -66,33 +57,28 @@ export class LocalStore {
   // Selection Actions
   setSelectedTaskIds(taskIds: string[]) {
     this.selectedTaskIds = taskIds;
-    if (taskIds) {
-      this.updateButtonStates({
-        move: true,
-        delete: true,
-        repeat: true,
-        duplicate: true,
-        convertToProject: true,
-        share: true,
-      });
-    } else {
-      this.updateButtonStates({
-        move: false,
-        delete: false,
-        repeat: false,
-        duplicate: false,
-        convertToProject: false,
-        share: false,
-      });
-    }
+    const hasSelection = taskIds.length > 0;
+
+    this.updateButtonStates({
+      newTask: "visible",
+      when: hasSelection ? "visible" : "disabled",
+      quickSearch: "visible",
+      move: hasSelection ? "visible" : "disabled",
+      delete: "hidden",
+      moreActions: "hidden",
+    });
   }
 
   // View Actions
   setOpenTaskId(openTaskId: string | null) {
     this.openTaskId = openTaskId;
     this.updateButtonStates({
-      newTask: !openTaskId,
-      quickSearch: !openTaskId,
+      newTask: openTaskId ? "hidden" : "visible",
+      quickSearch: openTaskId ? "hidden" : "visible",
+      when: openTaskId ? "hidden" : "visible",
+      move: "visible",
+      delete: openTaskId ? "visible" : "hidden",
+      moreActions: openTaskId ? "hidden" : "visible",
     });
   }
 
@@ -115,27 +101,11 @@ export class LocalStore {
     this.contextMenuPosition = position;
   }
 
-  startTaskCompletionAnimation(taskId: string) {
-    this.completionAnimationTasks.add(taskId);
-    setTimeout(() => {
-      this.completionAnimationTasks.delete(taskId);
-      this.setSelectedTaskIds(
-        this.selectedTaskIds.filter((id) => id !== taskId)
-      );
-    }, 5000);
-  }
-
-  toggleChecklistExpanded(taskId: string) {
-    this.checklistExpanded[taskId] = !this.checklistExpanded[taskId];
-  }
   // Button State Actions
-  updateButtonStates(newStates: Partial<typeof this.buttonStates>) {
+  updateButtonStates(
+    newStates: Partial<{ [K in keyof typeof this.buttonStates]: ButtonState }>,
+  ) {
     this.buttonStates = { ...this.buttonStates, ...newStates };
-  }
-
-  // Preference Actions
-  updateUserPreferences(newPrefs: Partial<typeof this.userPreferences>) {
-    this.userPreferences = { ...this.userPreferences, ...newPrefs };
   }
 
   // Computed Properties
@@ -157,26 +127,5 @@ export class LocalStore {
 
   get hasContextMenu() {
     return this.contextMenuPosition !== null;
-  }
-
-  // Reset State
-  reset() {
-    this.selectedTaskIds = [];
-    this.openTaskId = null;
-    this.quickSearchQuery = "";
-    this.quickSearchActive = false;
-    this.draggedTaskId = null;
-    this.contextMenuPosition = null;
-    this.completionAnimationTasks.clear();
-    this.buttonStates = {
-      newTask: true,
-      move: false,
-      quickSearch: true,
-      delete: false,
-      repeat: false,
-      duplicate: false,
-      convertToProject: false,
-      share: false,
-    };
   }
 }

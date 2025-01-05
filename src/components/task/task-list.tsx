@@ -4,23 +4,41 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { useDndContext } from "../dnd/dnd-context";
+import { useContext } from "react";
+import { RootStoreContext } from "@/lib/stores/root-store";
+import { cn } from "@/lib/utils";
 
 type Props = {
-  items: readonly TaskRow[];
+  tasks: readonly TaskRow[];
+  className?: string;
 };
 
-export const TaskList = ({ items }: Props) => {
-  return (
-    <SortableContext items={items} strategy={verticalListSortingStrategy}>
-      <div>
-        {/* {items.map((item) => (
-          <TaskItem key={item.id} item={item} />
-        ))} */}
+export const TaskList = ({ tasks, className }: Props) => {
+  const {
+    localStore: { selectedTaskIds },
+  } = useContext(RootStoreContext);
 
-        {items.map((item) => (
-          <div key={item.id}>{item.title}</div>
+  const { isDragging, activeType } = useDndContext();
+
+  return (
+    <SortableContext
+      items={tasks.map(task => task.id)}
+      strategy={verticalListSortingStrategy}
+    >
+      <div className={cn(
+        "flex flex-col gap-1",
+        isDragging && "cursor-grabbing",
+        className
+      )}>
+        {tasks.map((task) => (
+          <TaskItem
+            key={task.id}
+            task={task}
+            isSelected={selectedTaskIds.includes(task.id)}
+          />
         ))}
       </div>
     </SortableContext>
   );
-};
+});

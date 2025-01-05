@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/popover";
 import { useErrorState } from "@/hooks/use-error-state";
 
-interface Props extends InputProps {
+type Props = InputProps & {
   name: string;
   label?: ReactNode;
   caption?: ReactNode;
@@ -21,7 +21,7 @@ interface Props extends InputProps {
   className?: string;
   inputClassName?: string;
   onClose?: () => void;
-}
+};
 
 export const ColorField = ({
   label,

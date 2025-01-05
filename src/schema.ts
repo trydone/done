@@ -196,15 +196,13 @@ export const taskSchema = {
   tableName: "task",
   columns: {
     id: "string",
-    short_id: { type: "number", optional: true },
     title: "string",
     description: "string",
-
-    workspace_id: "string",
 
     // Organization & sorting
     sort_order: { type: "number", optional: true },
     today_sort_order: { type: "number", optional: true },
+    today_index_reference_date: { type: "number", optional: true },
 
     // Temporal management
     created_at: "number",
@@ -217,21 +215,16 @@ export const taskSchema = {
     start_bucket: "string",
 
     // Deadline management
-    deadline: { type: "number", optional: true },
-    deadline_suppression_date: { type: "number", optional: true },
-    deadline_offset: { type: "number", optional: true },
+    deadline_at: { type: "number", optional: true },
+    deadline_suppression_at: { type: "number", optional: true },
 
     // Reminder system
-    reminder_time: { type: "number", optional: true },
-    last_reminder_interaction_date: { type: "number", optional: true },
-
-    // Organization & sorting
-    index: { type: "number", optional: true },
-    today_index: { type: "number", optional: true },
-    today_index_reference_date: { type: "number", optional: true },
+    reminder_at: { type: "number", optional: true },
+    last_reminder_interaction_at: { type: "number", optional: true },
 
     // Relationships
     creator_id: "string",
+    workspace_id: "string",
     assignee_id: { type: "string", optional: true },
     project_id: { type: "string", optional: true },
     team_id: { type: "string", optional: true },
@@ -264,6 +257,11 @@ export const taskSchema = {
       sourceField: "id",
       destField: "task_id",
       destSchema: () => taskCommentSchema,
+    },
+    checklistItems: {
+      sourceField: "id",
+      destField: "task_id",
+      destSchema: () => checklistItemSchema,
     },
     creator: {
       sourceField: "creator_id",
@@ -348,7 +346,6 @@ export const checklistItemSchema = {
     completed_at: { type: "number", optional: true },
     created_at: "number",
     updated_at: "number",
-    creator_id: "string",
   },
   primaryKey: "id",
   relationships: {
@@ -356,11 +353,6 @@ export const checklistItemSchema = {
       sourceField: "task_id",
       destField: "id",
       destSchema: () => taskSchema,
-    },
-    creator: {
-      sourceField: "creator_id",
-      destField: "id",
-      destSchema: () => userSchema,
     },
   },
 } as const;
@@ -422,7 +414,7 @@ export const emojiSchema = {
   },
 } as const;
 
-export const sessionSchema = createTableSchema({
+export const sessionSchema = {
   tableName: "session",
   columns: {
     id: "string",
@@ -438,7 +430,7 @@ export const sessionSchema = createTableSchema({
       destSchema: userSchema,
     },
   },
-});
+} as const;
 
 export type EnterpriseRow = Row<typeof enterpriseSchema>;
 export type WorkspaceRow = Row<typeof workspaceSchema>;
@@ -447,6 +439,8 @@ export type WorkspaceMemberRow = Row<typeof workspaceMemberSchema>;
 export type TeamMemberRow = Row<typeof teamMemberSchema>;
 export type ProjectRow = Row<typeof projectSchema>;
 export type TaskRow = Row<typeof taskSchema>;
+export type TagRow = Row<typeof tagSchema>;
+export type ChecklistItemRow = Row<typeof checklistItemSchema>;
 export type CommentRow = Row<typeof taskCommentSchema>;
 export type UserRow = Row<typeof userSchema>;
 export type Schema = typeof schema;
@@ -478,6 +472,7 @@ export const schema = createSchema({
     view_state: viewStateSchema,
     emoji: emojiSchema,
     session: sessionSchema,
+    checklist_item: checklistItemSchema,
   },
 });
 
@@ -634,17 +629,20 @@ export const permissions: ReturnType<typeof definePermissions> =
       },
       task: {
         row: {
-          insert: [
-            // prevents setting the creator_id of an task to someone
-            // other than the user doing the creating
-            loggedInUserIsCreator,
-          ],
-          update: {
-            preMutation: [loggedInUserIsCreator, loggedInUserIsAdmin],
-            postMutation: [loggedInUserIsCreator, loggedInUserIsAdmin],
-          },
-          delete: [loggedInUserIsCreator, loggedInUserIsAdmin],
-          select: [allowTask],
+          insert: ANYONE_CAN,
+          update: ANYONE_CAN,
+          delete: ANYONE_CAN,
+          // insert: [
+          //   // prevents setting the creator_id of an task to someone
+          //   // other than the user doing the creating
+          //   loggedInUserIsCreator,
+          // ],
+          // update: {
+          //   preMutation: [loggedInUserIsCreator, loggedInUserIsAdmin],
+          //   postMutation: [loggedInUserIsCreator, loggedInUserIsAdmin],
+          // },
+          // delete: [loggedInUserIsCreator, loggedInUserIsAdmin],
+          // select: [allowTask],
         },
       },
       task_comment: {

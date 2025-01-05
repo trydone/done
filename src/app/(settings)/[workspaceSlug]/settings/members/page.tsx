@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
 import { Input } from "@/components/ui/input";
@@ -30,6 +29,7 @@ import {
 import { Schema } from "@/schema";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useMemo, useState } from "react";
 
 type Props = {
   params: { workspaceSlug: string };
@@ -38,10 +38,10 @@ type Props = {
 export default function Page({ params: { workspaceSlug } }: Props) {
   const zero = useZero();
   const [members] = useQuery(zero.query.workspace_member);
-  const [search, setSearch] = React.useState("");
-  const [filter, setFilter] = React.useState<"All" | "Admin" | "Member">("All");
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<"All" | "Admin" | "Member">("All");
 
-  const filteredMembers = React.useMemo(() => {
+  const filteredMembers = useMemo(() => {
     return members.filter((member) => {
       const matchesSearch =
         member.name.toLowerCase().includes(search.toLowerCase()) ||

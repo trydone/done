@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
 import { Input } from "@/components/ui/input";
@@ -32,7 +31,7 @@ import {
 import { toast } from "sonner";
 import { Schema } from "@/schema";
 import { ExternalLink, Upload } from "lucide-react";
-import { useCallback } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 
 type Props = {
   params: { workspaceSlug: string };
@@ -41,10 +40,10 @@ type Props = {
 export default function Page({ params: { workspaceSlug } }: Props) {
   const zero = useZero();
   const [workspace] = useQuery(zero.query.workspace);
-  const [isUploading, setIsUploading] = React.useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const handleNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNameChange = async (e: ChangeEvent<HTMLInputElement>) => {
     try {
       await zero.mutate.workspace.update({
         id: workspace?.id,

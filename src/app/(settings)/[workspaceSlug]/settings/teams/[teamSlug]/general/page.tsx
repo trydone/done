@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
 import { Input } from "@/components/ui/input";

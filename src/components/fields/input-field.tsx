@@ -5,7 +5,7 @@ import { FormControl } from "@/components/ui/form-control";
 import { Input, InputProps } from "@/components/ui/input";
 import { useErrorState } from "@/hooks/use-error-state";
 
-interface Props extends InputProps {
+type Props = InputProps & {
   name: string;
   label?: ReactNode;
   caption?: ReactNode;
@@ -15,7 +15,7 @@ interface Props extends InputProps {
   labelClassName?: string;
   inputClassName?: string;
   setValue?: any;
-}
+};
 
 export const InputField = ({
   label,

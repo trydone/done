@@ -18,7 +18,7 @@ export const TaskItemDetails = ({ task, checked, onComplete }: Props) => {
   return (
     <div className="flex flex-col h-full bg-background rounded-lg border">
       <TaskHeader task={task} checked={checked} onComplete={onComplete} />
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-3 space-y-4">
         <TaskNotes task={task} />
         <ChecklistList task={task} />
         <TagList task={task} />

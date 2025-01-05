@@ -6,11 +6,9 @@ import { useZero } from "@/hooks/use-zero";
 
 type Props = {
   task: TaskRow;
-  className?: string;
-  disabled?: boolean;
 };
 
-export const TaskNotes = ({ task, className, disabled = false }: Props) => {
+export const TaskNotes = ({ task }: Props) => {
   const zero = useZero();
 
   const handleDescriptionChange = useCallback(
@@ -24,23 +22,13 @@ export const TaskNotes = ({ task, className, disabled = false }: Props) => {
   );
 
   return (
-    <div className={cn("space-y-4", className)}>
-      <TextareaAutosize
-        value={task.description || ""}
-        onChange={handleDescriptionChange}
-        disabled={disabled}
-        placeholder="Add description..."
-        minRows={1}
-        className={cn(
-          "w-full resize-none",
-          "text-base leading-relaxed",
-          "bg-transparent",
-          "border-none outline-none focus:outline-none focus:ring-0",
-          "placeholder:text-muted-foreground",
-          disabled && "cursor-not-allowed opacity-50",
-        )}
-        spellCheck="false"
-      />
-    </div>
+    <TextareaAutosize
+      value={task.description || ""}
+      onChange={handleDescriptionChange}
+      placeholder="Notes"
+      minRows={1}
+      className="w-full resize-none p-0 text-sm leading-relaxed bg-transparent border-none outline-none focus:outline-none focus:ring-0 placeholder:text-muted-foreground"
+      spellCheck="false"
+    />
   );
 };

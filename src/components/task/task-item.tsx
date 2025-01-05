@@ -106,7 +106,6 @@ export const TaskItem = observer(
       // If checking, show visual feedback immediately but wait to update the server
       // You might want to add some local state to show the checkbox as checked
       setTimeout(async () => {
-        console.log(1);
         await zero.mutate.task.update({
           id: task.id,
           completed_at: Math.floor(Date.now() / 1000),
@@ -129,21 +128,20 @@ export const TaskItem = observer(
         ref={setNodeRef}
         style={style}
         {...attributes}
+        {...listeners}
         className={cn(
-          "group relative flex items-center gap-3 p-3 rounded-lg border",
-          "transition-all duration-200 ease-in-out",
-          "hover:bg-gray-50",
-          isSelected && "bg-blue-50 border-blue-200",
-          isDragging && "shadow-lg",
-          task.completed_at && "opacity-50",
-          isContextDragging && !isSelected && "opacity-50",
+          "group relative flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 ease-in-out hover:bg-gray-50",
+          {
+            "!bg-blue-50 border-blue-200": isSelected,
+            "shadow-lg": isDragging,
+            "opacity-50": isContextDragging && !isSelected,
+          },
         )}
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
       >
         <TaskItemContent
           task={task}
-          listeners={listeners}
           onComplete={handleComplete}
           checked={isCheckedLocally}
         />

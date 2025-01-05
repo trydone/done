@@ -22,10 +22,10 @@ export default function Page() {
 
   return (
     <PageContainer>
-      <H1>
-        <ArchiveIcon />
-        Someday
-      </H1>
+      <div className="flex gap-2 items-center">
+        <ArchiveIcon className="size-6" />
+        <h1 className="text-2xl font-bold tracking-tight">Someday</h1>
+      </div>
 
       <TaskList tasks={tasks} />
     </PageContainer>

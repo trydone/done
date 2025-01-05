@@ -24,7 +24,7 @@ export const TaskHeader = ({ task, checked, onComplete }: Props) => {
   );
 
   return (
-    <div className="flex items-center gap-3 p-4 border-b">
+    <div className="flex items-center gap-3 pt-3 px-3">
       <Checkbox
         id={`task-${task.id}-status`}
         checked={checked}
@@ -36,8 +36,9 @@ export const TaskHeader = ({ task, checked, onComplete }: Props) => {
         id={`task-${task.id}-title`}
         value={task.title}
         onChange={handleTitleChange}
-        placeholder="Task title"
-        className="border-none focus-visible:ring-0 text-lg font-medium bg-transparent placeholder:text-muted-foreground"
+        placeholder="New To-Do"
+        className="border-none focus-visible:ring-0 p-0 h-auto !rounded-none text-sm bg-transparent placeholder:text-muted-foreground"
+        autoFocus
       />
     </div>
   );

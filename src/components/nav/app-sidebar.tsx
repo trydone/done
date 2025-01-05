@@ -17,10 +17,11 @@ import {
 } from "@/components/ui/sidebar";
 
 import { AppSidebarItem } from "./app-sidebar-item";
-import { useLogin } from "@/hooks/use-login";
 import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
 import { WorkspaceSwitch } from "../workspace/workspace-switch";
+import { useContext } from "react";
+import { RootStoreContext } from "@/lib/stores/root-store";
 
 const items = [
   {
@@ -61,11 +62,13 @@ const items = [
 ];
 
 export const AppSidebar = () => {
-  const login = useLogin();
+  const {
+    authStore: { loginState },
+  } = useContext(RootStoreContext);
 
   const zero = useZero();
   const [user] = useQuery(
-    zero.query.user.where("id", login.loginState?.decoded.sub ?? "").one(),
+    zero.query.user.where("id", loginState?.decoded.sub ?? "").one(),
   );
 
   const loginHref =
@@ -88,7 +91,7 @@ export const AppSidebar = () => {
                 <AppSidebarItem item={item} key={index} />
               ))}
 
-              {login.loginState === undefined ? (
+              {!loginState ? (
                 <a href={loginHref}>Login</a>
               ) : (
                 <img

@@ -510,12 +510,8 @@ table "tag" {
     type = uuid
     default = sql("gen_random_uuid()")
   }
-  column "name" {
+  column "title" {
     null = false
-    type = text
-  }
-  column "color" {
-    null = true
     type = text
   }
   column "workspace_id" {
@@ -541,9 +537,9 @@ table "tag" {
     on_update   = NO_ACTION
     on_delete   = CASCADE
   }
-  index "tag_workspace_name_idx" {
+  index "tag_workspace_title_idx" {
     unique  = true
-    columns = [column.workspace_id, column.name]
+    columns = [column.workspace_id, column.title]
   }
 }
 
@@ -595,11 +591,6 @@ table "task_comment" {
 
 table "task_tag" {
   schema = schema.public
-  column "id" {
-    null = false
-    type = uuid
-    default = sql("gen_random_uuid()")
-  }
 
   column "task_id" {
     null = false
@@ -615,7 +606,7 @@ table "task_tag" {
     default = sql("now()")
   }
   primary_key {
-    columns = [column.id]
+    columns = [column.tag_id, column.task_id]
   }
   foreign_key "task_tag_tag_id_fk" {
     columns     = [column.tag_id]

@@ -20,15 +20,18 @@ import {
 import { Lock, Mail, Shield } from "lucide-react";
 import { toast } from "sonner";
 import { useZero } from "@/hooks/use-zero";
-import { useLogin } from "@/hooks/use-login";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
+import { RootStoreContext } from "@/lib/stores/root-store";
 
 export default function Page() {
-  const login = useLogin();
+  const {
+    authStore: { loginState },
+  } = useContext(RootStoreContext);
+
   const zero = useZero();
   const [session] = useQuery(
     zero.query.session
-      .where("id", login.loginState?.decoded.sub || "")
+      .where("id", loginState?.decoded.sub || "")
       .one()
       .related("user"),
   );

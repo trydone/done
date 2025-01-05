@@ -5,7 +5,7 @@ import { H1 } from "@/components/shared/typography";
 import { TaskList } from "@/components/task/task-list";
 import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
-import { StarIcon } from "lucide-react";
+import { MoonIcon, StarIcon } from "lucide-react";
 
 export default function Page() {
   const zero = useZero();
@@ -34,16 +34,19 @@ export default function Page() {
 
   return (
     <PageContainer>
-      <H1>
-        <StarIcon />
-        Today
-      </H1>
+      <div className="flex gap-2 items-center">
+        <StarIcon className="size-6" />
+        <h1 className="text-2xl font-bold tracking-tight">Today</h1>
+      </div>
 
       <TaskList tasks={todayTasks} />
 
       {eveningTasks.length > 0 && (
         <>
-          <H1>Evening</H1>
+          <div className="flex gap-2 items-center border-b border-border">
+            <MoonIcon className="size-4" />
+            <h1 className="text-base font-bold tracking-tight">Evening</h1>
+          </div>
 
           <TaskList tasks={eveningTasks} />
         </>

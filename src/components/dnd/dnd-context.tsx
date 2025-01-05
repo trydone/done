@@ -15,6 +15,10 @@ import { observer } from "mobx-react-lite";
 import { RootStoreContext } from "@/lib/stores/root-store";
 import { TaskItem } from "../task/task-item";
 import { MultipleTasksOverlay } from "../task/multiple-task-overlay";
+import { useZero } from "@/hooks/use-zero";
+import { TaskRow } from "@/schema";
+import { useQuery } from "@rocicorp/zero/react";
+import _ from "lodash";
 
 interface DragState {
   activeId: UniqueIdentifier | null;
@@ -29,15 +33,28 @@ export const DndContext = createContext<{
   activeType: null,
 });
 
+const REORDER_STEP = 1000;
+
 export const DndProvider = observer(({ children }: { children: ReactNode }) => {
   const {
     localStore: { selectedTaskIds },
   } = useContext(RootStoreContext);
 
+  const zero = useZero();
+
   const [{ activeId, activeType }, setDragState] = useState<DragState>({
     activeId: null,
     activeType: null,
   });
+
+  // Active task for drag overlay
+  const [activeTask] = useQuery(
+    zero.query.task.where("id", "=", activeId as string).one(),
+    !!activeId,
+  );
+
+  // Keep track of all tasks and their order
+  const [allTasks] = useQuery(zero.query.task.orderBy("sort_order", "asc"));
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -50,43 +67,93 @@ export const DndProvider = observer(({ children }: { children: ReactNode }) => {
     }),
   );
 
-  const handleDragStart = ({ active }: DragStartEvent) => {
-    const selectedIds = selectedTaskIds;
-    const isSelected = selectedIds.includes(active.id as string);
-
-    setDragState({
-      activeId: active.id,
-      activeType:
-        isSelected && selectedIds.length > 1 ? "multiple-tasks" : "task",
+  const updateTask = async (task: Partial<TaskRow>) => {
+    await zero.mutate.task.update({
+      id: task.id,
+      title: task.title,
+      sort_order: task.sort_order,
+      start_bucket: task.start_bucket,
     });
   };
 
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+  const updateTasksBucket = async (taskIds: string[], newBucket: string) => {
+    const tasksByBucket = _.groupBy(allTasks, "start");
+    const tasksInTargetBucket = tasksByBucket[newBucket] || [];
+    const firstSortOrder =
+      tasksInTargetBucket.length > 0
+        ? tasksInTargetBucket[0].sort_order - REORDER_STEP
+        : 0;
+
+    for (let i = 0; i < taskIds.length; i++) {
+      await updateTask({
+        id: taskIds[i],
+        start_bucket: newBucket,
+        sort_order: firstSortOrder - i * REORDER_STEP,
+      });
+    }
+  };
+
+  const reorderTasks = async (taskIds: string[], targetId: string) => {
+    const targetTask = allTasks.find((t) => t.id === targetId);
+    if (!targetTask) return;
+
+    const tasksByBucket = _.groupBy(allTasks, "start");
+
+    const tasksInBucket = tasksByBucket[targetTask.start_bucket] || [];
+    const targetIndex = tasksInBucket.findIndex((t) => t.id === targetId);
+    const prevTask = targetIndex > 0 ? tasksInBucket[targetIndex - 1] : null;
+    const nextTask =
+      targetIndex < tasksInBucket.length - 1
+        ? tasksInBucket[targetIndex + 1]
+        : null;
+
+    let newSortOrder: number;
+    if (!prevTask) {
+      newSortOrder = nextTask ? nextTask.sort_order - REORDER_STEP : 0;
+    } else if (!nextTask) {
+      newSortOrder = prevTask.sort_order + REORDER_STEP;
+    } else {
+      newSortOrder = (prevTask.sort_order + nextTask.sort_order) / 2;
+    }
+
+    for (let i = 0; i < taskIds.length; i++) {
+      await updateTask({
+        id: taskIds[i],
+        sort_order: newSortOrder + i * (REORDER_STEP / 100),
+      });
+    }
+  };
+
+  const handleDragStart = ({ active }: DragStartEvent) => {
+    const isSelected = selectedTaskIds.includes(active.id as string);
+    setDragState({
+      activeId: active.id,
+      activeType:
+        isSelected && selectedTaskIds.length > 1 ? "multiple-tasks" : "task",
+    });
+  };
+
+  const handleDragEnd = async ({ active, over }: DragEndEvent) => {
     if (!over) {
       setDragState({ activeId: null, activeType: null });
       return;
     }
 
-    const activeData = active.data.current;
-    const overData = over.data.current;
+    const activeData = active.data.current as { type?: string };
+    const overData = over.data.current as { type?: string };
 
-    // Handle dropping on sidebar bucket
     if (overData?.type === "bucket") {
       const tasksToMove =
         activeType === "multiple-tasks"
           ? selectedTaskIds
           : [active.id as string];
-
-      updateTasksBucket(tasksToMove, over.id as Task["bucket"]);
-    }
-    // Handle reordering within task list
-    else if (activeData?.type === "task" && overData?.type === "task") {
+      await updateTasksBucket(tasksToMove, over.id as string);
+    } else if (activeData?.type === "task" && overData?.type === "task") {
       const tasksToReorder =
         activeType === "multiple-tasks"
           ? selectedTaskIds
           : [active.id as string];
-
-      reorderTasks(tasksToReorder, over.id as string);
+      await reorderTasks(tasksToReorder, over.id as string);
     }
 
     setDragState({ activeId: null, activeType: null });
@@ -109,12 +176,8 @@ export const DndProvider = observer(({ children }: { children: ReactNode }) => {
       >
         {children}
         <DragOverlay>
-          {activeId && activeType === "task" && (
-            <TaskItem
-              task={taskStore.tasks.get(activeId as string)!}
-              isSelected={false}
-              isDragging
-            />
+          {activeId && activeType === "task" && activeTask && (
+            <TaskItem task={activeTask} isSelected={false} isDragging />
           )}
           {activeId && activeType === "multiple-tasks" && (
             <MultipleTasksOverlay count={selectedTaskIds.length} />

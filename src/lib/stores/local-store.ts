@@ -67,6 +67,8 @@ export class LocalStore {
       delete: "hidden",
       moreActions: "hidden",
     });
+
+    this.setOpenTaskId(null);
   }
 
   // View Actions

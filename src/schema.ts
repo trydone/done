@@ -361,7 +361,10 @@ export const tagSchema = createTableSchema({
   tableName: "tag",
   columns: {
     id: "string",
-    name: "string",
+    title: "string",
+    workspace_id: "string",
+    created_at: "number",
+    updated_at: "number",
   },
   primaryKey: "id",
 });
@@ -369,11 +372,11 @@ export const tagSchema = createTableSchema({
 export const taskTagSchema = {
   tableName: "task_tag",
   columns: {
-    id: "string",
     task_id: "string",
     tag_id: "string",
+    created_at: "number",
   },
-  primaryKey: "id",
+  primaryKey: ["tag_id", "task_id"],
   relationships: {
     task: {
       sourceField: "task_id",
@@ -510,7 +513,14 @@ export const permissions: ReturnType<typeof definePermissions> =
     const allowYourSession = (
       authData: AuthData,
       eb: ExpressionBuilder<typeof sessionSchema>,
-    ) => eb.and(userIsLoggedIn(authData, eb), eb.cmp("id", "=", authData.sub));
+    ) => {
+      console.log({ authData });
+
+      return eb.and(
+        userIsLoggedIn(authData, eb),
+        eb.cmp("id", "=", authData.sub),
+      );
+    };
 
     const loggedInUserIsAdmin = (
       authData: AuthData,
@@ -551,7 +561,11 @@ export const permissions: ReturnType<typeof definePermissions> =
     const allowWorkspace = (
       authData: AuthData,
       eb: ExpressionBuilder<typeof workspaceSchema>,
-    ) => eb.exists("sessionMembers", (q) => q.where("id", "=", authData.sub));
+    ) => {
+      return eb.exists("sessionMembers", (q) =>
+        q.where("id", "=", authData.sub),
+      );
+    };
 
     const allowUser = (
       authData: AuthData,
@@ -605,12 +619,16 @@ export const permissions: ReturnType<typeof definePermissions> =
       workspace: {
         // Only the authentication system can write to the user table.
         row: {
-          insert: NOBODY_CAN,
-          update: {
-            preMutation: NOBODY_CAN,
-          },
-          delete: NOBODY_CAN,
-          select: [allowWorkspace],
+          insert: ANYONE_CAN,
+          update: ANYONE_CAN,
+          delete: ANYONE_CAN,
+          select: ANYONE_CAN,
+          // insert: NOBODY_CAN,
+          // update: {
+          //   preMutation: NOBODY_CAN,
+          // },
+          // delete: NOBODY_CAN,
+          // select: [allowWorkspace],
         },
       },
       user: {
@@ -618,7 +636,7 @@ export const permissions: ReturnType<typeof definePermissions> =
           insert: ANYONE_CAN,
           update: ANYONE_CAN,
           delete: ANYONE_CAN,
-          // select: [allowUser],
+          select: ANYONE_CAN,
           // insert: NOBODY_CAN,
           // update: {
           //   preMutation: NOBODY_CAN,
@@ -632,6 +650,7 @@ export const permissions: ReturnType<typeof definePermissions> =
           insert: ANYONE_CAN,
           update: ANYONE_CAN,
           delete: ANYONE_CAN,
+          select: ANYONE_CAN,
           // insert: [
           //   // prevents setting the creator_id of an task to someone
           //   // other than the user doing the creating
@@ -647,67 +666,122 @@ export const permissions: ReturnType<typeof definePermissions> =
       },
       task_comment: {
         row: {
-          insert: [
-            loggedInUserIsAdmin,
-            and(loggedInUserIsCreator, canSeeComment),
-          ],
-          update: {
-            preMutation: [
-              loggedInUserIsAdmin,
-              and(loggedInUserIsCreator, canSeeComment),
-            ],
-          },
-          delete: [
-            loggedInUserIsAdmin,
-            and(canSeeComment, loggedInUserIsCreator),
-          ],
+          insert: ANYONE_CAN,
+          update: ANYONE_CAN,
+          delete: ANYONE_CAN,
+          select: ANYONE_CAN,
+          // insert: [
+          //   loggedInUserIsAdmin,
+          //   and(loggedInUserIsCreator, canSeeComment),
+          // ],
+          // update: {
+          //   preMutation: [
+          //     loggedInUserIsAdmin,
+          //     and(loggedInUserIsCreator, canSeeComment),
+          //   ],
+          // },
+          // delete: [
+          //   loggedInUserIsAdmin,
+          //   and(canSeeComment, loggedInUserIsCreator),
+          // ],
         },
       },
       tag: {
         row: {
-          insert: [loggedInUserIsAdmin],
-          update: {
-            preMutation: [loggedInUserIsAdmin],
-          },
-          delete: [loggedInUserIsAdmin],
+          insert: ANYONE_CAN,
+          update: ANYONE_CAN,
+          delete: ANYONE_CAN,
+          select: ANYONE_CAN,
+          // insert: [loggedInUserIsAdmin],
+          // update: {
+          //   preMutation: [loggedInUserIsAdmin],
+          // },
+          // delete: [loggedInUserIsAdmin],
         },
       },
       view_state: {
         row: {
-          insert: [allowIfUserIDMatchesLoggedInUser],
-          update: {
-            preMutation: [allowIfUserIDMatchesLoggedInUser],
-            postMutation: [allowIfUserIDMatchesLoggedInUser],
-          },
-          delete: NOBODY_CAN,
+          insert: ANYONE_CAN,
+          update: ANYONE_CAN,
+          delete: ANYONE_CAN,
+          select: ANYONE_CAN,
+          // insert: [allowIfUserIDMatchesLoggedInUser],
+          // update: {
+          //   preMutation: [allowIfUserIDMatchesLoggedInUser],
+          //   postMutation: [allowIfUserIDMatchesLoggedInUser],
+          // },
+          // delete: NOBODY_CAN,
         },
       },
       task_tag: {
         row: {
-          insert: [and(canSeeTaskTag, allowIfAdminOrTaskCreator)],
-          update: {
-            preMutation: NOBODY_CAN,
-          },
-          delete: [and(canSeeTaskTag, allowIfAdminOrTaskCreator)],
+          insert: ANYONE_CAN,
+          update: ANYONE_CAN,
+          delete: ANYONE_CAN,
+          select: ANYONE_CAN,
+          // insert: [and(canSeeTaskTag, allowIfAdminOrTaskCreator)],
+          // update: {
+          //   preMutation: NOBODY_CAN,
+          // },
+          // delete: [and(canSeeTaskTag, allowIfAdminOrTaskCreator)],
         },
       },
       emoji: {
         row: {
-          // Can only insert emoji if the can see the task.
-          insert: [and(canSeeEmoji, loggedInUserIsCreator)],
-
-          // Can only update their own emoji.
-          update: {
-            preMutation: [and(canSeeEmoji, loggedInUserIsCreator)],
-            postMutation: [and(canSeeEmoji, loggedInUserIsCreator)],
-          },
-          delete: [and(canSeeEmoji, loggedInUserIsCreator)],
+          insert: ANYONE_CAN,
+          update: ANYONE_CAN,
+          delete: ANYONE_CAN,
+          select: ANYONE_CAN,
+          // // Can only insert emoji if the can see the task.
+          // insert: [and(canSeeEmoji, loggedInUserIsCreator)],
+          // // Can only update their own emoji.
+          // update: {
+          //   preMutation: [and(canSeeEmoji, loggedInUserIsCreator)],
+          //   postMutation: [and(canSeeEmoji, loggedInUserIsCreator)],
+          // },
+          // delete: [and(canSeeEmoji, loggedInUserIsCreator)],
         },
       },
       session: {
         row: {
-          delete: [allowYourSession],
-          select: [allowYourSession],
+          insert: ANYONE_CAN,
+          update: ANYONE_CAN,
+          delete: ANYONE_CAN,
+          select: ANYONE_CAN,
+          // delete: [allowYourSession],
+          // select: [allowYourSession],
+        },
+      },
+      checklist_item: {
+        row: {
+          insert: ANYONE_CAN,
+          update: ANYONE_CAN,
+          delete: ANYONE_CAN,
+          select: ANYONE_CAN,
+        },
+      },
+      team: {
+        row: {
+          insert: ANYONE_CAN,
+          update: ANYONE_CAN,
+          delete: ANYONE_CAN,
+          select: ANYONE_CAN,
+        },
+      },
+      workspace_member: {
+        row: {
+          insert: ANYONE_CAN,
+          update: ANYONE_CAN,
+          delete: ANYONE_CAN,
+          select: ANYONE_CAN,
+        },
+      },
+      team_member: {
+        row: {
+          insert: ANYONE_CAN,
+          update: ANYONE_CAN,
+          delete: ANYONE_CAN,
+          select: ANYONE_CAN,
         },
       },
     };

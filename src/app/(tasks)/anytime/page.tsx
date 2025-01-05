@@ -23,10 +23,10 @@ export default function Page() {
 
   return (
     <PageContainer>
-      <H1>
-        <LayersIcon />
-        Anytime
-      </H1>
+      <div className="flex gap-2 items-center">
+        <LayersIcon className="size-6" />
+        <h1 className="text-2xl font-bold tracking-tight">Anytime</h1>
+      </div>
 
       <TaskList tasks={tasks} />
     </PageContainer>

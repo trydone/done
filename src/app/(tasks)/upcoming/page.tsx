@@ -23,10 +23,10 @@ export default function Page() {
 
   return (
     <PageContainer>
-      <H1>
-        <CalendarIcon />
-        Upcoming
-      </H1>
+      <div className="flex gap-2 items-center">
+        <CalendarIcon className="size-6" />
+        <h1 className="text-2xl font-bold tracking-tight">Upcoming</h1>
+      </div>
 
       <TaskList tasks={tasks} />
     </PageContainer>

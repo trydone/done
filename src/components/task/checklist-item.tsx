@@ -81,11 +81,13 @@ export const ChecklistItem = ({ item, isDragging }: Props) => {
         onCheckedChange={handleCheckedChange}
         className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
       />
+
       <Input
         value={item.title}
         onChange={handleTitleChange}
-        className="border-none focus-visible:ring-0 px-0 py-0 h-auto"
+        className="border-none focus-visible:ring-0 px-0 py-0 h-auto !rounded-none"
         placeholder="Add item..."
+        autoFocus
       />
 
       <Button

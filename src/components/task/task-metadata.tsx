@@ -54,10 +54,6 @@ export const TaskMetadata = ({ task, className }: Props) => {
         {(task?.checklistItems || []).length > 0 && (
           <div className="flex items-center gap-1">
             <ListIcon className="w-3 h-3 text-gray-400" />
-            <span className="text-xs text-gray-500">
-              {task.checklistItems.filter((item) => item.completed_at).length}/
-              {task.checklistItems.length}
-            </span>
           </div>
         )}
 
@@ -67,12 +63,12 @@ export const TaskMetadata = ({ task, className }: Props) => {
           </div>
         )}
 
-        {(task?.tags || []).length > 0 && (
-          <div className="flex items-center gap-1">
+        {(task?.tags || []).map((tag, index) => (
+          <div className="flex items-center gap-1" key={index}>
             <TagIcon className="w-3 h-3 text-gray-400" />
-            <span className="text-xs text-gray-500">{task.tags.length}</span>
+            <span className="text-xs text-gray-500">{tag.title}</span>
           </div>
-        )}
+        ))}
       </div>
 
       {/* Right side with deadline */}

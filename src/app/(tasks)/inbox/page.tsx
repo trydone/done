@@ -13,6 +13,7 @@ export default function Page() {
   const [tasks] = useQuery(
     zero.query.task
       .where("start", "=", "not_started")
+      .where("start_bucket", "=", "inbox")
       .where("archived_at", "IS", null)
       .where("completed_at", "IS", null)
       .orderBy("sort_order", "asc")
@@ -20,12 +21,14 @@ export default function Page() {
       .related("checklistItems"),
   );
 
+  console.log({ tasks });
+
   return (
     <PageContainer>
-      <H1>
-        <InboxIcon />
-        Inbox
-      </H1>
+      <div className="flex gap-2 items-center">
+        <InboxIcon className="size-6" />
+        <h1 className="text-2xl font-bold tracking-tight">Inbox</h1>
+      </div>
 
       <TaskList tasks={tasks} />
     </PageContainer>

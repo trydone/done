@@ -137,9 +137,7 @@ export async function GET(request: NextRequest) {
     // Set cookie
     cookieStore.set("jwt", jwt, {
       path: "/",
-      maxAge: 60 * 60 * 24 * 30,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     });
 
     // Redirect

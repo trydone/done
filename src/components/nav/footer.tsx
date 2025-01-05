@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { observer } from "mobx-react-lite";
 import {
   PlusIcon,
@@ -22,26 +22,52 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FooterButton } from "./footer-button";
 import { PopoverWrapper } from "../ui/popover-wrapper";
+import { v4 } from "uuid";
 
 export const Footer = observer(() => {
   const zero = useZero();
   const {
     localStore: {
-      selectedTaskIds,
+      openTaskId,
+      setOpenTaskId,
       setSelectedTaskIds,
       setQuickSearchQuery,
       buttonStates,
+      selectedWorkspaceId,
     },
   } = useContext(RootStoreContext);
 
-  const [taskDialogOpen, setTaskDialogOpen] = useState(false);
-
-  const handleDelete = async () => {
-    for (const taskId of selectedTaskIds) {
-      await zero.mutate.task.delete({ id: taskId });
+  const handleDelete = useCallback(async () => {
+    if (!openTaskId) {
+      return;
     }
-    setSelectedTaskIds([]);
-  };
+
+    await zero.mutate.task.update({
+      id: openTaskId,
+      archived_at: Math.floor(Date.now() / 1000),
+    });
+
+    setOpenTaskId(null);
+  }, []);
+
+  const handleNewTask = useCallback(async () => {
+    const taskId = v4();
+
+    await zero.mutate.task.insert({
+      id: taskId,
+      workspace_id:
+        selectedWorkspaceId || `9d190060-d582-4136-827d-cd0468d081ec`,
+      title: "",
+      description: "",
+      created_at: Date.now(),
+      creator_id: "9ecb970e-0fee-4dfd-9721-2c04c8ed7607",
+      updated_at: Date.now(),
+      start: "not_started",
+      start_bucket: "inbox",
+    });
+
+    setOpenTaskId(taskId);
+  }, []);
 
   const handleQuickFind = () => {
     setQuickSearchQuery("");
@@ -53,7 +79,7 @@ export const Footer = observer(() => {
         <FooterButton
           icon={PlusIcon}
           title="New To-Do"
-          onClick={() => setTaskDialogOpen(true)}
+          onClick={handleNewTask}
           state={buttonStates.newTask}
         />
 
@@ -173,11 +199,6 @@ export const Footer = observer(() => {
           </DropdownMenu>
         )}
       </footer>
-
-      <NewTaskDialog
-        open={taskDialogOpen}
-        onClose={() => setTaskDialogOpen(false)}
-      />
     </>
   );
 });

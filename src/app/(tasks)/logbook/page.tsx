@@ -21,10 +21,10 @@ export default function Page() {
 
   return (
     <PageContainer>
-      <H1>
-        <BookCheckIcon />
-        Logbook
-      </H1>
+      <div className="flex gap-2 items-center">
+        <BookCheckIcon className="size-6" />
+        <h1 className="text-2xl font-bold tracking-tight">Logbook</h1>
+      </div>
 
       <TaskList tasks={tasks} />
     </PageContainer>

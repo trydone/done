@@ -6,6 +6,7 @@ import {
   CalendarIcon,
   InboxIcon,
   LayersIcon,
+  LogIn,
   StarIcon,
   TrashIcon,
 } from 'lucide-react'
@@ -108,7 +109,6 @@ const useGoogleLogin = () => {
   return '/api/auth/google?redirect_url=' + encodeURIComponent(link)
 }
 
-
 const useIsLoggedIn = () => {
   const zero = useZero()
   const [sessions] = useQuery(zero.query.session)
@@ -165,11 +165,21 @@ const BlockWorkspaceSwitch = () => {
 const BlockLoginGoogle = () => {
   const loginRef = useGoogleLogin()
 
-  return <a href={loginRef}>Login (google)</a>
+  return (
+    <div className="flex gap-2 px-2">
+      <LogIn size={16} />
+      <a href={loginRef}>Login (google)</a>
+    </div>
+  )
 }
 
 const BlockLoginGithub = () => {
   const loginRef = useGithubLogin()
 
-  return <a href={loginRef}>Login (github)</a>
+  return (
+    <div className="flex gap-2 px-2">
+      <LogIn size={16} />
+      <a href={loginRef}>Login (github)</a>
+    </div>
+  )
 }

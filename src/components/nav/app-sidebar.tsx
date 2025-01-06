@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import {useQuery} from '@rocicorp/zero/react'
+import { useDroppable } from '@dnd-kit/core'
+import { useQuery } from '@rocicorp/zero/react'
 import {
   ArchiveIcon,
   BookCheckIcon,
@@ -9,7 +10,8 @@ import {
   StarIcon,
   TrashIcon,
 } from 'lucide-react'
-import {useContext} from 'react'
+import { usePathname } from 'next/navigation'
+import { useContext } from 'react'
 
 import {
   Sidebar,
@@ -18,11 +20,11 @@ import {
   SidebarGroupContent,
   SidebarMenu,
 } from '@/components/ui/sidebar'
-import {useZero} from '@/hooks/use-zero'
-import {RootStoreContext} from '@/lib/stores/root-store'
+import { useZero } from '@/hooks/use-zero'
+import { RootStoreContext } from '@/lib/stores/root-store'
 
-import {WorkspaceSwitch} from '../workspace/workspace-switch'
-import {AppSidebarItem, AppSidebarItemType} from './app-sidebar-item'
+import { WorkspaceSwitch } from '../workspace/workspace-switch'
+import { AppSidebarItem, AppSidebarItemType } from './app-sidebar-item'
 
 const items: AppSidebarItemType[] = [
   {
@@ -70,9 +72,17 @@ const items: AppSidebarItemType[] = [
 ]
 
 export const AppSidebar = () => {
+  const pathname = usePathname()
   const {
-    authStore: {loginState},
+    authStore: { loginState },
   } = useContext(RootStoreContext)
+
+  const { setNodeRef } = useDroppable({
+    id: 'sidebar-container',
+    data: {
+      type: 'sidebar',
+    },
+  })
 
   const zero = useZero()
   const [user] = useQuery(
@@ -102,14 +112,14 @@ export const AppSidebar = () => {
     )
 
   return (
-    <Sidebar>
+    <Sidebar ref={setNodeRef}>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
               <WorkspaceSwitch.Block />
 
-              {items.map((item, index) => {
+              {items.map((item) => {
                 let count = undefined
 
                 if (item.id === 'inbox' && inboxTasks.length > 0) {
@@ -117,7 +127,14 @@ export const AppSidebar = () => {
                 } else if (item.id === 'today' && todayTasks.length > 0) {
                   count = todayTasks.length
                 }
-                return <AppSidebarItem item={item} key={index} count={count} />
+                return (
+                  <AppSidebarItem
+                    item={item}
+                    key={item.id}
+                    count={count}
+                    isActive={pathname === item.url}
+                  />
+                )
               })}
 
               {!loginState ? (

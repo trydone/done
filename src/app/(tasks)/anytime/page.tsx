@@ -1,18 +1,18 @@
 'use client'
 
-import {useQuery} from '@rocicorp/zero/react'
-import {LayersIcon} from 'lucide-react'
+import { useQuery } from '@rocicorp/zero/react'
+import { LayersIcon } from 'lucide-react'
 
-import {PageContainer} from '@/components/shared/page-container'
-import {TaskList} from '@/components/task/task-list'
-import {useZero} from '@/hooks/use-zero'
+import { PageContainer } from '@/components/shared/page-container'
+import { TaskList } from '@/components/task/task-list'
+import { useZero } from '@/hooks/use-zero'
 
 export default function Page() {
   const zero = useZero()
 
   const [tasks] = useQuery(
     zero.query.task
-      .where('start', 'IS NOT', 'postponed')
+      .where('start', '=', 'started')
       .where('archived_at', 'IS', null)
       .where('completed_at', 'IS', null)
       .orderBy('start', 'asc')

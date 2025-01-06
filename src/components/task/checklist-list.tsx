@@ -15,19 +15,19 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
-import {useCallback, useState} from 'react'
-import {v4} from 'uuid'
+import { useCallback, useState } from 'react'
+import { v4 } from 'uuid'
 
-import {useZero} from '@/hooks/use-zero'
-import {ChecklistItemRow, TaskRow} from '@/schema'
+import { useZero } from '@/hooks/use-zero'
+import { ChecklistItemRow, TaskRow } from '@/schema'
 
-import {ChecklistItem} from './checklist-item'
+import { ChecklistItem } from './checklist-item'
 
 type Props = {
-  task: TaskRow & {checklistItems: readonly ChecklistItemRow[]}
+  task: TaskRow & { checklistItems: readonly ChecklistItemRow[] }
 }
 
-export const ChecklistList = ({task}: Props) => {
+export const ChecklistList = ({ task }: Props) => {
   const zero = useZero()
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
   const [focusedId, setFocusedId] = useState<string | null>(null)
@@ -67,7 +67,7 @@ export const ChecklistList = ({task}: Props) => {
 
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
-      const {active, over} = event
+      const { active, over } = event
       setActiveId(null)
       if (!over || active.id === over.id) return
 
@@ -82,7 +82,7 @@ export const ChecklistList = ({task}: Props) => {
         task?.checklistItems || [],
         oldIndex,
         newIndex,
-      ).map((item, index) => ({...item, sort_order: index}))
+      ).map((item, index) => ({ ...item, sort_order: index }))
 
       handleUpdateSortOrders(newChecklist)
     },
@@ -133,7 +133,7 @@ export const ChecklistList = ({task}: Props) => {
   )
 
   return (
-    <div className="pl-9 pr-3">
+    <div className="pb-3 pl-9 pr-3">
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -154,9 +154,11 @@ export const ChecklistList = ({task}: Props) => {
               onAddItem={handleAddItem}
               isFocused={focusedId === item.id}
               onFocusChange={handleFocusChange}
-              showTopLine={index === 0}
+              showTopLine={index === 0 && activeId !== item.id}
               showBottomLine={
-                focusedId !== item.id && focusedIndex - 1 !== index
+                focusedId !== item.id &&
+                focusedIndex - 1 !== index &&
+                activeId !== item.id
               }
             />
           ))}

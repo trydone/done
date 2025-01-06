@@ -1,16 +1,16 @@
-import {useSortable} from '@dnd-kit/sortable'
-import {CSS} from '@dnd-kit/utilities'
-import {GripVertical} from 'lucide-react'
-import {KeyboardEvent, useCallback, useRef} from 'react'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { GripVertical } from 'lucide-react'
+import { KeyboardEvent, useCallback, useRef } from 'react'
 
-import {Checkbox} from '@/components/ui/checkbox'
-import {Input} from '@/components/ui/input'
-import {useZero} from '@/hooks/use-zero'
-import {cn} from '@/lib/utils'
-import {ChecklistItemRow, TaskRow} from '@/schema'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { useZero } from '@/hooks/use-zero'
+import { cn } from '@/lib/utils'
+import { ChecklistItemRow, TaskRow } from '@/schema'
 
 type Props = {
-  task: TaskRow & {checklistItems: readonly ChecklistItemRow[]}
+  task: TaskRow & { checklistItems: readonly ChecklistItemRow[] }
   item: ChecklistItemRow
   isDragging: boolean
   onAddItem?: (afterId: string) => void
@@ -88,9 +88,14 @@ export const ChecklistItem = ({
 
   const handleTitleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
+      const cursorPosition = e.target.selectionStart
       zero.mutate.checklist_item.update({
         id: item.id,
         title: e.target.value,
+      })
+      // Restore cursor position after the update
+      requestAnimationFrame(() => {
+        e.target.setSelectionRange(cursorPosition, cursorPosition)
       })
     },
     [zero.mutate.checklist_item, item.id],
@@ -145,7 +150,7 @@ export const ChecklistItem = ({
     transform,
     transition,
     isDragging: isSortableDragging,
-  } = useSortable({id: item.id})
+  } = useSortable({ id: item.id })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -159,7 +164,8 @@ export const ChecklistItem = ({
       className={cn(
         'group relative rounded-md border border-transparent px-1',
         {
-          'opacity-50': isDragging,
+          'border-blue-400 bg-blue-200 dark:border-blue-600 dark:bg-blue-800':
+            isDragging,
           'border-border bg-muted': isFocused,
         },
       )}
@@ -194,7 +200,14 @@ export const ChecklistItem = ({
           {...listeners}
           className="cursor-grab disabled:cursor-not-allowed"
         >
-          <GripVertical className="size-4 text-muted-foreground" />
+          <GripVertical
+            className={cn(
+              'size-4 text-muted-foreground opacity-0 transition-opacity',
+              {
+                'opacity-100': isFocused || isDragging,
+              },
+            )}
+          />
         </button>
       </div>
 

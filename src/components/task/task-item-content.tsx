@@ -1,11 +1,11 @@
-import {format} from 'date-fns'
-import {MoonIcon, StarIcon} from 'lucide-react'
+import { format } from 'date-fns'
+import { MoonIcon, StarIcon } from 'lucide-react'
 
-import {Checkbox} from '@/components/ui/checkbox'
-import {cn} from '@/lib/utils'
+import { Checkbox } from '@/components/ui/checkbox'
+import { cn } from '@/lib/utils'
 
-import {TaskMetadata} from './task-metadata'
-import {Task} from './types'
+import { TaskMetadata } from './task-metadata'
+import { Task } from './types'
 
 type Props = {
   task: Task
@@ -45,11 +45,13 @@ export const TaskItemContent = ({
 
           {showWhenIcon &&
             task.start === 'started' &&
-            task.start_bucket === 'today' && <StarIcon className="size-4" />}
+            task.start_bucket === 'today' &&
+            !!task.start_date && <StarIcon className="size-4" />}
 
           {showWhenIcon &&
             task.start === 'started' &&
-            task.start_bucket === 'evening' && <MoonIcon className="size-4" />}
+            task.start_bucket === 'evening' &&
+            !!task.start_date && <MoonIcon className="size-4" />}
 
           <span
             className={cn('truncate text-sm', {

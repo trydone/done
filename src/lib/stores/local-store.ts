@@ -1,7 +1,7 @@
-import {makeAutoObservable} from 'mobx'
-import {isHydrated, makePersistable} from 'mobx-persist-store'
+import { makeAutoObservable } from 'mobx'
+import { isHydrated, makePersistable } from 'mobx-persist-store'
 
-import type {RootStore} from './root-store'
+import type { RootStore } from './root-store'
 
 export type ButtonState = 'visible' | 'hidden' | 'disabled'
 
@@ -22,7 +22,7 @@ export class LocalStore {
 
   // UI Interaction States
   draggedTaskId: string | null = null
-  contextMenuPosition: {x: number; y: number} | null = null
+  contextMenuPosition: { x: number; y: number } | null = null
 
   // Button States
   buttonStates = {
@@ -35,7 +35,7 @@ export class LocalStore {
   }
 
   constructor(rootStore: RootStore) {
-    makeAutoObservable(this, undefined, {autoBind: true})
+    makeAutoObservable(this, undefined, { autoBind: true })
     makePersistable(this, {
       name: 'things-local-store',
       properties: ['sidebarCollapsed'],
@@ -49,7 +49,7 @@ export class LocalStore {
     this.selectedWorkspaceId = undefined
   }
 
-  changeWorkspace(params: {userId: string; workspaceId: string}) {
+  changeWorkspace(params: { userId: string; workspaceId: string }) {
     this.selectedUserId = params.userId
     this.selectedWorkspaceId = params.workspaceId
   }
@@ -77,10 +77,10 @@ export class LocalStore {
     this.updateButtonStates({
       newTask: openTaskId ? 'hidden' : 'visible',
       quickFind: openTaskId ? 'hidden' : 'visible',
-      when: openTaskId ? 'hidden' : 'visible',
-      move: 'visible',
+      when: openTaskId ? 'hidden' : 'disabled',
+      move: openTaskId ? 'visible' : 'disabled',
       delete: openTaskId ? 'visible' : 'hidden',
-      moreActions: openTaskId ? 'hidden' : 'visible',
+      moreActions: openTaskId ? 'visible' : 'hidden',
     })
   }
 
@@ -103,15 +103,15 @@ export class LocalStore {
     this.draggedTaskId = taskId
   }
 
-  setContextMenuPosition(position: {x: number; y: number} | null) {
+  setContextMenuPosition(position: { x: number; y: number } | null) {
     this.contextMenuPosition = position
   }
 
   // Button State Actions
   updateButtonStates(
-    newStates: Partial<{[K in keyof typeof this.buttonStates]: ButtonState}>,
+    newStates: Partial<{ [K in keyof typeof this.buttonStates]: ButtonState }>,
   ) {
-    this.buttonStates = {...this.buttonStates, ...newStates}
+    this.buttonStates = { ...this.buttonStates, ...newStates }
   }
 
   // Computed Properties

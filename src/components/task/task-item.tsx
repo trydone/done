@@ -1,21 +1,21 @@
-import {useSortable} from '@dnd-kit/sortable'
-import {CSS} from '@dnd-kit/utilities'
-import {observer} from 'mobx-react-lite'
-import {MouseEvent, useContext} from 'react'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { observer } from 'mobx-react-lite'
+import { MouseEvent, useContext } from 'react'
 
-import {RootStoreContext} from '@/lib/stores/root-store'
-import {cn} from '@/lib/utils'
+import { RootStoreContext } from '@/lib/stores/root-store'
+import { cn } from '@/lib/utils'
 
-import {useDndContext} from '../dnd/dnd-context'
-import {TaskItemContent} from './task-item-content'
-import {Task} from './types'
+import { useDndContext } from '../dnd/dnd-context'
+import { TaskItemContent } from './task-item-content'
+import { Task } from './types'
 
 type Props = {
   task: Task
   isDragging?: boolean
   isSelected?: boolean
   showWhenIcon?: boolean
-  onComplete: (checked: boolean) => void
+  onComplete?: (checked: boolean) => void
   checked: boolean
 }
 
@@ -29,9 +29,9 @@ export const TaskItem = observer(
     checked,
   }: Props) => {
     const {
-      localStore: {selectedTaskIds, setSelectedTaskIds, setOpenTaskId},
+      localStore: { selectedTaskIds, setSelectedTaskIds, setOpenTaskId },
     } = useContext(RootStoreContext)
-    const {isDragging: isContextDragging} = useDndContext()
+    const { isDragging: isContextDragging } = useDndContext()
     const {
       attributes,
       listeners,

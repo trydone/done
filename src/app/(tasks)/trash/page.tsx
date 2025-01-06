@@ -1,13 +1,13 @@
 'use client'
-import {useQuery} from '@rocicorp/zero/react'
-import {TrashIcon} from 'lucide-react'
-import {useCallback} from 'react'
+import { useQuery } from '@rocicorp/zero/react'
+import { TrashIcon } from 'lucide-react'
+import { useCallback } from 'react'
 
-import {PageContainer} from '@/components/shared/page-container'
-import {Section} from '@/components/shared/section'
-import {TaskList} from '@/components/task/task-list'
-import {Button} from '@/components/ui/button'
-import {useZero} from '@/hooks/use-zero'
+import { PageContainer } from '@/components/shared/page-container'
+import { Section } from '@/components/shared/section'
+import { TaskList } from '@/components/task/task-list'
+import { Button } from '@/components/ui/button'
+import { useZero } from '@/hooks/use-zero'
 
 export default function PageTrash() {
   return (
@@ -49,8 +49,8 @@ const SectionTrash = () => {
           <TrashIcon className="task-outside-click size-16 opacity-30" />
         </div>
       ) : (
-        <div>
-          <Button onClick={handleEmptyTrash} size="sm" variant="destructive">
+        <div className="mx-4">
+          <Button onClick={handleEmptyTrash} size="xs" variant="destructive">
             Empty Trash
           </Button>
         </div>

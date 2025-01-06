@@ -1,8 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import { useState } from 'react'
 
-import { ChecklistItemRow, TagRow, TaskRow } from '@/schema'
-
 import { ChecklistButton } from './checklist-button'
 import { ChecklistList } from './checklist-list'
 import { TagButton } from './tag-button'
@@ -10,15 +8,13 @@ import { TagDialog } from './tag-dialog'
 import { TagList } from './tag-list'
 import { TaskHeader } from './task-header'
 import { TaskNotes } from './task-notes'
+import { Task } from './types'
 import { WhenButton } from './when-button'
 import { WhenDialog } from './when-dialog'
 import { WhenLabel } from './when-label'
 
 type Props = {
-  task: TaskRow & {
-    checklistItems: readonly ChecklistItemRow[]
-    tags: readonly TagRow[]
-  }
+  task: Task
   checked: boolean
   onComplete: (checked: boolean) => void
 }
@@ -43,7 +39,7 @@ export const TaskItemDetails = observer(
             <TagList task={task} setOpen={setTagOpen} />
           )}
 
-          <div className="flex items-center pb-4 pl-10 pr-3">
+          <div className="flex items-center pb-4 pl-9 pr-3">
             <div className="flex-1">
               {task?.start !== 'not_started' && (
                 <WhenLabel task={task} setOpen={setWhenOpen} />

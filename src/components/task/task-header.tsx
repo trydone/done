@@ -1,33 +1,33 @@
-import { useCallback } from "react";
+import { useCallback } from 'react'
 
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { useZero } from "@/hooks/use-zero";
-import { TaskRow } from "@/schema";
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { useZero } from '@/hooks/use-zero'
+import { TaskRow } from '@/schema'
 
 type Props = {
-  task: TaskRow;
-  checked: boolean;
-  onComplete: (checked: boolean) => void;
-};
+  task: TaskRow
+  checked: boolean
+  onComplete: (checked: boolean) => void
+}
 
 export const TaskHeader = ({ task, checked, onComplete }: Props) => {
-  const zero = useZero();
+  const zero = useZero()
 
   const handleTitleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       zero.mutate.task.update({
         id: task.id,
         title: e.target.value,
-      });
+      })
     },
     [task.id, zero.mutate.task],
-  );
+  )
 
   return (
     <div className="flex gap-2 px-4">
       <div className="pb-1 pt-4">
-        <div className="flex h-[20px] items-center">
+        <div className="flex h-[20px] w-4 items-center">
           <Checkbox
             id={`task-${task.id}-status`}
             checked={checked}
@@ -46,5 +46,5 @@ export const TaskHeader = ({ task, checked, onComplete }: Props) => {
         autoFocus
       />
     </div>
-  );
-};
+  )
+}

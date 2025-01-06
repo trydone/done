@@ -1,23 +1,14 @@
+import { useQuery } from '@rocicorp/zero/react'
 import { addDays, startOfDay } from 'date-fns'
-import {
-  CalendarIcon,
-  MoreHorizontalIcon,
-  PlusIcon,
-  SearchIcon,
-  TrashIcon,
-} from 'lucide-react'
+import { CalendarIcon, PlusIcon, SearchIcon, TrashIcon } from 'lucide-react'
 import { observer } from 'mobx-react-lite'
 import { usePathname } from 'next/navigation'
 import { useCallback, useContext, useState } from 'react'
+import { useHotkeys } from 'react-hotkeys-hook'
 import { v4 } from 'uuid'
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { useZero } from '@/hooks/use-zero'
+import { INITIAL_GAP } from '@/lib/constants'
 import { RootStoreContext } from '@/lib/stores/root-store'
 
 import { WhenDialog } from '../task/when-dialog'
@@ -27,6 +18,10 @@ export const Footer = observer(() => {
   const pathname = usePathname()
   const zero = useZero()
   const [whenOpen, setWhenOpen] = useState(false)
+
+  const [firstTask] = useQuery(
+    zero.query.task.orderBy('sort_order', 'asc').one(),
+  )
 
   const {
     localStore: {
@@ -65,7 +60,7 @@ export const Footer = observer(() => {
       case '/today':
         start = 'started'
         start_bucket = 'today'
-        start_date = startOfDay(new Date()).getTime() // Today at midnight
+        start_date = startOfDay(new Date()).getTime()
         break
       case '/anytime':
         start = 'not_started'
@@ -75,7 +70,6 @@ export const Footer = observer(() => {
       case '/upcoming':
         start = 'postponed'
         start_bucket = 'today'
-        // Set to tomorrow at midnight
         start_date = addDays(startOfDay(new Date()), 1).getTime()
         break
       case '/someday':
@@ -91,6 +85,11 @@ export const Footer = observer(() => {
         break
     }
 
+    // Calculate top sort order
+    const newSortOrder = firstTask
+      ? firstTask.sort_order - INITIAL_GAP
+      : INITIAL_GAP
+
     await zero.mutate.task.insert({
       id: taskId,
       workspace_id:
@@ -103,15 +102,66 @@ export const Footer = observer(() => {
       start,
       start_bucket,
       start_date,
+      sort_order: newSortOrder,
+      today_sort_order: newSortOrder,
     })
 
     setOpenTaskId(taskId)
-  }, [pathname, selectedWorkspaceId, setOpenTaskId, zero.mutate.task])
+  }, [
+    pathname,
+    firstTask,
+    zero.mutate.task,
+    selectedWorkspaceId,
+    setOpenTaskId,
+  ])
 
   const handleQuickFind = () => {
     setQuickFindQuery('')
     setQuickFindOpen(true)
   }
+
+  useHotkeys(
+    'n',
+    (e) => {
+      e.preventDefault()
+      handleNewTask()
+    },
+    {
+      enabled: buttonStates.newTask === 'visible',
+    },
+  )
+
+  useHotkeys(
+    'meta+k',
+    (e) => {
+      e.preventDefault()
+      handleQuickFind()
+    },
+    {
+      enabled: buttonStates.quickFind === 'visible',
+    },
+  )
+
+  useHotkeys(
+    'backspace, delete',
+    (e) => {
+      e.preventDefault()
+
+      if (selectedTaskIds.length > 0) {
+        selectedTaskIds.forEach(async (taskId) => {
+          await zero.mutate.task.update({
+            id: taskId,
+            archived_at: Date.now(),
+          })
+        })
+      } else if (openTaskId) {
+        handleDelete()
+      }
+    },
+    {
+      enabled: !!openTaskId || selectedTaskIds.length > 0,
+    },
+  )
 
   return (
     <>
@@ -137,24 +187,6 @@ export const Footer = observer(() => {
           />
         )}
 
-        {/* {buttonStates.move !== "hidden" && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <FooterButton
-                icon={ArrowRightIcon}
-                title="Move"
-                state={buttonStates.move}
-              />
-            </PopoverTrigger>
-
-            <PopoverWrapper title="Move to">
-              <Button variant="ghost" className="justify-start">
-                Inbox
-              </Button>
-            </PopoverWrapper>
-          </Popover>
-        )} */}
-
         <FooterButton
           icon={SearchIcon}
           title="Quick Find"
@@ -168,33 +200,6 @@ export const Footer = observer(() => {
           onClick={handleDelete}
           state={buttonStates.delete}
         />
-
-        {buttonStates.moreActions !== 'hidden' && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <FooterButton
-                title="More Actions"
-                icon={MoreHorizontalIcon}
-                state={buttonStates.moreActions}
-              />
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent align="end" className="w-48 rounded-lg p-1">
-              <DropdownMenuItem className="cursor-pointer rounded-md px-3 py-1.5 text-sm">
-                Repeat...
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer rounded-md px-3 py-1.5 text-sm">
-                Duplicate
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer rounded-md px-3 py-1.5 text-sm">
-                Convert to Project...
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer rounded-md px-3 py-1.5 text-sm">
-                Share...
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
       </footer>
 
       {whenOpen && (

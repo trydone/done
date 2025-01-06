@@ -14,7 +14,8 @@ export const WhenLabel = observer(({ task, setOpen }: Props) => {
   return (
     <Button
       variant="ghost"
-      className="flex h-auto items-center gap-2 px-2 py-1 text-sm"
+      size="sm"
+      className="h-auto gap-1.5 rounded-md p-1"
       onClick={() => setOpen(true)}
     >
       {getButtonIcon(task)} {getButtonText(task)}

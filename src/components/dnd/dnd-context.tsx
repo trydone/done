@@ -16,6 +16,7 @@ import { observer } from 'mobx-react-lite'
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
 
 import { useZero } from '@/hooks/use-zero'
+import { INITIAL_GAP } from '@/lib/constants'
 import { RootStoreContext } from '@/lib/stores/root-store'
 import { TaskRow } from '@/schema'
 
@@ -35,8 +36,6 @@ export const DndContext = createContext<{
   activeType: null,
 })
 
-const REORDER_STEP = 1000
-
 export const DndProvider = observer(({ children }: { children: ReactNode }) => {
   const {
     localStore: { selectedTaskIds },
@@ -49,13 +48,15 @@ export const DndProvider = observer(({ children }: { children: ReactNode }) => {
     activeType: null,
   })
 
-  // Active task for drag overlay
   const [activeTask] = useQuery(
-    zero.query.task.where('id', '=', activeId as string).one(),
+    zero.query.task
+      .where('id', '=', activeId as string)
+      .related('tags')
+      .related('checklistItems', (q) => q.orderBy('sort_order', 'asc'))
+      .one(),
     !!activeId,
   )
 
-  // Keep track of all tasks and their order
   const [allTasks] = useQuery(zero.query.task.orderBy('sort_order', 'asc'))
 
   const sensors = useSensors(
@@ -78,20 +79,36 @@ export const DndProvider = observer(({ children }: { children: ReactNode }) => {
     })
   }
 
-  const updateTasksBucket = async (taskIds: string[], newBucket: string) => {
-    const tasksByBucket = _.groupBy(allTasks, 'start')
-    const tasksInTargetBucket = tasksByBucket[newBucket] || []
-    const firstSortOrder =
-      tasksInTargetBucket.length > 0
-        ? tasksInTargetBucket[0].sort_order - REORDER_STEP
-        : 0
+  const rebalanceBucket = async (bucketTasks: TaskRow[]) => {
+    const updates = bucketTasks.map((task, index) => ({
+      id: task.id,
+      sort_order: (index + 1) * INITIAL_GAP,
+    }))
 
-    for (let i = 0; i < taskIds.length; i++) {
-      await updateTask({
-        id: taskIds[i],
-        start_bucket: newBucket,
-        sort_order: firstSortOrder - i * REORDER_STEP,
-      })
+    for (const update of updates) {
+      await updateTask(update)
+    }
+  }
+
+  const updateTasksBucket = async (taskIds: string[], newBucket: string) => {
+    // Get current tasks in target bucket
+    const tasksInBucket = allTasks.filter((t) => t.start_bucket === newBucket)
+
+    // Move selected tasks to front
+    const movedTasks = taskIds.map((id, index) => ({
+      id,
+      sort_order: -1 * (taskIds.length - index) * INITIAL_GAP,
+      start_bucket: newBucket,
+    }))
+
+    // Update tasks
+    for (const task of movedTasks) {
+      await updateTask(task)
+    }
+
+    // Rebalance if needed
+    if (tasksInBucket.length > 0) {
+      await rebalanceBucket([...movedTasks, ...tasksInBucket])
     }
   }
 
@@ -99,31 +116,24 @@ export const DndProvider = observer(({ children }: { children: ReactNode }) => {
     const targetTask = allTasks.find((t) => t.id === targetId)
     if (!targetTask) return
 
-    const tasksByBucket = _.groupBy(allTasks, 'start')
+    // Get all tasks in the same bucket
+    const bucketTasks = allTasks.filter(
+      (t) => t.start_bucket === targetTask.start_bucket,
+    )
+    const targetIndex = bucketTasks.findIndex((t) => t.id === targetId)
 
-    const tasksInBucket = tasksByBucket[targetTask.start_bucket] || []
-    const targetIndex = tasksInBucket.findIndex((t) => t.id === targetId)
-    const prevTask = targetIndex > 0 ? tasksInBucket[targetIndex - 1] : null
-    const nextTask =
-      targetIndex < tasksInBucket.length - 1
-        ? tasksInBucket[targetIndex + 1]
-        : null
+    // Remove tasks being moved
+    const remainingTasks = bucketTasks.filter((t) => !taskIds.includes(t.id))
 
-    let newSortOrder: number
-    if (!prevTask) {
-      newSortOrder = nextTask ? nextTask.sort_order - REORDER_STEP : 0
-    } else if (!nextTask) {
-      newSortOrder = prevTask.sort_order + REORDER_STEP
-    } else {
-      newSortOrder = (prevTask.sort_order + nextTask.sort_order) / 2
-    }
+    // Insert tasks at target position
+    const orderedTasks = [
+      ...remainingTasks.slice(0, targetIndex),
+      ...taskIds.map((id) => bucketTasks.find((t) => t.id === id)!),
+      ...remainingTasks.slice(targetIndex),
+    ]
 
-    for (let i = 0; i < taskIds.length; i++) {
-      await updateTask({
-        id: taskIds[i],
-        sort_order: newSortOrder + i * (REORDER_STEP / 100),
-      })
-    }
+    // Rebalance entire bucket
+    await rebalanceBucket(orderedTasks)
   }
 
   const handleDragStart = ({ active }: DragStartEvent) => {
@@ -144,18 +154,22 @@ export const DndProvider = observer(({ children }: { children: ReactNode }) => {
     const activeData = active.data.current as { type?: string }
     const overData = over.data.current as { type?: string }
 
-    if (overData?.type === 'bucket') {
-      const tasksToMove =
-        activeType === 'multiple-tasks'
-          ? selectedTaskIds
-          : [active.id as string]
-      await updateTasksBucket(tasksToMove, over.id as string)
-    } else if (activeData?.type === 'task' && overData?.type === 'task') {
-      const tasksToReorder =
-        activeType === 'multiple-tasks'
-          ? selectedTaskIds
-          : [active.id as string]
-      await reorderTasks(tasksToReorder, over.id as string)
+    try {
+      if (overData?.type === 'bucket') {
+        const tasksToMove =
+          activeType === 'multiple-tasks'
+            ? selectedTaskIds
+            : [active.id as string]
+        await updateTasksBucket(tasksToMove, over.id as string)
+      } else if (activeData?.type === 'task' && overData?.type === 'task') {
+        const tasksToReorder =
+          activeType === 'multiple-tasks'
+            ? selectedTaskIds
+            : [active.id as string]
+        await reorderTasks(tasksToReorder, over.id as string)
+      }
+    } catch (error) {
+      console.error('Error during drag operation:', error)
     }
 
     setDragState({ activeId: null, activeType: null })

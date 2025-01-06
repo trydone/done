@@ -1,16 +1,17 @@
 import { useState } from 'react'
 
 import { Dialog, DialogContent } from '@/components/ui/dialog'
-import { TagRow, TaskRow } from '@/schema'
+import { TagRow } from '@/schema'
 
 import { TagDialogForm } from './tag-dialog-form'
 import { TagDialogList } from './tag-dialog-list'
 import { TagDialogManage } from './tag-dialog-manage'
+import { Task } from './types'
 
 type Props = {
   open: boolean
   setOpen: (open: boolean) => void
-  task: TaskRow & { tags: readonly TagRow[] }
+  task: Task
 }
 
 type View = 'list' | 'form' | 'manage'

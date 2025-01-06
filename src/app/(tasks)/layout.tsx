@@ -12,7 +12,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
-import { useZero } from '@/hooks/use-zero'
 import { RootStoreContext } from '@/lib/stores/root-store'
 import { cn } from '@/lib/utils'
 
@@ -23,7 +22,7 @@ const Layout = observer(
     children: ReactNode
   }>) => {
     const {
-      localStore: { openTaskId, setOpenTaskId },
+      localStore: { openTaskId, setOpenTaskId, setSelectedTaskIds },
     } = useContext(RootStoreContext)
 
     const handleBackgroundClick = useCallback(
@@ -35,9 +34,10 @@ const Layout = observer(
           target.classList.contains('task-outside-click')
         ) {
           setOpenTaskId(null)
+          setSelectedTaskIds([])
         }
       },
-      [setOpenTaskId],
+      [setOpenTaskId, setSelectedTaskIds],
     )
 
     return (
@@ -56,9 +56,12 @@ const Layout = observer(
 
               <div
                 onClick={handleBackgroundClick}
-                className={cn('flex flex-1 flex-col gap-4 px-4 py-10', {
-                  'bg-sidebar': !!openTaskId,
-                })}
+                className={cn(
+                  'flex flex-1 flex-col gap-4 px-4 py-10 transition-colors',
+                  {
+                    'bg-sidebar': !!openTaskId,
+                  },
+                )}
               >
                 {children}
               </div>

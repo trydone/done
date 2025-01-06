@@ -46,12 +46,9 @@ export const FooterButton = ({
             {...props}
           >
             <Icon
-              className={cn(
-                'h-4 w-4',
-                state === 'disabled'
-                  ? 'text-muted-foreground opacity-60'
-                  : 'text-muted-foreground',
-              )}
+              className={cn('h-4 w-4 text-foreground', {
+                'opacity-60': state === 'disabled',
+              })}
             />
           </Button>
         </TooltipTrigger>

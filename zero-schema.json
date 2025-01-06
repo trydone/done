@@ -395,7 +395,7 @@
           },
           "sort_order": {
             "type": "number",
-            "optional": true
+            "optional": false
           },
           "start": {
             "type": "string",
@@ -423,7 +423,7 @@
           },
           "today_sort_order": {
             "type": "number",
-            "optional": true
+            "optional": false
           },
           "updated_at": {
             "type": "number",

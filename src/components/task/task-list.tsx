@@ -1,30 +1,27 @@
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { observer } from "mobx-react-lite";
-import { useContext } from "react";
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { observer } from 'mobx-react-lite'
+import { useContext } from 'react'
 
-import { RootStoreContext } from "@/lib/stores/root-store";
-import { cn } from "@/lib/utils";
-import { TaskRow } from "@/schema";
+import { RootStoreContext } from '@/lib/stores/root-store'
+import { cn } from '@/lib/utils'
 
-import { useDndContext } from "../dnd/dnd-context";
-import { TaskItem } from "./task-item";
+import { useDndContext } from '../dnd/dnd-context'
+import { TaskItemWrapper } from './task-item-wrapper'
+import { Task } from './types'
 
 type Props = {
-  tasks: readonly TaskRow[];
-  className?: string;
-  showWhenIcon?: boolean;
-};
+  tasks: readonly Task[]
+  className?: string
+  showWhenIcon?: boolean
+}
 
 export const TaskList = observer(
   ({ tasks, className, showWhenIcon }: Props) => {
     const {
       localStore: { selectedTaskIds },
-    } = useContext(RootStoreContext);
+    } = useContext(RootStoreContext)
 
-    const { isDragging } = useDndContext();
+    const { isDragging } = useDndContext()
 
     return (
       <SortableContext
@@ -33,13 +30,13 @@ export const TaskList = observer(
       >
         <div
           className={cn(
-            "flex flex-col gap-1",
-            isDragging && "cursor-grabbing",
+            'flex flex-col gap-1',
+            isDragging && 'cursor-grabbing',
             className,
           )}
         >
           {tasks.map((task) => (
-            <TaskItem
+            <TaskItemWrapper
               key={task.id}
               task={task}
               isSelected={selectedTaskIds.includes(task.id)}
@@ -48,6 +45,6 @@ export const TaskList = observer(
           ))}
         </div>
       </SortableContext>
-    );
+    )
   },
-);
+)

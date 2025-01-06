@@ -2,7 +2,6 @@ import { useQuery } from '@rocicorp/zero/react'
 import { observer } from 'mobx-react-lite'
 import { useRouter } from 'next/navigation'
 import { useCallback, useContext } from 'react'
-import { useHotkeys } from 'react-hotkeys-hook'
 
 import {
   CommandDialog,
@@ -51,17 +50,6 @@ export const QuickFindCommand = observer(() => {
       .where('completed_at', 'IS', null),
     !!quickFindQuery,
   )
-
-  useHotkeys('meta+k, ctrl+k, meta+f', (e) => {
-    e.preventDefault()
-    setQuickFindOpen(!quickFindOpen)
-  })
-
-  useHotkeys('esc', () => {
-    if (quickFindOpen) {
-      setQuickFindOpen(false)
-    }
-  })
 
   const handleSelect = useCallback(
     (url: string) => {

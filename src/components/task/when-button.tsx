@@ -1,16 +1,22 @@
 import { CalendarIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { TagRow, TaskRow } from '@/schema'
+
+import { Task } from './types'
 
 type Props = {
-  task: TaskRow & { tags: readonly TagRow[] }
+  task: Task
   setOpen: (open: boolean) => void
 }
 
 export const WhenButton = ({ setOpen }: Props) => {
   return (
-    <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
+    <Button
+      variant="ghost"
+      size="sm"
+      className="h-auto gap-1.5 rounded-md p-1"
+      onClick={() => setOpen(true)}
+    >
       <CalendarIcon className="size-4" />
     </Button>
   )

@@ -199,8 +199,8 @@ export const taskSchema = {
     description: 'string',
 
     // Organization & sorting
-    sort_order: { type: 'number', optional: true },
-    today_sort_order: { type: 'number', optional: true },
+    sort_order: 'number',
+    today_sort_order: 'number',
     today_index_reference_date: { type: 'number', optional: true },
 
     // Temporal management

@@ -1,22 +1,19 @@
-import { TagRow, TaskRow } from '@/schema'
-
 import { Badge } from '../ui/badge'
+import { Task } from './types'
 
 type Props = {
-  task: TaskRow & { tags: readonly TagRow[] }
+  task: Task
   setOpen: (open: boolean) => void
 }
 
 export const TagList = ({ task, setOpen }: Props) => {
   return (
-    <div className="flex flex-wrap items-center gap-2 pb-3 pl-10 pr-3 pt-4">
+    <div
+      onClick={() => setOpen(true)}
+      className="flex cursor-pointer flex-wrap items-center gap-1 pb-3 pl-10 pr-3 pt-4"
+    >
       {(task?.tags || []).map((tag) => (
-        <Badge
-          variant="blue"
-          key={tag.id}
-          onClick={() => setOpen(true)}
-          className="rounded-full"
-        >
+        <Badge variant="blue" key={tag.id} className="rounded-full text-xs">
           <span>{tag.title}</span>
         </Badge>
       ))}

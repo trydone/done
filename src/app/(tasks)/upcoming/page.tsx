@@ -5,6 +5,7 @@ import { CalendarIcon } from 'lucide-react'
 
 import { PageContainer } from '@/components/shared/page-container'
 import { TaskList } from '@/components/task/task-list'
+import { Task } from '@/components/task/types'
 import { useZero } from '@/hooks/use-zero'
 
 // Helper function to format date headers
@@ -25,19 +26,22 @@ const formatDateHeader = (date: Date) => {
 }
 
 // Helper function to group tasks by date
-const groupTasksByDate = (tasks) => {
-  return tasks.reduce((groups, task) => {
-    const date = new Date(task.start_date)
-    const dateKey = date.toISOString()
-    if (!groups[dateKey]) {
-      groups[dateKey] = {
-        date,
-        tasks: [],
+const groupTasksByDate = (tasks: readonly Task[]) => {
+  return tasks.reduce(
+    (groups: Record<string, { date: Date; tasks: Task[] }>, task) => {
+      const date = new Date(task.start_date!)
+      const dateKey = date.toISOString()
+      if (!groups[dateKey]) {
+        groups[dateKey] = {
+          date,
+          tasks: [],
+        }
       }
-    }
-    groups[dateKey].tasks.push(task)
-    return groups
-  }, {})
+      groups[dateKey].tasks.push(task)
+      return groups
+    },
+    {},
+  )
 }
 
 export default function Page() {
@@ -47,7 +51,6 @@ export default function Page() {
       .where('start', '=', 'postponed')
       .where('archived_at', 'IS', null)
       .where('completed_at', 'IS', null)
-      .orderBy('start_date', 'asc') // Changed to ascending for chronological order
       .orderBy('sort_order', 'asc')
       .related('tags')
       .related('checklistItems', (q) => q.orderBy('sort_order', 'asc')),
@@ -68,19 +71,15 @@ export default function Page() {
         </div>
       )}
 
-      {Object.entries(groupedTasks).length === 0 ? (
-        <div className="mx-4 text-muted-foreground">No upcoming tasks</div>
-      ) : (
-        Object.entries(groupedTasks).map(
-          ([dateKey, { date, tasks: tasksForDate }]) => (
-            <div key={dateKey} className="mb-8">
-              <h2 className="task-outside-click mx-4 mb-4 text-lg font-medium">
-                {formatDateHeader(date)}
-              </h2>
-              <TaskList tasks={tasksForDate} />
-            </div>
-          ),
-        )
+      {Object.entries(groupedTasks).map(
+        ([dateKey, { date, tasks: tasksForDate }]) => (
+          <div key={dateKey} className="mb-8">
+            <h2 className="task-outside-click mx-4 mb-4 text-lg font-medium">
+              {formatDateHeader(date)}
+            </h2>
+            <TaskList tasks={tasksForDate} />
+          </div>
+        ),
       )}
     </PageContainer>
   )

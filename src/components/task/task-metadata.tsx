@@ -2,15 +2,12 @@ import { differenceInDays, format } from 'date-fns'
 import { ClockIcon, FileIcon, ListIcon } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { ChecklistItemRow, TagRow, TaskRow } from '@/schema'
 
 import { Badge } from '../ui/badge'
+import { Task } from './types'
 
 type Props = {
-  task: TaskRow & {
-    tags: readonly TagRow[]
-    checklistItems: readonly ChecklistItemRow[]
-  }
+  task: Task
   className?: string
 }
 
@@ -55,15 +52,19 @@ export const TaskMetadata = ({ task, className }: Props) => {
           </div>
         )}
 
-        {(task?.tags || []).map((tag, index) => (
-          <Badge
-            variant="default"
-            className="flex items-center gap-1 text-xs"
-            key={index}
-          >
-            {tag.title}
-          </Badge>
-        ))}
+        {(task?.tags || []).length > 0 && (
+          <div className="flex items-center gap-1">
+            {(task?.tags || []).map((tag, index) => (
+              <Badge
+                variant="default"
+                className="rounded-full border border-border bg-transparent text-xs"
+                key={index}
+              >
+                {tag.title}
+              </Badge>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Right side with deadline */}

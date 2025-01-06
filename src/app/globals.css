@@ -37,44 +37,47 @@ body {
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent: 225 13.8% 88.6%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 96%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: 222.2 84% 4.9%;
+      --foreground: 210 40% 98%;
+      --card: 222.2 84% 4.9%;
+      --card-foreground: 210 40% 98%;
+      --popover: 222.2 84% 4.9%;
+      --popover-foreground: 210 40% 98%;
+      --primary: 210 40% 98%;
+      --primary-foreground: 222.2 47.4% 11.2%;
+      --secondary: 217.2 32.6% 17.5%;
+      --secondary-foreground: 210 40% 98%;
+      --muted: 217.2 32.6% 17.5%;
+      --muted-foreground: 215 20.2% 65.1%;
+      --accent: 217.2 32.6% 17.5%;
+      --accent-foreground: 210 40% 98%;
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 210 40% 98%;
+      --border: 217.2 32.6% 17.5%;
+      --input: 217.2 32.6% 17.5%;
+      --ring: 212.7 26.8% 83.9%;
+      --chart-1: 220 70% 50%;
+      --chart-2: 160 60% 45%;
+      --chart-3: 30 80% 55%;
+      --chart-4: 280 65% 60%;
+      --chart-5: 340 75% 55%;
+      --sidebar-background: 240 5.9% 10%;
+      --sidebar-foreground: 240 4.8% 95.9%;
+      --sidebar-primary: 224.3 76.3% 48%;
+      --sidebar-primary-foreground: 0 0% 100%;
+      --sidebar-accent: 240 3.7% 15.9%;
+      --sidebar-accent-foreground: 240 4.8% 95.9%;
+      --sidebar-border: 240 3.7% 15.9%;
+      --sidebar-ring: 217.2 91.2% 59.8%;
+    }
   }
 }
 
@@ -87,25 +90,57 @@ body {
   }
 }
 
-.ft-checkbox[data-state="checked"] .ft-checkbox-polyline {
+.h1 {
+  @apply scroll-m-20 text-3xl font-semibold leading-tight tracking-tight lg:text-4xl;
+}
+
+.h2 {
+  @apply scroll-m-20 text-3xl font-semibold leading-tight tracking-tight transition-colors;
+}
+
+.h3 {
+  @apply scroll-m-20 text-2xl font-semibold leading-tight tracking-tight;
+}
+
+.h4 {
+  @apply scroll-m-20 text-xl font-semibold leading-tight tracking-tight;
+}
+
+.h5 {
+  @apply scroll-m-20 text-lg font-semibold tracking-tight;
+}
+
+.h6 {
+  @apply scroll-m-20 text-base font-semibold tracking-tight;
+}
+
+.ft-checkbox[data-state='checked'] .ft-checkbox-polyline {
   stroke-dashoffset: 44;
   transition: stroke-dashoffset 250ms linear 0.2s;
 }
 
-.ft-checkbox:not([data-state="checked"]) .ft-checkbox-polyline {
+.ft-checkbox:not([data-state='checked']) .ft-checkbox-polyline {
   stroke-dashoffset: 66;
 }
 
 .ft-checkbox::after {
-  content: "";
-  @apply bg-blue-600 rounded-[3px] opacity-0 scale-50 transition-all ease-linear duration-200 origin-center absolute inset-0;
+  content: '';
+  @apply absolute inset-0 origin-center scale-50 rounded-[3px] bg-blue-600 opacity-0 transition-all duration-200 ease-linear;
 }
 
-.ft-checkbox[data-state="checked"]::after {
-  @apply opacity-100 scale-100;
+.ft-checkbox[data-state='checked']::after {
+  @apply scale-100 opacity-100;
 }
 
 .ft-checkbox::before {
-  content: "";
-  @apply border border-gray-400 rounded-[3px] transition-all origin-center absolute inset-0;
+  content: '';
+  @apply absolute inset-0 origin-center rounded-[3px] border border-muted-foreground transition-all;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }

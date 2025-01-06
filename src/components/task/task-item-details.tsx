@@ -1,29 +1,85 @@
-import { ChecklistItemRow, TagRow, TaskRow } from "@/schema";
-import { TaskHeader } from "./task-header";
-import { TaskNotes } from "./task-notes";
-import { ChecklistList } from "./checklist-list";
-import { TagList } from "./tag-list";
-import { WhenPicker } from "./when-picker";
+import {observer} from 'mobx-react-lite'
+import {useContext, useState} from 'react'
+
+import {RootStoreContext} from '@/lib/stores/root-store'
+
+import {ChecklistButton} from './checklist-button'
+import {ChecklistList} from './checklist-list'
+import {TagButton} from './tag-button'
+import {TagDialog} from './tag-dialog'
+import {TagList} from './tag-list'
+import {TaskHeader} from './task-header'
+import {TaskNotes} from './task-notes'
+import {Task} from './types'
+import {WhenButton} from './when-button'
+import {WhenDialog} from './when-dialog'
+import {WhenLabel} from './when-label'
 
 type Props = {
-  task: TaskRow & {
-    checklistItems: readonly ChecklistItemRow[];
-    tags: readonly TagRow[];
-  };
-  checked: boolean;
-  onComplete: (checked: boolean) => void;
-};
+  task: Task
+  checked: boolean
+  onComplete: (checked: boolean) => void
+}
 
-export const TaskItemDetails = ({ task, checked, onComplete }: Props) => {
-  return (
-    <div className="flex flex-col h-full bg-background rounded-lg shadow-md">
-      <TaskHeader task={task} checked={checked} onComplete={onComplete} />
-      <div className="flex-1 overflow-y-auto pt-1 p-4">
-        <TaskNotes task={task} />
-        <ChecklistList task={task} />
-        <TagList task={task} />
-        <WhenPicker task={task} />
+export const TaskItemDetails = observer(
+  ({task, checked, onComplete}: Props) => {
+    const {
+      localStore: {tempTask},
+    } = useContext(RootStoreContext)
+    const [tagOpen, setTagOpen] = useState(false)
+    const [whenOpen, setWhenOpen] = useState(false)
+
+    const newTask = tempTask || task
+
+    return (
+      <div className="py-5">
+        <div className="flex h-full flex-col rounded-lg bg-background shadow-md">
+          <TaskHeader task={task} checked={checked} onComplete={onComplete} />
+
+          <TaskNotes task={task} />
+
+          {(task?.checklistItems || []).length > 0 && (
+            <ChecklistList task={task} />
+          )}
+
+          {(task?.tags || []).length > 0 && (
+            <TagList task={task} setOpen={setTagOpen} />
+          )}
+
+          <div className="flex items-center gap-1 pb-4 pl-9 pr-3">
+            <div className="flex-1">
+              {newTask?.start !== 'not_started' && (
+                <WhenLabel task={newTask} setOpen={setWhenOpen} />
+              )}
+            </div>
+
+            {(task?.tags || []).length === 0 && (
+              <TagButton task={task} setOpen={setTagOpen} />
+            )}
+
+            {(task?.checklistItems || []).length === 0 && (
+              <ChecklistButton task={task} />
+            )}
+
+            {newTask?.start === 'not_started' && (
+              <WhenButton task={newTask} setOpen={setWhenOpen} />
+            )}
+          </div>
+        </div>
+
+        {tagOpen && (
+          <TagDialog task={task} open={tagOpen} setOpen={setTagOpen} />
+        )}
+
+        {whenOpen && (
+          <WhenDialog
+            type="single"
+            task={newTask}
+            open={whenOpen}
+            setOpen={setWhenOpen}
+          />
+        )}
       </div>
-    </div>
-  );
-};
+    )
+  },
+)

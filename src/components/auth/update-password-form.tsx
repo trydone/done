@@ -1,35 +1,35 @@
-"use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
+'use client'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {useCallback, useState} from 'react'
+import {useForm} from 'react-hook-form'
+import {toast} from 'sonner'
+import * as z from 'zod'
 
-import { PasswordField } from "@/components/fields/password-field";
-import { Button } from "@/components/ui/button";
+import {PasswordField} from '@/components/fields/password-field'
+import {Button} from '@/components/ui/button'
 
 const schema = z.object({
-  password: z.string().min(1, { message: "Required" }),
-});
+  password: z.string().min(1, {message: 'Required'}),
+})
 
-type Schema = z.infer<typeof schema>;
+type Schema = z.infer<typeof schema>
 
-const redirectTo = "/sites";
+const redirectTo = '/sites'
 
 export const UpdatePasswordForm = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
-  const { control, handleSubmit } = useForm<Schema>({
+  const {control, handleSubmit} = useForm<Schema>({
     resolver: zodResolver(schema),
-    mode: "all",
+    mode: 'all',
     defaultValues: {
-      password: "",
+      password: '',
     },
-  });
+  })
 
-  const submitHandler = useCallback(async ({ password }: Schema) => {
+  const submitHandler = useCallback(async ({}: Schema) => {
     try {
-      setLoading(true);
+      setLoading(true)
 
       // const { error } = await supabase.auth.updateUser({ password });
 
@@ -38,14 +38,14 @@ export const UpdatePasswordForm = () => {
       // }
 
       setTimeout(() => {
-        window.location.href = redirectTo;
-      }, 500);
+        window.location.href = redirectTo
+      }, 500)
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  }, []);
+  }, [])
 
   return (
     <form onSubmit={handleSubmit(submitHandler)}>
@@ -60,5 +60,5 @@ export const UpdatePasswordForm = () => {
         Update password
       </Button>
     </form>
-  );
-};
+  )
+}

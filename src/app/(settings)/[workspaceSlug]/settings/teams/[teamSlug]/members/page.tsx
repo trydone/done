@@ -1,16 +1,27 @@
-"use client";
+'use client'
 
-import { useZero } from "@/hooks/use-zero";
-import { useQuery } from "@rocicorp/zero/react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {useQuery} from '@rocicorp/zero/react'
+import {ChevronLeft, MoreHorizontal, Plus, Search} from 'lucide-react'
+import Link from 'next/link'
+import {useMemo, useState} from 'react'
+import {toast} from 'sonner'
+
+import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
+import {Button} from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu'
+import {Input} from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -18,56 +29,51 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ChevronLeft, MoreHorizontal, Plus, Search } from "lucide-react";
-import { Schema } from "@/schema";
-import { toast } from "sonner";
-import Link from "next/link";
-import { useMemo, useState } from "react";
+} from '@/components/ui/table'
+import {useZero} from '@/hooks/use-zero'
 
 type Props = {
-  params: { workspaceSlug: string; teamSlug: string };
-};
+  params: {workspaceSlug: string; teamSlug: string}
+}
 
-export default function Page({ params: { workspaceSlug, teamSlug } }: Props) {
-  const zero = useZero();
-  const [members] = useQuery(zero.query.team_member);
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("All");
+export default function Page({params: {}}: Props) {
+  const zero = useZero()
+  const [members] = useQuery(
+    zero.query.team_member.related('user', (q) => q.one()),
+  )
+  const [search, setSearch] = useState('')
+  const [filter, setFilter] = useState('All')
 
   const filteredMembers = useMemo(() => {
     return members.filter(
       (member) =>
-        member.user.name.toLowerCase().includes(search.toLowerCase()) ||
-        member.user.email.toLowerCase().includes(search.toLowerCase()),
-    );
-  }, [members, search]);
+        (member?.user?.name || '')
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        (member?.user?.email || '')
+          .toLowerCase()
+          .includes(search.toLowerCase()),
+    )
+  }, [members, search])
 
   const handleLeave = async (memberId: string) => {
     try {
-      await zero.mutate.member.delete({ id: memberId });
-      toast.success("Member removed successfully");
-    } catch (error) {
-      toast.error("Failed to remove member");
+      await zero.mutate.team_member.delete({id: memberId})
+      toast.success('Member removed successfully')
+    } catch (_error) {
+      toast.error('Failed to remove member')
     }
-  };
+  }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <div className="container mx-auto space-y-6 py-6">
       {/* Header */}
       <div className="flex items-center space-x-4">
         <Link href="/teams" className="hover:opacity-80">
-          <ChevronLeft className="h-6 w-6" />
+          <ChevronLeft className="size-6" />
         </Link>
         <div className="flex items-center space-x-3">
-          <div className="h-6 w-6 rounded bg-green-500/20 flex items-center justify-center">
+          <div className="flex size-6 items-center justify-center rounded bg-green-500/20">
             <span className="text-green-500">$</span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight">
@@ -78,9 +84,9 @@ export default function Page({ params: { workspaceSlug, teamSlug } }: Props) {
 
       {/* Controls */}
       <div className="flex items-center justify-between gap-4">
-        <div className="flex flex-1 items-center gap-4 max-w-xl">
+        <div className="flex max-w-xl flex-1 items-center gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search by name or email"
               value={search}
@@ -101,7 +107,7 @@ export default function Page({ params: { workspaceSlug, teamSlug } }: Props) {
         </div>
 
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="mr-2 size-4" />
           Add a member
         </Button>
       </div>
@@ -125,9 +131,9 @@ export default function Page({ params: { workspaceSlug, teamSlug } }: Props) {
                     <AvatarImage src={member.avatar} />
                     <AvatarFallback>
                       {member.name
-                        .split(" ")
+                        .split(' ')
                         .map((n) => n[0])
-                        .join("")}
+                        .join('')}
                     </AvatarFallback>
                   </Avatar>
                   <div>
@@ -146,7 +152,7 @@ export default function Page({ params: { workspaceSlug, teamSlug } }: Props) {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm">
-                      <MoreHorizontal className="h-4 w-4" />
+                      <MoreHorizontal className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -164,5 +170,5 @@ export default function Page({ params: { workspaceSlug, teamSlug } }: Props) {
         </TableBody>
       </Table>
     </div>
-  );
+  )
 }

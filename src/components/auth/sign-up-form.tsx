@@ -1,46 +1,45 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { setCookie } from "cookies-next";
-import { useCallback, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
+import {zodResolver} from '@hookform/resolvers/zod'
+import {useCallback, useState} from 'react'
+import {useForm} from 'react-hook-form'
+import {toast} from 'sonner'
+import * as z from 'zod'
 
-import { InputField } from "@/components/fields/input-field";
-import { PasswordField } from "@/components/fields/password-field";
-import { Button } from "@/components/ui/button";
+import {InputField} from '@/components/fields/input-field'
+import {PasswordField} from '@/components/fields/password-field'
+import {Button} from '@/components/ui/button'
 
 const schema = z.object({
-  name: z.string().min(1, { message: "Required" }),
-  email: z.string().email().min(1, { message: "Required" }),
-  password: z.string().min(6, { message: "Too short" }),
+  name: z.string().min(1, {message: 'Required'}),
+  email: z.string().email().min(1, {message: 'Required'}),
+  password: z.string().min(6, {message: 'Too short'}),
   jobTitle: z.string().optional(),
-});
+})
 
-type Schema = z.infer<typeof schema>;
+type Schema = z.infer<typeof schema>
 
 type Props = {
-  returnTo: string;
-  forwardQuery?: string;
-};
+  returnTo: string
+  forwardQuery?: string
+}
 
-export const SignUpForm = ({ returnTo, forwardQuery }: Props) => {
-  const [loading, setLoading] = useState(false);
+export const SignUpForm = ({returnTo, forwardQuery}: Props) => {
+  const [loading, setLoading] = useState(false)
 
-  const { control, handleSubmit } = useForm<Schema>({
+  const {control, handleSubmit} = useForm<Schema>({
     resolver: zodResolver(schema),
-    mode: "all",
+    mode: 'all',
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      jobTitle: "",
+      name: '',
+      email: '',
+      password: '',
+      jobTitle: '',
     },
-  });
+  })
 
   const submitHandler = useCallback(
-    async (input: Schema) => {
+    async (_input: Schema) => {
       try {
-        setLoading(true);
+        setLoading(true)
         // setCookie(RETURN_TO_KEY, returnTo);
 
         // const { error } = await supabase.auth.signUp({
@@ -60,16 +59,16 @@ export const SignUpForm = ({ returnTo, forwardQuery }: Props) => {
 
         setTimeout(() => {
           window.location.href =
-            returnTo + (forwardQuery ? `?${forwardQuery}` : "");
-        }, 500);
+            returnTo + (forwardQuery ? `?${forwardQuery}` : '')
+        }, 500)
       } catch (error: any) {
-        toast.error(error.message);
+        toast.error(error.message)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     },
     [forwardQuery, returnTo],
-  );
+  )
 
   return (
     <form onSubmit={handleSubmit(submitHandler)}>
@@ -99,5 +98,5 @@ export const SignUpForm = ({ returnTo, forwardQuery }: Props) => {
         Sign up
       </Button>
     </form>
-  );
-};
+  )
+}

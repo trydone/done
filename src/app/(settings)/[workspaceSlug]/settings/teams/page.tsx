@@ -1,9 +1,12 @@
-"use client";
+'use client'
 
-import { useZero } from "@/hooks/use-zero";
-import { useQuery } from "@rocicorp/zero/react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import {useQuery} from '@rocicorp/zero/react'
+import {Plus, Search} from 'lucide-react'
+import {useRouter} from 'next/navigation'
+import {useMemo, useState} from 'react'
+
+import {Button} from '@/components/ui/button'
+import {Input} from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -11,35 +14,31 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Search, DollarSign, Plus } from "lucide-react";
-import { Schema } from "@/schema";
-import { Badge } from "@/components/ui/badge";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+} from '@/components/ui/table'
+import {useZero} from '@/hooks/use-zero'
 
 type Props = {
-  params: { workspaceSlug: string };
-};
+  params: {workspaceSlug: string}
+}
 
-export default function Page({ params: { workspaceSlug } }: Props) {
-  const zero = useZero();
-  const router = useRouter();
-  const [teams] = useQuery(zero.query.team);
-  const [search, setSearch] = useState("");
+export default function Page({params: {}}: Props) {
+  const zero = useZero()
+  const router = useRouter()
+  const [teams] = useQuery(zero.query.team)
+  const [search, setSearch] = useState('')
 
   const filteredTeams = useMemo(() => {
     return teams.filter((team) =>
       team.name.toLowerCase().includes(search.toLowerCase()),
-    );
-  }, [teams, search]);
+    )
+  }, [teams, search])
 
   const handleCreateTeam = () => {
-    router.push("/teams/new");
-  };
+    router.push('/teams/new')
+  }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <div className="container mx-auto space-y-6 py-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Teams</h1>
@@ -47,8 +46,8 @@ export default function Page({ params: { workspaceSlug } }: Props) {
 
       {/* Controls */}
       <div className="flex items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <div className="relative max-w-sm flex-1">
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Filter by name..."
             value={search}
@@ -57,7 +56,7 @@ export default function Page({ params: { workspaceSlug } }: Props) {
           />
         </div>
         <Button onClick={handleCreateTeam}>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="mr-2 size-4" />
           Create team
         </Button>
       </div>
@@ -81,8 +80,8 @@ export default function Page({ params: { workspaceSlug } }: Props) {
 
               <TableCell>
                 {new Date(team.created_at).toLocaleDateString(undefined, {
-                  month: "short",
-                  day: "numeric",
+                  month: 'short',
+                  day: 'numeric',
                 })}
               </TableCell>
             </TableRow>
@@ -90,5 +89,5 @@ export default function Page({ params: { workspaceSlug } }: Props) {
         </TableBody>
       </Table>
     </div>
-  );
+  )
 }

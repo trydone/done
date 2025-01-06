@@ -1,41 +1,40 @@
-"use client";
-import { FC, useContext, ReactNode } from "react";
-import { observer } from "mobx-react-lite";
-import { useQuery } from "@rocicorp/zero/react";
+'use client'
 
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { WorkspaceRow, UserRow, WorkspaceMemberRow } from "@/schema";
-import { RootStoreContext } from "@/lib/stores/root-store";
-import { H2 } from "@/components/shared/typography";
-import { WorkspaceSignout } from "./workspace-signout";
-import { useZero } from "@/hooks/use-zero";
+import {useQuery} from '@rocicorp/zero/react'
+import {observer} from 'mobx-react-lite'
+import {FC, ReactNode, useContext} from 'react'
+
+import {H2} from '@/components/shared/typography'
+import {Label} from '@/components/ui/label'
+import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
+import {useZero} from '@/hooks/use-zero'
+import {RootStoreContext} from '@/lib/stores/root-store'
+import {UserRow, WorkspaceMemberRow, WorkspaceRow} from '@/schema'
+
+import {WorkspaceSignout} from './workspace-signout'
 
 type ExtendedWorkspaceMemberRow = WorkspaceMemberRow & {
-  workspace: readonly WorkspaceRow[];
-};
+  workspace: readonly WorkspaceRow[]
+}
 
 type ExtendedUserRow = UserRow & {
-  workspaceMembers: readonly ExtendedWorkspaceMemberRow[];
-};
+  workspaceMembers: readonly ExtendedWorkspaceMemberRow[]
+}
 
 interface Compound
   extends FC<{
-    users?: readonly ExtendedUserRow[];
-    selectedUserId?: string;
-    selectedWorkspaceId?: string;
-    onWorkspaceChange: (params: {
-      userId: string;
-      workspaceId: string;
-    }) => void;
-    onAllWorkspacesClick?: () => void;
-    renderUserTitle?: (user: ExtendedUserRow) => ReactNode;
+    users?: readonly ExtendedUserRow[]
+    selectedUserId?: string
+    selectedWorkspaceId?: string
+    onWorkspaceChange: (params: {userId: string; workspaceId: string}) => void
+    onAllWorkspacesClick?: () => void
+    renderUserTitle?: (user: ExtendedUserRow) => ReactNode
   }> {
   AllWorkspaces: FC<{
-    active: boolean;
-    onClick?: () => void;
-  }>;
-  Block: FC;
+    active: boolean
+    onClick?: () => void
+  }>
+  Block: FC
 }
 
 export const WorkspaceSwitch: Compound = ({
@@ -82,25 +81,25 @@ export const WorkspaceSwitch: Compound = ({
       </div>
     ))}
   </>
-);
+)
 
-const AllWorkspaces: Compound["AllWorkspaces"] = ({ active, onClick }) => (
+const AllWorkspaces: Compound['AllWorkspaces'] = ({active, onClick}) => (
   <RadioGroup value={active ? `all` : ``} onValueChange={onClick}>
     <div className="flex items-center space-x-2">
       <RadioGroupItem value="all" id="all" />
       <Label htmlFor="all">All Workspaces</Label>
     </div>
   </RadioGroup>
-);
+)
 
-WorkspaceSwitch.AllWorkspaces = AllWorkspaces;
+WorkspaceSwitch.AllWorkspaces = AllWorkspaces
 
-const Block: Compound["Block"] = observer(() => {
-  const zero = useZero();
+const Block: Compound['Block'] = observer(() => {
+  const zero = useZero()
 
   const [users] = useQuery(
-    zero.query.user.related("workspaceMembers", (q) => q.related("workspace")),
-  );
+    zero.query.user.related('workspaceMembers', (q) => q.related('workspace')),
+  )
 
   const {
     localStore: {
@@ -109,7 +108,7 @@ const Block: Compound["Block"] = observer(() => {
       selectedWorkspaceId,
       selectedUserId,
     },
-  } = useContext(RootStoreContext);
+  } = useContext(RootStoreContext)
 
   return (
     <WorkspaceSwitch
@@ -125,7 +124,7 @@ const Block: Compound["Block"] = observer(() => {
         </div>
       )}
     />
-  );
-});
+  )
+})
 
-WorkspaceSwitch.Block = Block;
+WorkspaceSwitch.Block = Block

@@ -1,25 +1,21 @@
-import { Calendar1Icon, CircleXIcon } from "lucide-react";
-import { format } from "date-fns";
-import * as React from "react";
-import { useCallback } from "react";
-import { SelectSingleEventHandler } from "react-day-picker";
+import {format} from 'date-fns'
+import {Calendar1Icon, CircleXIcon} from 'lucide-react'
+import * as React from 'react'
+import {useCallback} from 'react'
+import {SelectSingleEventHandler} from 'react-day-picker'
 
-import { Button } from "@/components/ui/button";
-import { Calendar, CalendarProps } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import {Button} from '@/components/ui/button'
+import {Calendar, CalendarProps} from '@/components/ui/calendar'
+import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
+import {cn} from '@/lib/utils'
 
 type Props = CalendarProps & {
-  date?: Date;
-  setDate: (value: Date | undefined) => void;
-  isClearable?: boolean;
-  disabled?: boolean;
-  children?: React.ReactNode;
-};
+  date?: Date
+  setDate: (value: Date | undefined) => void
+  isClearable?: boolean
+  disabled?: boolean
+  children?: React.ReactNode
+}
 
 export const DatePicker = ({
   date,
@@ -29,15 +25,15 @@ export const DatePicker = ({
   children,
   ...props
 }: Props) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false)
 
   const onDateSelect = useCallback<SelectSingleEventHandler>(
     (date) => {
-      setDate(date);
-      setOpen(false);
+      setDate(date)
+      setOpen(false)
     },
     [setDate],
-  );
+  )
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -51,12 +47,12 @@ export const DatePicker = ({
               variant="input"
               disabled={disabled}
               className={cn(
-                "w-full justify-start text-left font-normal",
-                !date && "text-muted-foreground",
+                'w-full justify-start text-left font-normal',
+                !date && 'text-muted-foreground',
               )}
             >
               <Calendar1Icon className="mr-2 size-4" />
-              {date ? format(date, "PPP") : <span>Pick a date</span>}
+              {date ? format(date, 'PPP') : <span>Pick a date</span>}
             </Button>
 
             {!!date && isClearable && (
@@ -86,5 +82,5 @@ export const DatePicker = ({
         />
       </PopoverContent>
     </Popover>
-  );
-};
+  )
+}

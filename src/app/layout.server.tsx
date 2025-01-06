@@ -1,10 +1,10 @@
-import { ReactNode } from "react";
+import {ReactNode} from 'react'
 
 export const metadata = {
-  title: "My App",
-  description: "My app description",
-};
+  title: 'My App',
+  description: 'My app description',
+}
 
-export default function ServerLayout({ children }: { children: ReactNode }) {
-  return children;
+export default function ServerLayout({children}: {children: ReactNode}) {
+  return children
 }

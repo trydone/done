@@ -1,8 +1,8 @@
-import { Slot } from '@radix-ui/react-slot'
-import { cva, VariantProps } from 'class-variance-authority'
+import {Slot} from '@radix-ui/react-slot'
+import {cva, VariantProps} from 'class-variance-authority'
 import * as React from 'react'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
 const textVariants = cva('', {
   variants: {
@@ -135,10 +135,7 @@ const Text = React.forwardRef<HTMLParagraphElement, TextProps>(
     return (
       <Component
         ref={ref}
-        className={cn(
-          textVariants({ size, weight, family, leading }),
-          className,
-        )}
+        className={cn(textVariants({size, weight, family, leading}), className)}
         {...props}
       >
         {children}
@@ -148,4 +145,4 @@ const Text = React.forwardRef<HTMLParagraphElement, TextProps>(
 )
 Text.displayName = 'Text'
 
-export { Text }
+export {Text}

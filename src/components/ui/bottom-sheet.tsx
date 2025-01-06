@@ -3,7 +3,7 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import * as React from 'react'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
 const BottomSheet = DialogPrimitive.Root
 
@@ -12,7 +12,7 @@ const BottomSheetPortal = DialogPrimitive.Portal
 const BottomSheetOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
+>(({className, ...props}, ref) => (
   <DialogPrimitive.Overlay
     className={cn(
       'fixed inset-0 z-[100] bg-black/60 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
@@ -32,7 +32,7 @@ const BottomSheetContent = React.forwardRef<
   }
 >(
   (
-    { className, children, hideOverlay = true, overlayClassName, ...props },
+    {className, children, hideOverlay = true, overlayClassName, ...props},
     ref,
   ) => (
     <BottomSheetPortal>
@@ -43,7 +43,7 @@ const BottomSheetContent = React.forwardRef<
           'fixed bottom-0 left-1/2 z-[100] w-full -translate-x-1/2 translate-y-0 duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:!slide-out-to-top-0 data-[state=closed]:slide-out-to-left-1/2 data-[state=open]:!slide-in-from-top-0 data-[state=open]:slide-in-from-left-1/2 sm:rounded-2xl md:w-full',
           className,
         )}
-        style={{ top: 'unset' }}
+        style={{top: 'unset'}}
         {...props}
       >
         <div className="relative">{children}</div>
@@ -59,7 +59,7 @@ const BottomSheetOuter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'absolute inset-x-0 top-[-44px] flex items-center justify-between px-4 pointer-events-none',
+      'pointer-events-none absolute inset-x-0 top-[-44px] flex items-center justify-between px-4',
       className,
     )}
     {...props}
@@ -73,7 +73,7 @@ const BottomSheetInner = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'bottom-sheet-inner z-[100] grid max-h-[430px] min-h-[50px] w-full gap-4 overflow-y-auto !rounded-b-none rounded-t-[32px] bg-background p-0 border border-border shadow-lg',
+      'bottom-sheet-inner z-[100] grid max-h-[430px] min-h-[50px] w-full gap-4 overflow-y-auto !rounded-b-none rounded-t-[32px] border border-border bg-background p-0 shadow-lg',
       className,
     )}
     {...props}
@@ -81,4 +81,4 @@ const BottomSheetInner = ({
 )
 BottomSheetInner.displayName = 'BottomSheetInner'
 
-export { BottomSheet, BottomSheetContent, BottomSheetInner, BottomSheetOuter }
+export {BottomSheet, BottomSheetContent, BottomSheetInner, BottomSheetOuter}

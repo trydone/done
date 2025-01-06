@@ -1,15 +1,15 @@
-import { useBreakpoint } from "@/hooks/use-breakpoint";
+import {useBreakpoint} from '@/hooks/use-breakpoint'
 
-import { Dialog } from "./dialog";
-import { Sheet } from "./sheet";
+import {Dialog} from './dialog'
+import {Sheet} from './sheet'
 
 type Props = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  children: React.ReactNode;
-  modal?: boolean;
-  defaultOpen?: boolean;
-};
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  children: React.ReactNode
+  modal?: boolean
+  defaultOpen?: boolean
+}
 
 export const ResponsiveSheet = ({
   open,
@@ -18,8 +18,8 @@ export const ResponsiveSheet = ({
   modal,
   defaultOpen,
 }: Props) => {
-  const breakpoint = useBreakpoint();
-  const isDesktop = ["lg", "xl"].includes(breakpoint);
+  const breakpoint = useBreakpoint()
+  const isDesktop = ['lg', 'xl'].includes(breakpoint)
 
   if (!isDesktop) {
     return (
@@ -31,7 +31,7 @@ export const ResponsiveSheet = ({
       >
         {children}
       </Sheet>
-    );
+    )
   }
 
   return (
@@ -43,5 +43,5 @@ export const ResponsiveSheet = ({
     >
       {children}
     </Dialog>
-  );
-};
+  )
+}

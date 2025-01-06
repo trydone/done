@@ -1,16 +1,11 @@
-import { ClipboardIcon } from "lucide-react";
-
 type Props = {
-  count: number;
-};
+  count: number
+}
 
 export const MultipleTasksOverlay = ({ count }: Props) => (
-  <div className="bg-white border rounded-lg p-3 shadow-lg">
-    <div className="flex items-center gap-2">
-      <div className="bg-blue-100 rounded-lg p-2">
-        <ClipboardIcon className="w-4 h-4 text-blue-600" />
-      </div>
-      <span className="font-medium">{count} tasks selected</span>
+  <div className="relative w-[100px] rounded-[4px] bg-blue-200 p-3 shadow-lg dark:bg-blue-800">
+    <div className="absolute -bottom-1/2 left-1/2 flex size-5 -translate-x-1/2 items-center justify-center rounded-full bg-red-500 text-xs font-semibold text-white">
+      {count}
     </div>
   </div>
-);
+)

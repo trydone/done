@@ -1,165 +1,197 @@
-import { useCallback, useContext, useState } from "react";
-import { observer } from "mobx-react-lite";
-import {
-  PlusIcon,
-  CalendarIcon,
-  MoveIcon,
-  SearchIcon,
-  TrashIcon,
-  MoreHorizontalIcon,
-  ArrowRightIcon,
-} from "lucide-react";
-import { NewTaskDialog } from "../task/new-task-dialog";
-import { useZero } from "@/hooks/use-zero";
-import { RootStoreContext } from "@/lib/stores/root-store";
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverTrigger } from "@/components/ui/popover";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { FooterButton } from "./footer-button";
-import { PopoverWrapper } from "../ui/popover-wrapper";
-import { v4 } from "uuid";
+import {useQuery} from '@rocicorp/zero/react'
+import {addDays, startOfDay} from 'date-fns'
+import {CalendarIcon, PlusIcon, SearchIcon, TrashIcon} from 'lucide-react'
+import {observer} from 'mobx-react-lite'
+import {usePathname} from 'next/navigation'
+import {useCallback, useContext, useState} from 'react'
+import {useHotkeys} from 'react-hotkeys-hook'
+import {v4} from 'uuid'
+
+import {useZero} from '@/hooks/use-zero'
+import {INITIAL_GAP} from '@/lib/constants'
+import {RootStoreContext} from '@/lib/stores/root-store'
+
+import {WhenDialog} from '../task/when-dialog'
+import {FooterButton} from './footer-button'
 
 export const Footer = observer(() => {
-  const zero = useZero();
+  const pathname = usePathname()
+  const zero = useZero()
+  const [whenOpen, setWhenOpen] = useState(false)
+
+  const [firstTask] = useQuery(
+    zero.query.task.orderBy('sort_order', 'asc').one(),
+  )
+
   const {
     localStore: {
       openTaskId,
       setOpenTaskId,
-      setSelectedTaskIds,
-      setQuickSearchQuery,
+      setQuickFindQuery,
       buttonStates,
       selectedWorkspaceId,
+      selectedTaskIds,
+      setQuickFindOpen,
     },
-  } = useContext(RootStoreContext);
+  } = useContext(RootStoreContext)
 
   const handleDelete = useCallback(async () => {
     if (!openTaskId) {
-      return;
+      return
     }
 
     await zero.mutate.task.update({
       id: openTaskId,
-      archived_at: Math.floor(Date.now() / 1000),
-    });
+      archived_at: Date.now(),
+    })
 
-    setOpenTaskId(null);
-  }, []);
+    setOpenTaskId(null)
+  }, [openTaskId, setOpenTaskId, zero.mutate.task])
 
   const handleNewTask = useCallback(async () => {
-    const taskId = v4();
+    const taskId = v4()
+
+    // Default values
+    let start = 'not_started'
+    let start_bucket = 'today'
+    let start_date = null
+
+    switch (pathname) {
+      case '/today':
+        start = 'started'
+        start_bucket = 'today'
+        start_date = startOfDay(new Date()).getTime()
+        break
+      case '/anytime':
+        start = 'not_started'
+        start_bucket = 'today'
+        start_date = null
+        break
+      case '/upcoming':
+        start = 'postponed'
+        start_bucket = 'today'
+        start_date = addDays(startOfDay(new Date()), 1).getTime()
+        break
+      case '/someday':
+        start = 'postponed'
+        start_bucket = 'today'
+        start_date = null
+        break
+      case '/inbox':
+      default:
+        start = 'not_started'
+        start_bucket = 'today'
+        start_date = null
+        break
+    }
+
+    // Calculate top sort order
+    const newSortOrder = firstTask
+      ? firstTask.sort_order - INITIAL_GAP
+      : INITIAL_GAP
 
     await zero.mutate.task.insert({
       id: taskId,
       workspace_id:
         selectedWorkspaceId || `9d190060-d582-4136-827d-cd0468d081ec`,
-      title: "",
-      description: "",
+      title: '',
+      description: '',
       created_at: Date.now(),
-      creator_id: "9ecb970e-0fee-4dfd-9721-2c04c8ed7607",
+      creator_id: '9ecb970e-0fee-4dfd-9721-2c04c8ed7607',
       updated_at: Date.now(),
-      start: "not_started",
-      start_bucket: "inbox",
-    });
+      start,
+      start_bucket,
+      start_date,
+      sort_order: newSortOrder,
+      today_sort_order: newSortOrder,
+    })
 
-    setOpenTaskId(taskId);
-  }, []);
+    setOpenTaskId(taskId)
+  }, [
+    pathname,
+    firstTask,
+    zero.mutate.task,
+    selectedWorkspaceId,
+    setOpenTaskId,
+  ])
 
   const handleQuickFind = () => {
-    setQuickSearchQuery("");
-  };
+    setQuickFindQuery('')
+    setQuickFindOpen(true)
+  }
+
+  useHotkeys(
+    'n',
+    (e) => {
+      e.preventDefault()
+      handleNewTask()
+    },
+    {
+      enabled: buttonStates.newTask === 'visible',
+    },
+  )
+
+  useHotkeys(
+    'meta+k',
+    (e) => {
+      e.preventDefault()
+      handleQuickFind()
+    },
+    {
+      enabled: buttonStates.quickFind === 'visible',
+    },
+  )
+
+  useHotkeys(
+    'backspace, delete',
+    (e) => {
+      e.preventDefault()
+
+      if (selectedTaskIds.length > 0) {
+        selectedTaskIds.forEach(async (taskId) => {
+          await zero.mutate.task.update({
+            id: taskId,
+            archived_at: Date.now(),
+          })
+        })
+      } else if (openTaskId) {
+        handleDelete()
+      }
+    },
+    {
+      enabled: !!openTaskId || selectedTaskIds.length > 0,
+    },
+  )
 
   return (
     <>
-      <footer className="flex items-center justify-between gap-1 p-2 w-full border-t bg-white">
+      <footer className="flex w-full items-center justify-between gap-1 border-t bg-background p-2">
         <FooterButton
           icon={PlusIcon}
           title="New To-Do"
           onClick={handleNewTask}
-          state={buttonStates.newTask}
+          state={
+            buttonStates.newTask === 'visible' &&
+            ['/logbook', '/trash'].includes(pathname)
+              ? 'disabled'
+              : buttonStates.newTask
+          }
         />
 
-        {buttonStates.when !== "hidden" && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <FooterButton
-                icon={CalendarIcon}
-                title="When"
-                state={buttonStates.when}
-              />
-            </PopoverTrigger>
-
-            <PopoverWrapper
-              title="When"
-              description="Decide when to start. Today or later?"
-            >
-              <Button variant="ghost" className="justify-start">
-                Today
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                This Evening
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Tomorrow
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                This Weekend
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Next Week
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Someday
-              </Button>
-            </PopoverWrapper>
-          </Popover>
-        )}
-
-        {buttonStates.move !== "hidden" && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <FooterButton
-                icon={ArrowRightIcon}
-                title="Move"
-                state={buttonStates.move}
-              />
-            </PopoverTrigger>
-
-            <PopoverWrapper title="Move to">
-              <Button variant="ghost" className="justify-start">
-                Today
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                This Evening
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Upcoming
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Anytime
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Someday
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Logbook
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Trash
-              </Button>
-            </PopoverWrapper>
-          </Popover>
+        {buttonStates.when !== 'hidden' && (
+          <FooterButton
+            icon={CalendarIcon}
+            title="When"
+            state={buttonStates.when}
+            onClick={() => setWhenOpen(true)}
+          />
         )}
 
         <FooterButton
           icon={SearchIcon}
           title="Quick Find"
           onClick={handleQuickFind}
-          state={buttonStates.quickSearch}
+          state={buttonStates.quickFind}
         />
 
         <FooterButton
@@ -168,37 +200,16 @@ export const Footer = observer(() => {
           onClick={handleDelete}
           state={buttonStates.delete}
         />
-
-        {buttonStates.moreActions !== "hidden" && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <FooterButton
-                title="More Actions"
-                icon={MoreHorizontalIcon}
-                state={buttonStates.moreActions}
-              />
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent
-              align="end"
-              className="w-48 bg-[#2D2D2D] text-white rounded-lg p-1"
-            >
-              <DropdownMenuItem className="text-sm px-3 py-1.5 focus:bg-[#454545] rounded-md cursor-pointer">
-                Repeat...
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-sm px-3 py-1.5 focus:bg-[#454545] rounded-md cursor-pointer">
-                Duplicate
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-sm px-3 py-1.5 focus:bg-[#454545] rounded-md cursor-pointer">
-                Convert to Project...
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-sm px-3 py-1.5 focus:bg-[#454545] rounded-md cursor-pointer">
-                Share...
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
       </footer>
+
+      {whenOpen && (
+        <WhenDialog
+          type="multiple"
+          taskIds={selectedTaskIds}
+          open={whenOpen}
+          setOpen={setWhenOpen}
+        />
+      )}
     </>
-  );
-});
+  )
+})

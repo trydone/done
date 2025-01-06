@@ -1,4 +1,4 @@
-import { Button } from './button'
+import {Button} from './button'
 
 type Item = {
   id: string
@@ -11,7 +11,7 @@ type Props = {
   value?: string
 }
 
-export const SimpleScrollMenu = ({ items, handleClick, value }: Props) => {
+export const SimpleScrollMenu = ({items, handleClick, value}: Props) => {
   const activeIndex = items.findIndex((item) => item.id === value)
 
   return (

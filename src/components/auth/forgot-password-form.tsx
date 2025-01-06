@@ -1,36 +1,36 @@
-"use client";
-import { CheckIcon } from "lucide-react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
+'use client'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {CheckIcon} from 'lucide-react'
+import {useCallback, useState} from 'react'
+import {useForm} from 'react-hook-form'
+import {toast} from 'sonner'
+import * as z from 'zod'
 
-import { InputField } from "@/components/fields/input-field";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import {InputField} from '@/components/fields/input-field'
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
+import {Button} from '@/components/ui/button'
 
 const schema = z.object({
-  email: z.string().email().min(1, { message: "Required" }),
-});
+  email: z.string().email().min(1, {message: 'Required'}),
+})
 
-type Schema = z.infer<typeof schema>;
+type Schema = z.infer<typeof schema>
 
 export const ForgotPasswordForm = () => {
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
 
-  const { control, handleSubmit } = useForm<Schema>({
+  const {control, handleSubmit} = useForm<Schema>({
     resolver: zodResolver(schema),
-    mode: "all",
+    mode: 'all',
     defaultValues: {
-      email: "",
+      email: '',
     },
-  });
+  })
 
-  const submitHandler = useCallback(async ({ email }: Schema) => {
+  const submitHandler = useCallback(async ({}: Schema) => {
     try {
-      setLoading(true);
+      setLoading(true)
       // setCookie(RETURN_TO_KEY, "/update-password");
 
       // const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -41,13 +41,13 @@ export const ForgotPasswordForm = () => {
       //   throw error;
       // }
 
-      setMessage("Check your inbox for a password reset email.");
+      setMessage('Check your inbox for a password reset email.')
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  }, []);
+  }, [])
 
   return (
     <form onSubmit={handleSubmit(submitHandler)}>
@@ -73,5 +73,5 @@ export const ForgotPasswordForm = () => {
         Send reset email
       </Button>
     </form>
-  );
-};
+  )
+}

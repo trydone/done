@@ -1,20 +1,20 @@
-import { CircleXIcon } from "lucide-react";
-import * as React from "react";
-import TextareaAutosize from "react-textarea-autosize";
+import {CircleXIcon} from 'lucide-react'
+import * as React from 'react'
+import TextareaAutosize from 'react-textarea-autosize'
 
-import { cn } from "@/lib/utils";
+import {cn} from '@/lib/utils'
 
 export interface TextareaProps
-  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "style"> {
-  hasError?: boolean;
-  clearable?: boolean;
-  onClear?: () => void;
-  clearClassName?: string;
-  leftAddon?: React.ReactNode | null;
-  rightAddon?: React.ReactNode | null;
-  leftControl?: React.ReactNode | null;
-  rightControl?: React.ReactNode | null;
-  minRows?: number;
+  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'style'> {
+  hasError?: boolean
+  clearable?: boolean
+  onClear?: () => void
+  clearClassName?: string
+  leftAddon?: React.ReactNode | null
+  rightAddon?: React.ReactNode | null
+  leftControl?: React.ReactNode | null
+  rightControl?: React.ReactNode | null
+  minRows?: number
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -36,8 +36,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ) => {
     return (
       <label
-        className={cn("relative w-full", {
-          "input-group": !!leftAddon || !!rightAddon,
+        className={cn('relative w-full', {
+          'input-group': !!leftAddon || !!rightAddon,
         })}
       >
         {leftAddon && <span>{leftAddon}</span>}
@@ -50,11 +50,11 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
         <TextareaAutosize
           className={cn(
-            "flex h-[52px] w-full rounded-2xl border-[1.5px] border-input transition-colors hover:border-input-hover bg-card px-4 py-[14px] font-sans font-normal text-base leading-snug text-foreground ring-offset-background placeholder:text-placeholder-foreground focus:outline-none focus:border-ring disabled:cursor-not-allowed disabled:opacity-50",
+            'hover:border-input-hover placeholder:text-placeholder-foreground flex h-[52px] w-full rounded-2xl border-[1.5px] border-input bg-card px-4 py-[14px] font-sans text-base font-normal leading-snug text-foreground ring-offset-background transition-colors focus:border-ring focus:outline-none disabled:cursor-not-allowed disabled:opacity-50',
             {
-              "border-destructive-foreground": hasError,
-              "pr-9": clearable && !!props.value,
-              "pr-12": clearable && !!props.value && rightControl,
+              'border-destructive-foreground': hasError,
+              'pr-9': clearable && !!props.value,
+              'pr-12': clearable && !!props.value && rightControl,
             },
             className,
           )}
@@ -68,7 +68,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             <button
               tabIndex={-1}
               className={cn(
-                "flex h-[52px] w-10 items-center justify-center !p-0 text-muted-foreground",
+                'flex h-[52px] w-10 items-center justify-center !p-0 text-muted-foreground',
                 clearClassName,
               )}
               type="button"
@@ -86,8 +86,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
         {rightControl && (
           <div
-            className={cn("absolute right-3 top-4", {
-              "right-9": clearable && !!props.value,
+            className={cn('absolute right-3 top-4', {
+              'right-9': clearable && !!props.value,
             })}
           >
             {rightControl}
@@ -96,9 +96,9 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
         {rightAddon && <span>{rightAddon}</span>}
       </label>
-    );
+    )
   },
-);
-Textarea.displayName = "Textarea";
+)
+Textarea.displayName = 'Textarea'
 
-export { Textarea };
+export {Textarea}

@@ -1,29 +1,29 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/ui/button";
+import {useRouter} from 'next/navigation'
 
-import { useRouter } from "next/navigation";
+import {Button} from '@/components/ui/button'
 
 type Props = {
-  invitationId: string;
-};
+  invitationId: string
+}
 
-export const AcceptInvitePage = ({ invitationId }: Props) => {
-  const router = useRouter();
+export const AcceptInvitePage = ({}: Props) => {
+  const router = useRouter()
 
   const handleAccept = () => {
     // acceptMutation.mutate({ invitationId });
-    console.log("accept");
-  };
+    // console.log("accept");
+  }
 
   const handleDecline = () => {
-    router.push("/sites");
-  };
+    router.push('/sites')
+  }
 
   return (
     <div>
       <div className="container mx-auto pt-6">
-        <div className="rounded-3xl border-0.5 border-border bg-card px-6 py-8 shadow-sm">
+        <div className="rounded-3xl border border-border bg-card px-6 py-8 shadow-sm">
           <h1 className="h2 mb-6">Accept invite</h1>
 
           <div className="mb-4 flex space-x-2">
@@ -42,5 +42,5 @@ export const AcceptInvitePage = ({ invitationId }: Props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

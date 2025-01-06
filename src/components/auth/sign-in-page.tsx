@@ -1,64 +1,63 @@
-"use client";
+'use client'
 // import { AppleIcon, FacebookIcon, GoogleIcon } from "lucide-react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import queryString from "query-string";
-import { useCallback, useState } from "react";
-import { toast } from "sonner";
+import Link from 'next/link'
+import {useSearchParams} from 'next/navigation'
+import queryString from 'query-string'
+import {useState} from 'react'
 
-import { AuthNavbar } from "@/components/auth/auth-navbar";
-import { SignInForm } from "@/components/auth/sign-in-form";
-import { ButtonDiv } from "@/components/ui/button";
+import {AuthNavbar} from '@/components/auth/auth-navbar'
+import {SignInForm} from '@/components/auth/sign-in-form'
+import {ButtonDiv} from '@/components/ui/button'
 
-type Provider = "google" | "apple" | "facebook";
+type Provider = 'google' | 'apple' | 'facebook'
 
 const getReturnTo = (returnTo?: string | null): string => {
   if (!returnTo) {
-    return `/sites`;
+    return `/sites`
   }
 
-  return returnTo;
-};
+  return returnTo
+}
 
 export const SignInPage = () => {
-  const [loading, setLoading] = useState<Provider | undefined>();
-  const searchParams = useSearchParams();
+  const [_loading, _setLoading] = useState<Provider | undefined>()
+  const searchParams = useSearchParams()
 
-  const returnTo = searchParams?.get("returnTo");
+  const returnTo = searchParams?.get('returnTo')
 
   const queryParams = queryString.stringify({
     returnTo: getReturnTo(returnTo),
-  });
+  })
 
-  const handleOAuthSignIn = useCallback(
-    async (provider: Provider) => {
-      try {
-        setLoading(provider);
-        // setCookie(RETURN_TO_KEY, getReturnTo(returnTo));
+  // const handleOAuthSignIn = useCallback(
+  //   async (provider: Provider) => {
+  //     try {
+  //       setLoading(provider);
+  //       // setCookie(RETURN_TO_KEY, getReturnTo(returnTo));
 
-        // const { error } = await supabase.auth.signInWithOAuth({
-        //   provider,
-        //   options: {
-        //     redirectTo: `${clientGetUrl()}/auth/callback`,
-        //   },
-        // });
+  //       // const { error } = await supabase.auth.signInWithOAuth({
+  //       //   provider,
+  //       //   options: {
+  //       //     redirectTo: `${clientGetUrl()}/auth/callback`,
+  //       //   },
+  //       // });
 
-        // if (error) {
-        //   throw error;
-        // }
-      } catch (error: any) {
-        toast.error(error.message);
-        setLoading(undefined);
-      }
-    },
-    [returnTo],
-  );
+  //       // if (error) {
+  //       //   throw error;
+  //       // }
+  //     } catch (error: any) {
+  //       toast.error(error.message);
+  //       setLoading(undefined);
+  //     }
+  //   },
+  //   [returnTo],
+  // );
 
   return (
     <>
       <AuthNavbar />
 
-      <div className="rounded-3xl border-0.5 border-border bg-background px-4 py-6 shadow-sm dark:shadow-none">
+      <div className="rounded-3xl border border-border bg-background px-4 py-6 shadow-sm dark:shadow-none">
         <h1 className="h3 mb-6 text-center">Sign in</h1>
 
         {/* <div className="mb-8 flex flex-row justify-center space-x-3">
@@ -134,5 +133,5 @@ export const SignInPage = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}

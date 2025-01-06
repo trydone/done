@@ -24,47 +24,54 @@ import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
 import { WorkspaceSwitch } from "../workspace/workspace-switch";
 
-const items = [
+const items: AppSidebarItemType[] = [
   {
-    title: "Inbox",
-    url: "/inbox",
+    id: 'inbox',
+    title: 'Inbox',
+    url: '/inbox',
     icon: InboxIcon,
   },
   {
-    title: "Today",
-    url: "/today",
+    id: 'today',
+    title: 'Today',
+    url: '/today',
     icon: StarIcon,
   },
   {
-    title: "Upcoming",
-    url: "/upcoming",
+    id: 'upcoming',
+    title: 'Upcoming',
+    url: '/upcoming',
     icon: CalendarIcon,
   },
   {
-    title: "Anytime",
-    url: "/anytime",
+    id: 'anytime',
+    title: 'Anytime',
+    url: '/anytime',
     icon: LayersIcon,
   },
   {
-    title: "Someday",
-    url: "/someday",
+    id: 'someday',
+    title: 'Someday',
+    url: '/someday',
     icon: ArchiveIcon,
   },
   {
-    title: "Logbook",
-    url: "/logbook",
+    id: 'logbook',
+    title: 'Logbook',
+    url: '/logbook',
     icon: BookCheckIcon,
   },
   {
-    title: "Trash",
-    url: "/trash",
+    id: 'trash',
+    title: 'Trash',
+    url: '/trash',
     icon: TrashIcon,
   },
-];
+]
 
 export const AppSidebar = () => {
   return (
-    <Sidebar>
+    <Sidebar ref={setNodeRef}>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>

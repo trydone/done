@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
 export interface SurfaceProps extends React.HTMLAttributes<HTMLDivElement> {
   withShadow?: boolean
@@ -9,7 +9,7 @@ export interface SurfaceProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Surface = React.forwardRef<HTMLDivElement, SurfaceProps>(
   (
-    { className, children, withShadow = true, withBorder = true, ...props },
+    {className, children, withShadow = true, withBorder = true, ...props},
     ref,
   ) => {
     return (
@@ -30,4 +30,4 @@ const Surface = React.forwardRef<HTMLDivElement, SurfaceProps>(
 )
 Surface.displayName = 'Surface'
 
-export { Surface }
+export {Surface}

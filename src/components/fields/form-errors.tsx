@@ -1,7 +1,7 @@
-import { useMemo } from 'react'
-import { FieldErrors } from 'react-hook-form'
+import {useMemo} from 'react'
+import {FieldErrors} from 'react-hook-form'
 
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
+import {Alert, AlertDescription, AlertTitle} from '../ui/alert'
 
 type Props = {
   className?: string
@@ -29,7 +29,7 @@ const renderError = (key: string, error: any, prefix = '') => {
   )
 }
 
-export const FormErrors = ({ className, errors }: Props) => {
+export const FormErrors = ({className, errors}: Props) => {
   const errorEntries = useMemo(() => Object.entries(errors), [errors])
 
   if (errorEntries.length === 0) {

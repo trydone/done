@@ -1,37 +1,38 @@
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { useZero } from "@/hooks/use-zero";
-import { TaskRow } from "@/schema";
-import { useCallback } from "react";
+import {useCallback} from 'react'
+
+import {Checkbox} from '@/components/ui/checkbox'
+import {Input} from '@/components/ui/input'
+import {useZero} from '@/hooks/use-zero'
+import {TaskRow} from '@/schema'
 
 type Props = {
-  task: TaskRow;
-  checked: boolean;
-  onComplete: (checked: boolean) => void;
-};
+  task: TaskRow
+  checked: boolean
+  onComplete: (checked: boolean) => void
+}
 
-export const TaskHeader = ({ task, checked, onComplete }: Props) => {
-  const zero = useZero();
+export const TaskHeader = ({task, checked, onComplete}: Props) => {
+  const zero = useZero()
 
   const handleTitleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       zero.mutate.task.update({
         id: task.id,
         title: e.target.value,
-      });
+      })
     },
-    [],
-  );
+    [task.id, zero.mutate.task],
+  )
 
   return (
     <div className="flex gap-2 px-4">
-      <div className="pt-4 pb-1">
-        <div className="h-[20px] flex items-center">
+      <div className="pb-1 pt-4">
+        <div className="flex h-[20px] w-4 items-center">
           <Checkbox
             id={`task-${task.id}-status`}
             checked={checked}
             onCheckedChange={onComplete}
-            className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground transition-colors"
+            className="transition-colors data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
           />
         </div>
       </div>
@@ -41,9 +42,9 @@ export const TaskHeader = ({ task, checked, onComplete }: Props) => {
         value={task.title}
         onChange={handleTitleChange}
         placeholder="New To-Do"
-        className="border-none focus-visible:ring-0 p-0 pt-4 pb-1 h-auto !rounded-none text-sm bg-transparent placeholder:text-muted-foreground"
+        className="h-auto !rounded-none border-none bg-transparent p-0 pb-1 pt-4 text-sm placeholder:text-muted-foreground focus-visible:ring-0"
         autoFocus
       />
     </div>
-  );
-};
+  )
+}

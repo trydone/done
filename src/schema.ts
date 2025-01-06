@@ -514,8 +514,6 @@ export const permissions: ReturnType<typeof definePermissions> =
       authData: AuthData,
       eb: ExpressionBuilder<typeof sessionSchema>,
     ) => {
-      console.log({ authData });
-
       return eb.and(
         userIsLoggedIn(authData, eb),
         eb.cmp("id", "=", authData.sub),
@@ -636,13 +634,12 @@ export const permissions: ReturnType<typeof definePermissions> =
           insert: ANYONE_CAN,
           update: ANYONE_CAN,
           delete: ANYONE_CAN,
-          select: ANYONE_CAN,
           // insert: NOBODY_CAN,
           // update: {
           //   preMutation: NOBODY_CAN,
           // },
           // delete: NOBODY_CAN,
-          // select: [allowUser],
+          select: [allowUser],
         },
       },
       task: {
@@ -746,10 +743,8 @@ export const permissions: ReturnType<typeof definePermissions> =
         row: {
           insert: ANYONE_CAN,
           update: ANYONE_CAN,
-          delete: ANYONE_CAN,
-          select: ANYONE_CAN,
-          // delete: [allowYourSession],
-          // select: [allowYourSession],
+          delete: [allowYourSession],
+          select: [allowYourSession],
         },
       },
       checklist_item: {

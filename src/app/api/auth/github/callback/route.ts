@@ -43,7 +43,7 @@ async function getGitHubEmails(octokit: Octokit) {
 
   // Get primary email
   const primaryEmail = emailResponse.data.find(
-    (email: any) => email.primary === true,
+    (email: any) => email.primary === true
   );
 
   return primaryEmail?.email || emailResponse.data[0]?.email;
@@ -78,18 +78,25 @@ export async function GET(request: NextRequest) {
     const existingUserId =
       await sql`SELECT id FROM "user" WHERE "github_id" = ${userDetails.data.id}`;
 
-    if (existingUserId.length > 0) {
+    if (existingUserId[0]?.id) {
       userId = existingUserId[0].id;
     } else {
       // In your main callback function, after getting user details:
       const email = await getGitHubEmails(octokit);
+
+      if (!email) {
+        return NextResponse.json(
+          { error: "No email found in GitHub account" },
+          { status: 400 }
+        );
+      }
 
       // Create new user
       await sql`INSERT INTO "user"
         ("id", "username", "name", "avatar", "github_id", "email") VALUES (
           ${userId},
           ${userDetails.data.login},
-          ${userDetails.data.name},
+          ${userDetails.data.name || userDetails.data.login},
           ${userDetails.data.avatar_url},
           ${userDetails.data.id},
           ${email}
@@ -125,7 +132,7 @@ export async function GET(request: NextRequest) {
     const jwtPayload = {
       sub: sessionId,
       iat: Math.floor(Date.now() / 1000),
-      role: userRows[0].role || "user",
+      role: userRows[0]?.role || "user",
       name: userDetails.data.login,
     };
 
@@ -147,7 +154,7 @@ export async function GET(request: NextRequest) {
     console.error("Authentication error:", error);
     return NextResponse.json(
       { error: "Authentication failed" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

@@ -1,3 +1,4 @@
+"use client";
 import {
   ArchiveIcon,
   BookCheckIcon,
@@ -7,6 +8,8 @@ import {
   StarIcon,
   TrashIcon,
 } from "lucide-react";
+
+import { usePathname, useSearchParams } from "next/navigation";
 
 import {
   Sidebar,
@@ -20,8 +23,6 @@ import { AppSidebarItem } from "./app-sidebar-item";
 import { useZero } from "@/hooks/use-zero";
 import { useQuery } from "@rocicorp/zero/react";
 import { WorkspaceSwitch } from "../workspace/workspace-switch";
-import { useContext } from "react";
-import { RootStoreContext } from "@/lib/stores/root-store";
 
 const items = [
   {
@@ -62,49 +63,68 @@ const items = [
 ];
 
 export const AppSidebar = () => {
-  const {
-    authStore: { loginState },
-  } = useContext(RootStoreContext);
-
-  const zero = useZero();
-  const [user] = useQuery(
-    zero.query.user.where("id", loginState?.decoded.sub ?? "").one(),
-  );
-
-  const loginHref =
-    "/api/auth/github?redirect=" +
-    encodeURIComponent(
-      window.location.search
-        ? window.location.pathname + window.location.search
-        : window.location.pathname,
-    );
-
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              <WorkspaceSwitch.Block />
+              <BlockWorkspaceSwitch />
+              <BlockUsers />
 
               {items.map((item, index) => (
                 <AppSidebarItem item={item} key={index} />
               ))}
-
-              {!loginState ? (
-                <a href={loginHref}>Login</a>
-              ) : (
-                <img
-                  src={user?.avatar || ""}
-                  className="issue-creator-avatar"
-                  alt={user?.name ?? undefined}
-                  title={user?.username}
-                />
-              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
   );
+};
+
+const useGithubLogin = () => {
+  const pathname = usePathname();
+  const searchParams = useSearchParams().toString();
+  const link = [pathname, searchParams].filter(Boolean).join("?");
+  return "/api/auth/github?redirect=" + encodeURIComponent(link);
+};
+
+const useIsLoggedIn = () => {
+  const zero = useZero();
+  const [sessions] = useQuery(zero.query.session);
+  return sessions.length > 0;
+};
+
+const BlockWorkspaceSwitch = () => {
+  const isLoggedIn = useIsLoggedIn();
+
+  if (!isLoggedIn) {
+    return null;
+  }
+
+  return <WorkspaceSwitch.Block />;
+};
+
+const BlockUsers = () => {
+  const isLoggedIn = useIsLoggedIn();
+
+  const zero = useZero();
+  const [users] = useQuery(zero.query.user);
+
+  const loginRef = useGithubLogin();
+
+  if (!isLoggedIn) {
+    return <a href={loginRef}>Login</a>;
+  }
+
+  return users.map((user) => (
+    <img
+      key={user.id}
+      src={user?.avatar || ""}
+      className="issue-creator-avatar"
+      alt={user?.name ?? undefined}
+      title={user?.username}
+    />
+  ));
 };

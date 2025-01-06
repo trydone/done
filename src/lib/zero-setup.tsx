@@ -1,4 +1,4 @@
-import { Schema, schema } from "@/schema";
+import { schema } from "@/schema";
 import { Zero } from "@rocicorp/zero";
 import { getCookie } from "cookies-next";
 import { decodeJwt } from "jose";
@@ -23,7 +23,7 @@ export function createZero() {
   });
 
   // Only expose in development
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === "development" && typeof window !== "undefined") {
     try {
       Object.defineProperty(window, "z", {
         value: zero,

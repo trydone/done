@@ -1,16 +1,15 @@
 "use client";
-
+import { FC, useContext, ReactNode } from "react";
 import { observer } from "mobx-react-lite";
 import { useQuery } from "@rocicorp/zero/react";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Schema, WorkspaceRow, UserRow, WorkspaceMemberRow } from "@/schema";
+import { WorkspaceRow, UserRow, WorkspaceMemberRow } from "@/schema";
 import { RootStoreContext } from "@/lib/stores/root-store";
 import { H2 } from "@/components/shared/typography";
 import { WorkspaceSignout } from "./workspace-signout";
 import { useZero } from "@/hooks/use-zero";
-import { FC, ReactNode, useContext } from "react";
 
 type ExtendedWorkspaceMemberRow = WorkspaceMemberRow & {
   workspace: readonly WorkspaceRow[];
@@ -54,6 +53,8 @@ export const WorkspaceSwitch: Compound = ({
     />
     {users?.map((user) => (
       <div key={user.id}>
+        {renderUserTitle ? renderUserTitle(user) : <H2>{user.username}</H2>}
+
         <RadioGroup
           value={selectedUserId === user.id ? selectedWorkspaceId : ``}
           onValueChange={(value) =>
@@ -119,7 +120,7 @@ const Block: Compound["Block"] = observer(() => {
       onAllWorkspacesClick={clearWorkspace}
       renderUserTitle={(user) => (
         <div className="flex flex-row gap-2">
-          <H2>{user.email}</H2>
+          <H2>{user.username}</H2>
           <WorkspaceSignout.Block userId={user.id} />
         </div>
       )}

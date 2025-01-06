@@ -187,8 +187,26 @@ export const userSchema = {
         destSchema: () => workspaceSchema,
       },
     ],
+    profile: {
+      sourceField: 'id',
+      destField: 'user_id',
+      destSchema: () => profileSchema,
+    },
   },
 } as const
+
+export const profileSchema = createTableSchema({
+  tableName: 'profile',
+  columns: {
+    id: 'string',
+    user_id: 'string',
+    name: {type: 'string', optional: true},
+    avatar: {type: 'string', optional: true},
+    created_at: 'number',
+    updated_at: 'number',
+  },
+  primaryKey: 'id',
+})
 
 export const taskSchema = {
   tableName: 'task',
@@ -444,6 +462,7 @@ export type TagRow = Row<typeof tagSchema>
 export type ChecklistItemRow = Row<typeof checklistItemSchema>
 export type CommentRow = Row<typeof taskCommentSchema>
 export type UserRow = Row<typeof userSchema>
+export type ProfileRow = Row<typeof profileSchema>
 export type Schema = typeof schema
 
 /** The contents of the done JWT */
@@ -466,6 +485,7 @@ export const schema = createSchema({
     workspace_member: workspaceMemberSchema,
     team_member: teamMemberSchema,
     user: userSchema,
+    profile: profileSchema,
     task: taskSchema,
     task_comment: taskCommentSchema,
     tag: tagSchema,

@@ -419,6 +419,39 @@
         },
         "relationships": {}
       },
+      "profile": {
+        "tableName": "profile",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "avatar": {
+            "type": "string",
+            "optional": true
+          },
+          "created_at": {
+            "type": "number",
+            "optional": false
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "name": {
+            "type": "string",
+            "optional": true
+          },
+          "updated_at": {
+            "type": "number",
+            "optional": false
+          },
+          "user_id": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {}
+      },
       "project": {
         "tableName": "project",
         "primaryKey": [
@@ -984,6 +1017,15 @@
           }
         },
         "relationships": {
+          "profile": {
+            "sourceField": [
+              "id"
+            ],
+            "destField": [
+              "user_id"
+            ],
+            "destSchema": "profile"
+          },
           "session": {
             "sourceField": [
               "id"

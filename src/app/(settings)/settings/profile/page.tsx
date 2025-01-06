@@ -2,7 +2,7 @@
 
 import {useQuery} from '@rocicorp/zero/react'
 import {Lock, Mail, Shield} from 'lucide-react'
-import {ChangeEvent, useContext, useState} from 'react'
+import {ChangeEvent, useEffect, useState} from 'react'
 import {toast} from 'sonner'
 
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
@@ -16,37 +16,37 @@ import {
 } from '@/components/ui/card'
 import {Input} from '@/components/ui/input'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import {useZero} from '@/hooks/use-zero'
-import {RootStoreContext} from '@/lib/stores/root-store'
+import {ProfileRow} from '@/schema'
 
 export default function Page() {
-  const {
-    authStore: {loginState},
-  } = useContext(RootStoreContext)
-
   const zero = useZero()
-  const [session] = useQuery(
-    zero.query.session
-      .where('id', loginState?.decoded.sub || '')
-      .one()
-      .related('user'),
-  )
-  const [isUploading, setIsUploading] = useState(false)
+  const fromProfileSwitch = useProfileSwitch()
 
-  const user = session?.user?.[0]
+  const {selectedProfile} = fromProfileSwitch
+
+  const [isUploading, setIsUploading] = useState(false)
 
   const handleNameChange = async (e: ChangeEvent<HTMLInputElement>) => {
     try {
-      await zero.mutate.user.update({
-        id: user?.id,
-        name: e.target.value,
-      })
-      toast.success('Name updated successfully')
+      if (selectedProfile) {
+        await zero.mutate.profile.update({
+          id: selectedProfile.id,
+          name: e.target.value,
+        })
+      }
     } catch (_error) {
       toast.error('Failed to update name')
     }
@@ -57,12 +57,12 @@ export default function Page() {
     setIsUploading(true)
 
     try {
-      const file = e.target.files[0]
+      // const file = e.target.files[0]
       // Implement your file upload logic here
-      await zero.mutate.user.update({
-        id: user?.id,
-        avatar: 'uploaded-url',
-      })
+      // await zero.mutate.user.update({
+      //   id: user?.id,
+      //   avatar: 'uploaded-url',
+      // })
       toast.success('Profile picture updated successfully')
     } catch (_error) {
       toast.error('Failed to upload user picture')
@@ -103,6 +103,15 @@ export default function Page() {
         </p>
       </div>
 
+      <div>
+        <ProfileSwitch
+          selectedProfileId={selectedProfile?.id}
+          selectedProfile={selectedProfile}
+          profiles={fromProfileSwitch.profiles}
+          changeProfile={fromProfileSwitch.changeProfile}
+        />
+      </div>
+
       {/* Profile Section */}
       <Card>
         <CardHeader>
@@ -118,9 +127,11 @@ export default function Page() {
                 <TooltipTrigger asChild>
                   <div className="relative">
                     <Avatar className="size-20">
-                      <AvatarImage src={user?.avatar || ''} />
+                      <AvatarImage src={selectedProfile?.avatar || ''} />
                       <AvatarFallback>
-                        {user?.name ? getInitials(user.name) : '?'}
+                        {selectedProfile?.name
+                          ? getInitials(selectedProfile.name)
+                          : '?'}
                       </AvatarFallback>
                     </Avatar>
                     <input
@@ -139,7 +150,7 @@ export default function Page() {
               <label className="text-sm font-medium">Preferred name</label>
               <Input
                 placeholder="Enter your name"
-                defaultValue={user?.name}
+                value={selectedProfile?.name || ``}
                 onChange={handleNameChange}
               />
             </div>
@@ -163,7 +174,9 @@ export default function Page() {
                 <Mail className="size-4" />
                 <h3 className="font-medium">Email</h3>
               </div>
-              <p className="text-sm text-muted-foreground">{user?.username}</p>
+              <p className="text-sm text-muted-foreground">
+                {selectedProfile?.email}
+              </p>
             </div>
             <Button variant="outline" onClick={handleEmailChange}>
               Change email
@@ -204,5 +217,97 @@ export default function Page() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+const useProfileSwitch = () => {
+  const zero = useZero()
+  const [session] = useQuery(
+    zero.query.session.related('user', (q) => q.related('profile')),
+  )
+
+  const profiles = session.flatMap((s) =>
+    s.user.flatMap((u) =>
+      u.profile?.[0] ? {...u.profile?.[0], email: u.email} : [],
+    ),
+  )
+
+  const [selectedProfileId, setSelectedProfileId] = useState<
+    string | undefined
+  >()
+
+  const changeProfile = async (profileId: string) => {
+    setSelectedProfileId(profileId)
+  }
+
+  useEffect(() => {
+    if (profiles[0]?.id && !selectedProfileId) {
+      setSelectedProfileId(profiles[0].id)
+    }
+  }, [profiles, selectedProfileId])
+
+  const selectedProfile = profiles.find((p) => p.id === selectedProfileId)
+
+  return {
+    profiles,
+    selectedProfile,
+    selectedProfileId,
+    changeProfile,
+  }
+}
+
+const ProfileSwitch = ({
+  selectedProfileId,
+  selectedProfile,
+  profiles,
+  changeProfile,
+}: {
+  selectedProfileId?: string
+  selectedProfile?: ProfileRow
+  profiles: ReturnType<typeof useProfileSwitch>['profiles']
+  changeProfile: (profileId: string) => void
+}) => {
+  return (
+    <Select value={selectedProfileId} onValueChange={changeProfile}>
+      <SelectTrigger className="w-[280px]">
+        <SelectValue placeholder="Select profile">
+          {selectedProfile && (
+            <div className="flex items-center gap-2">
+              <Avatar className="size-6">
+                <AvatarImage
+                  src={selectedProfile.avatar || undefined}
+                  alt={selectedProfile.name || 'Profile'}
+                />
+                <AvatarFallback>
+                  {selectedProfile.name ? selectedProfile.name[0] : '?'}
+                </AvatarFallback>
+              </Avatar>
+              <span>{selectedProfile.name || 'Unnamed Profile'}</span>
+            </div>
+          )}
+        </SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+        {profiles.map((profile) => (
+          <SelectItem key={profile.id} value={profile.id}>
+            <div className="flex items-center gap-2">
+              <Avatar className="size-6">
+                <AvatarImage
+                  src={profile.avatar || undefined}
+                  alt={profile.name || 'Profile'}
+                />
+                <AvatarFallback>
+                  {profile.name ? profile.name[0] : '?'}
+                </AvatarFallback>
+              </Avatar>
+              <span>{profile.name || 'Unnamed Profile'}</span>
+              <span className="ml-2 text-xs text-muted-foreground">
+                {profile.email}
+              </span>
+            </div>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   )
 }

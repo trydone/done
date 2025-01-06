@@ -98,18 +98,27 @@ export async function GET(request: NextRequest) {
         SELECT id FROM "user" WHERE email = ${email}
       `
 
-      if (existingUser.length > 0) {
-        userId = existingUser[0]?.id
+      if (existingUser[0]?.id) {
+        userId = existingUser[0].id
       } else {
         userId = v4()
         await sql`
-          INSERT INTO "user" ("id", "username", "name", "avatar", "email") 
+          INSERT INTO "user" ("id", "username", "email", "role") 
           VALUES (
             ${userId},
             ${userDetails.data.login},
+            ${email},
+            'user'
+          )
+        `
+
+        await sql`
+          INSERT INTO "profile" ("id", "user_id", "name", "avatar") 
+          VALUES (
+            ${v4()},
+            ${userId},
             ${userDetails.data.name || userDetails.data.login},
-            ${userDetails.data.avatar_url},
-            ${email}
+            ${userDetails.data.avatar_url}
           )
         `
       }

@@ -637,14 +637,6 @@ table "user" {
     null = true
     type = text
   }
-  column "name" {
-    null = true
-    type = text
-  }
-  column "avatar" {
-    null = true
-    type = text
-  }
   column "role" {
     null    = false
     type    = text
@@ -667,6 +659,49 @@ table "user" {
   #   unique  = true
   #   columns = [column.username]
   # }
+}
+
+table "profile" {
+  schema = schema.public
+  column "id" {
+    null = false
+    type = uuid
+    default = sql("gen_random_uuid()")
+  }
+  column "user_id" {
+    null = false
+    type = uuid
+  }
+  column "name" {
+    null = true
+    type = text
+  }
+  column "avatar" {
+    null = true
+    type = text
+  }
+
+  column "created_at" {
+    null    = false
+    type    = timestamptz
+    default = sql("now()")
+  }
+  column "updated_at" {
+    null    = false
+    type    = timestamptz
+    default = sql("now()")
+  }
+
+  foreign_key "profile_user_id_fk" {
+    columns     = [column.user_id]
+    ref_columns = [table.user.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+
+  primary_key {
+    columns = [column.id]
+  }
 }
 
 table "account" {

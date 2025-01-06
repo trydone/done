@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import {decodeJwt,SignJWT} from 'jose'
+import {decodeJwt, SignJWT} from 'jose'
 import {cookies} from 'next/headers'
 import {NextRequest, NextResponse} from 'next/server'
 import postgres from 'postgres'
@@ -43,7 +43,7 @@ async function getGoogleAccessToken(code: string): Promise<{
 
 async function getGoogleUserDetails(idToken: string) {
   const response = await fetch(
-    `https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${idToken}`
+    `https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${idToken}`,
   )
   const userDetails = await response.json()
 
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
 
   try {
     // Exchange code for access token
-    const {access_token: accessToken, id_token: idToken} = 
+    const {access_token: accessToken, id_token: idToken} =
       await getGoogleAccessToken(code)
 
     // Get user details from Google
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
     if (!userDetails.email) {
       return NextResponse.json(
         {error: 'No email found in Google account'},
-        {status: 400}
+        {status: 400},
       )
     }
 
@@ -93,18 +93,27 @@ export async function GET(request: NextRequest) {
         SELECT id FROM "user" WHERE email = ${userDetails.email}
       `
 
-      if (existingUser.length > 0) {
-        userId = existingUser[0]?.id
+      if (existingUser[0]?.id) {
+        userId = existingUser[0].id
       } else {
         userId = v4()
         await sql`
-          INSERT INTO "user" ("id", "username", "name", "avatar", "email") 
+          INSERT INTO "user" ("id", "username", "email", "role") 
           VALUES (
             ${userId},
             ${userDetails.email.split('@')[0]},
+            ${userDetails.email},
+            'user'
+          )
+        `
+
+        await sql`
+          INSERT INTO "profile" ("id", "user_id", "name", "avatar") 
+          VALUES (
+            ${v4()},
+            ${userId},
             ${userDetails.name},
-            ${userDetails.avatar},
-            ${userDetails.email}
+            ${userDetails.avatar}
           )
         `
       }

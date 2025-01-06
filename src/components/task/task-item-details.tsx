@@ -35,7 +35,9 @@ export const TaskItemDetails = observer(
 
           <TaskNotes task={task} />
 
-          {(task?.tags || []).length > 0 && <ChecklistList task={task} />}
+          {(task?.checklistItems || []).length > 0 && (
+            <ChecklistList task={task} />
+          )}
 
           {(task?.tags || []).length > 0 && (
             <TagList task={task} setOpen={setTagOpen} />

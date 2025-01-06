@@ -1,20 +1,20 @@
 'use client'
 
-import { useQuery } from '@rocicorp/zero/react'
-import { ChevronLeft, MoreHorizontal, Plus, Search } from 'lucide-react'
+import {useQuery} from '@rocicorp/zero/react'
+import {ChevronLeft, MoreHorizontal, Plus, Search} from 'lucide-react'
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
-import { toast } from 'sonner'
+import {useMemo, useState} from 'react'
+import {toast} from 'sonner'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
+import {Button} from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
+import {Input} from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -30,13 +30,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useZero } from '@/hooks/use-zero'
+import {useZero} from '@/hooks/use-zero'
 
 type Props = {
-  params: { workspaceSlug: string; teamSlug: string }
+  params: {workspaceSlug: string; teamSlug: string}
 }
 
-export default function Page({ params: {} }: Props) {
+export default function Page({params: {}}: Props) {
   const zero = useZero()
   const [members] = useQuery(
     zero.query.team_member.related('user', (q) => q.one()),
@@ -58,7 +58,7 @@ export default function Page({ params: {} }: Props) {
 
   const handleLeave = async (memberId: string) => {
     try {
-      await zero.mutate.team_member.delete({ id: memberId })
+      await zero.mutate.team_member.delete({id: memberId})
       toast.success('Member removed successfully')
     } catch (_error) {
       toast.error('Failed to remove member')

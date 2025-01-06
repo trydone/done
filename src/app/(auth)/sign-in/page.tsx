@@ -1,6 +1,6 @@
-import { Metadata } from 'next'
+import {Metadata} from 'next'
 
-import { SignInPage } from '@/components/auth/sign-in-page'
+import {SignInPage} from '@/components/auth/sign-in-page'
 
 export const metadata: Metadata = {
   title: 'Sign In',

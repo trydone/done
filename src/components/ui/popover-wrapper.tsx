@@ -1,6 +1,6 @@
-import { ReactNode } from 'react'
+import {ReactNode} from 'react'
 
-import { PopoverContent } from '@/components/ui/popover'
+import {PopoverContent} from '@/components/ui/popover'
 
 type PopoverWrapperProps = {
   title: string

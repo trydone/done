@@ -1,7 +1,7 @@
-import { useQuery } from '@rocicorp/zero/react'
-import { observer } from 'mobx-react-lite'
-import { useRouter } from 'next/navigation'
-import { useCallback, useContext } from 'react'
+import {useQuery} from '@rocicorp/zero/react'
+import {observer} from 'mobx-react-lite'
+import {useRouter} from 'next/navigation'
+import {useCallback, useContext} from 'react'
 
 import {
   CommandDialog,
@@ -11,20 +11,20 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
-import { useZero } from '@/hooks/use-zero'
-import { RootStoreContext } from '@/lib/stores/root-store'
-import { TaskRow } from '@/schema'
+import {useZero} from '@/hooks/use-zero'
+import {RootStoreContext} from '@/lib/stores/root-store'
+import {TaskRow} from '@/schema'
 
 const sections = [
   {
     title: 'Recent',
     items: [
-      { id: 'today', title: 'Today', url: '/today' },
-      { id: 'anytime', title: 'Anytime', url: '/anytime' },
-      { id: 'inbox', title: 'Inbox', url: '/inbox' },
-      { id: 'upcoming', title: 'Upcoming', url: '/upcoming' },
-      { id: 'someday', title: 'Someday', url: '/someday' },
-      { id: 'logbook', title: 'Logbook', url: '/logbook' },
+      {id: 'today', title: 'Today', url: '/today'},
+      {id: 'anytime', title: 'Anytime', url: '/anytime'},
+      {id: 'inbox', title: 'Inbox', url: '/inbox'},
+      {id: 'upcoming', title: 'Upcoming', url: '/upcoming'},
+      {id: 'someday', title: 'Someday', url: '/someday'},
+      {id: 'logbook', title: 'Logbook', url: '/logbook'},
     ],
   },
 ]

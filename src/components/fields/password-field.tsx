@@ -1,10 +1,10 @@
-import { EyeIcon, EyeOffIcon } from 'lucide-react'
-import React, { ReactNode, useState } from 'react'
-import { useController } from 'react-hook-form'
+import {EyeIcon, EyeOffIcon} from 'lucide-react'
+import React, {ReactNode, useState} from 'react'
+import {useController} from 'react-hook-form'
 
-import { FormControl } from '@/components/ui/form-control'
-import { Input, InputProps } from '@/components/ui/input'
-import { useErrorState } from '@/hooks/use-error-state'
+import {FormControl} from '@/components/ui/form-control'
+import {Input, InputProps} from '@/components/ui/input'
+import {useErrorState} from '@/hooks/use-error-state'
 
 interface Props extends Exclude<InputProps, 'type'> {
   name: string
@@ -24,7 +24,7 @@ export const PasswordField = ({
   control,
   ...rest
 }: Props) => {
-  const { field, fieldState } = useController({ name, control })
+  const {field, fieldState} = useController({name, control})
   const hasError = useErrorState(fieldState, control)
 
   const [passwordType, setPasswordType] = useState<'password' | 'text'>(

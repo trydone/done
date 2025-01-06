@@ -1,9 +1,9 @@
-import { useCallback } from 'react'
+import {useCallback} from 'react'
 
-import { Checkbox } from '@/components/ui/checkbox'
-import { Input } from '@/components/ui/input'
-import { useZero } from '@/hooks/use-zero'
-import { TaskRow } from '@/schema'
+import {Checkbox} from '@/components/ui/checkbox'
+import {Input} from '@/components/ui/input'
+import {useZero} from '@/hooks/use-zero'
+import {TaskRow} from '@/schema'
 
 type Props = {
   task: TaskRow
@@ -11,7 +11,7 @@ type Props = {
   onComplete: (checked: boolean) => void
 }
 
-export const TaskHeader = ({ task, checked, onComplete }: Props) => {
+export const TaskHeader = ({task, checked, onComplete}: Props) => {
   const zero = useZero()
 
   const handleTitleChange = useCallback(

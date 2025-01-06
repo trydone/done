@@ -1,11 +1,11 @@
 'use client'
 
-import { useQuery } from '@rocicorp/zero/react'
-import { ChevronRight, Users } from 'lucide-react'
+import {useQuery} from '@rocicorp/zero/react'
+import {ChevronRight, Users} from 'lucide-react'
 import Link from 'next/link'
-import { toast } from 'sonner'
+import {toast} from 'sonner'
 
-import { Button } from '@/components/ui/button'
+import {Button} from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -13,20 +13,20 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { useZero } from '@/hooks/use-zero'
+import {Input} from '@/components/ui/input'
+import {useZero} from '@/hooks/use-zero'
 
 type Props = {
-  params: { workspaceSlug: string; teamSlug: string }
+  params: {workspaceSlug: string; teamSlug: string}
 }
 
-export default function Page({ params: { workspaceSlug, teamSlug } }: Props) {
+export default function Page({params: {workspaceSlug, teamSlug}}: Props) {
   const zero = useZero()
   const [team] = useQuery(zero.query.team)
 
   const handleDeleteTeam = async () => {
     try {
-      await zero.mutate.team.delete({ id: team?.id })
+      await zero.mutate.team.delete({id: team?.id})
       toast.success('Team scheduled for deletion')
     } catch (_error) {
       toast.error('Failed to delete team')

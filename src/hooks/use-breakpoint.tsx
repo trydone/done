@@ -4,7 +4,7 @@ Returns the current breakpoint of the theme, like media query max-width
 
 */
 
-import { useWindowSize } from 'usehooks-ts'
+import {useWindowSize} from 'usehooks-ts'
 
 export const breakpoints = {
   xxs: 400,

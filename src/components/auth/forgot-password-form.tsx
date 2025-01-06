@@ -1,17 +1,17 @@
 'use client'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { CheckIcon } from 'lucide-react'
-import { useCallback, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {CheckIcon} from 'lucide-react'
+import {useCallback, useState} from 'react'
+import {useForm} from 'react-hook-form'
+import {toast} from 'sonner'
 import * as z from 'zod'
 
-import { InputField } from '@/components/fields/input-field'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
+import {InputField} from '@/components/fields/input-field'
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
+import {Button} from '@/components/ui/button'
 
 const schema = z.object({
-  email: z.string().email().min(1, { message: 'Required' }),
+  email: z.string().email().min(1, {message: 'Required'}),
 })
 
 type Schema = z.infer<typeof schema>
@@ -20,7 +20,7 @@ export const ForgotPasswordForm = () => {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
 
-  const { control, handleSubmit } = useForm<Schema>({
+  const {control, handleSubmit} = useForm<Schema>({
     resolver: zodResolver(schema),
     mode: 'all',
     defaultValues: {

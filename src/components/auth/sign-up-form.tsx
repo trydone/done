@@ -1,17 +1,17 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {useCallback, useState} from 'react'
+import {useForm} from 'react-hook-form'
+import {toast} from 'sonner'
 import * as z from 'zod'
 
-import { InputField } from '@/components/fields/input-field'
-import { PasswordField } from '@/components/fields/password-field'
-import { Button } from '@/components/ui/button'
+import {InputField} from '@/components/fields/input-field'
+import {PasswordField} from '@/components/fields/password-field'
+import {Button} from '@/components/ui/button'
 
 const schema = z.object({
-  name: z.string().min(1, { message: 'Required' }),
-  email: z.string().email().min(1, { message: 'Required' }),
-  password: z.string().min(6, { message: 'Too short' }),
+  name: z.string().min(1, {message: 'Required'}),
+  email: z.string().email().min(1, {message: 'Required'}),
+  password: z.string().min(6, {message: 'Too short'}),
   jobTitle: z.string().optional(),
 })
 
@@ -22,10 +22,10 @@ type Props = {
   forwardQuery?: string
 }
 
-export const SignUpForm = ({ returnTo, forwardQuery }: Props) => {
+export const SignUpForm = ({returnTo, forwardQuery}: Props) => {
   const [loading, setLoading] = useState(false)
 
-  const { control, handleSubmit } = useForm<Schema>({
+  const {control, handleSubmit} = useForm<Schema>({
     resolver: zodResolver(schema),
     mode: 'all',
     defaultValues: {

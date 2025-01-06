@@ -1,12 +1,12 @@
 'use client'
 
-import { useQuery } from '@rocicorp/zero/react'
-import { observer } from 'mobx-react-lite'
-import { FC, useContext } from 'react'
+import {useQuery} from '@rocicorp/zero/react'
+import {observer} from 'mobx-react-lite'
+import {FC, useContext} from 'react'
 
-import { Button } from '@/components/ui/button'
-import { useZero } from '@/hooks/use-zero'
-import { RootStoreContext } from '@/lib/stores/root-store'
+import {Button} from '@/components/ui/button'
+import {useZero} from '@/hooks/use-zero'
+import {RootStoreContext} from '@/lib/stores/root-store'
 
 interface Compound
   extends FC<{
@@ -17,19 +17,19 @@ interface Compound
   }>
 }
 
-export const WorkspaceSignout: Compound = ({ onSignout }) => (
+export const WorkspaceSignout: Compound = ({onSignout}) => (
   <Button variant="link" onClick={onSignout}>
     Sign out
   </Button>
 )
 
-const Block: Compound['Block'] = observer(({ userId }) => {
+const Block: Compound['Block'] = observer(({userId}) => {
   const zero = useZero()
 
   const [sessions] = useQuery(zero.query.session)
 
   const {
-    localStore: { clearWorkspace, selectedUserId },
+    localStore: {clearWorkspace, selectedUserId},
   } = useContext(RootStoreContext)
 
   const onSignout = () => {
@@ -38,7 +38,7 @@ const Block: Compound['Block'] = observer(({ userId }) => {
       if (selectedUserId === userId) {
         clearWorkspace()
       }
-      zero.mutate.session.delete({ id: sessionId, user_id: userId })
+      zero.mutate.session.delete({id: sessionId, user_id: userId})
     }
   }
 

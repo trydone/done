@@ -8,7 +8,7 @@ import {
   type TableSchema,
 } from '@rocicorp/zero'
 // @ts-expect-error - no direct import available
-import type { Condition } from '@rocicorp/zero/out/zero-protocol/src/ast'
+import type {Condition} from '@rocicorp/zero/out/zero-protocol/src/ast'
 
 export const enterpriseSchema = createTableSchema({
   tableName: 'enterprise',
@@ -129,9 +129,9 @@ export const projectSchema = createTableSchema({
     id: 'string',
     name: 'string',
     slug: 'string',
-    description: { type: 'string', optional: true },
+    description: {type: 'string', optional: true},
     workspace_id: 'string',
-    team_id: { type: 'string', optional: true },
+    team_id: {type: 'string', optional: true},
     sort_order: 'number',
     created_at: 'number',
     updated_at: 'number',
@@ -156,9 +156,9 @@ export const userSchema = {
   columns: {
     id: 'string',
     username: 'string',
-    email: { type: 'string', optional: true },
-    name: { type: 'string', optional: true },
-    avatar: { type: 'string', optional: true },
+    email: {type: 'string', optional: true},
+    name: {type: 'string', optional: true},
+    avatar: {type: 'string', optional: true},
     role: 'string',
     github_id: 'number',
     created_at: 'number',
@@ -201,32 +201,32 @@ export const taskSchema = {
     // Organization & sorting
     sort_order: 'number',
     today_sort_order: 'number',
-    today_index_reference_date: { type: 'number', optional: true },
+    today_index_reference_date: {type: 'number', optional: true},
 
     // Temporal management
     created_at: 'number',
     updated_at: 'number',
-    completed_at: { type: 'number', optional: true },
-    archived_at: { type: 'number', optional: true },
+    completed_at: {type: 'number', optional: true},
+    archived_at: {type: 'number', optional: true},
 
     start: 'string',
-    start_date: { type: 'number', optional: true },
+    start_date: {type: 'number', optional: true},
     start_bucket: 'string',
 
     // Deadline management
-    deadline_at: { type: 'number', optional: true },
-    deadline_suppression_at: { type: 'number', optional: true },
+    deadline_at: {type: 'number', optional: true},
+    deadline_suppression_at: {type: 'number', optional: true},
 
     // Reminder system
-    reminder_at: { type: 'number', optional: true },
-    last_reminder_interaction_at: { type: 'number', optional: true },
+    reminder_at: {type: 'number', optional: true},
+    last_reminder_interaction_at: {type: 'number', optional: true},
 
     // Relationships
     creator_id: 'string',
     workspace_id: 'string',
-    assignee_id: { type: 'string', optional: true },
-    project_id: { type: 'string', optional: true },
-    team_id: { type: 'string', optional: true },
+    assignee_id: {type: 'string', optional: true},
+    project_id: {type: 'string', optional: true},
+    team_id: {type: 'string', optional: true},
   },
   primaryKey: 'id',
   relationships: {
@@ -342,7 +342,7 @@ export const checklistItemSchema = {
     task_id: 'string',
     title: 'string',
     sort_order: 'number',
-    completed_at: { type: 'number', optional: true },
+    completed_at: {type: 'number', optional: true},
     created_at: 'number',
     updated_at: 'number',
   },
@@ -493,7 +493,7 @@ export const permissions: ReturnType<typeof definePermissions> =
   definePermissions<AuthData, Schema>(schema, () => {
     const userIsLoggedIn = (
       authData: AuthData,
-      { cmpLit }: ExpressionBuilder<TableSchema>,
+      {cmpLit}: ExpressionBuilder<TableSchema>,
     ) => {
       return cmpLit(authData.sub, 'IS NOT', null)
     }
@@ -513,7 +513,7 @@ export const permissions: ReturnType<typeof definePermissions> =
       authData: AuthData,
       eb: ExpressionBuilder<typeof sessionSchema>,
     ) => {
-      console.log({ authData })
+      console.log({authData})
 
       return eb.and(
         userIsLoggedIn(authData, eb),
@@ -532,7 +532,7 @@ export const permissions: ReturnType<typeof definePermissions> =
 
     const allowIfUserIDMatchesLoggedInUser = (
       authData: AuthData,
-      { cmp }: ExpressionBuilder<typeof viewStateSchema>,
+      {cmp}: ExpressionBuilder<typeof viewStateSchema>,
     ) => cmp('user_id', '=', authData.sub)
 
     const allowIfAdminOrTaskCreator = (
@@ -603,7 +603,7 @@ export const permissions: ReturnType<typeof definePermissions> =
      */
     const canSeeEmoji = (
       authData: AuthData,
-      { exists, or }: ExpressionBuilder<typeof emojiSchema>,
+      {exists, or}: ExpressionBuilder<typeof emojiSchema>,
     ) =>
       or(
         exists('task', (q) => {

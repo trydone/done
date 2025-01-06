@@ -1,12 +1,12 @@
-import { UseComboboxStateChange } from 'downshift'
-import React, { ReactNode, useCallback, useEffect, useState } from 'react'
-import { useController } from 'react-hook-form'
+import {UseComboboxStateChange} from 'downshift'
+import React, {ReactNode, useCallback, useEffect, useState} from 'react'
+import {useController} from 'react-hook-form'
 
-import { OnChangeParams } from '@/components/ui/combobox'
-import { FormControl } from '@/components/ui/form-control'
-import { useErrorState } from '@/hooks/use-error-state'
+import {OnChangeParams} from '@/components/ui/combobox'
+import {FormControl} from '@/components/ui/form-control'
+import {useErrorState} from '@/hooks/use-error-state'
 
-import { Combobox, ComboboxOption } from '../ui/combobox'
+import {Combobox, ComboboxOption} from '../ui/combobox'
 
 type Props = {
   name: string
@@ -43,7 +43,7 @@ export const ComboboxField = ({
   ...props
 }: Props) => {
   const [items, setItems] = useState<ComboboxOption[]>(options)
-  const { field, fieldState } = useController({ name, control })
+  const {field, fieldState} = useController({name, control})
   const hasError = useErrorState(fieldState, control)
 
   const handleInputChange = useCallback(

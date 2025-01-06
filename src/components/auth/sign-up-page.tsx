@@ -1,11 +1,11 @@
 'use client'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import {useSearchParams} from 'next/navigation'
 import queryString from 'query-string'
-import { useState } from 'react'
-import { toast } from 'sonner'
+import {useState} from 'react'
+import {toast} from 'sonner'
 
-import { SignUpForm } from '@/components/auth/sign-up-form'
+import {SignUpForm} from '@/components/auth/sign-up-form'
 import useQueryParams from '@/hooks/use-query-params'
 
 type Provider = 'google' | 'apple' | 'facebook'
@@ -22,14 +22,14 @@ type Props = {
   overrideReturnTo?: string
 }
 
-export const SignUpPage = ({ overrideReturnTo }: Props) => {
+export const SignUpPage = ({overrideReturnTo}: Props) => {
   const [loading, setLoading] = useState<Provider | undefined>()
 
   const searchParams = useSearchParams()
-  const { getParamsAsRecord } = useQueryParams()
+  const {getParamsAsRecord} = useQueryParams()
   const returnTo = overrideReturnTo || searchParams?.get('returnTo')
   const forwardQuery = queryString.stringify(
-    getParamsAsRecord({ exclude: ['returnTo'] }),
+    getParamsAsRecord({exclude: ['returnTo']}),
   )
 
   const queryParams = queryString.stringify({

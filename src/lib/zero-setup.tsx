@@ -1,8 +1,8 @@
-import { Zero } from '@rocicorp/zero'
-import { getCookie } from 'cookies-next'
-import { decodeJwt } from 'jose'
+import {Zero} from '@rocicorp/zero'
+import {getCookie} from 'cookies-next'
+import {decodeJwt} from 'jose'
 
-import { schema } from '@/schema'
+import {schema} from '@/schema'
 
 export function createZero() {
   const encodedJWT = getCookie('jwt')

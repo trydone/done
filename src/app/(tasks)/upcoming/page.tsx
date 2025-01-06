@@ -1,12 +1,12 @@
 'use client'
-import { useQuery } from '@rocicorp/zero/react'
-import { format, isThisWeek, isThisYear, isToday, isTomorrow } from 'date-fns'
-import { CalendarIcon } from 'lucide-react'
+import {useQuery} from '@rocicorp/zero/react'
+import {format, isThisWeek, isThisYear, isToday, isTomorrow} from 'date-fns'
+import {CalendarIcon} from 'lucide-react'
 
-import { PageContainer } from '@/components/shared/page-container'
-import { TaskList } from '@/components/task/task-list'
-import { Task } from '@/components/task/types'
-import { useZero } from '@/hooks/use-zero'
+import {PageContainer} from '@/components/shared/page-container'
+import {TaskList} from '@/components/task/task-list'
+import {Task} from '@/components/task/types'
+import {useZero} from '@/hooks/use-zero'
 
 // Helper function to format date headers
 const formatDateHeader = (date: Date) => {
@@ -28,7 +28,7 @@ const formatDateHeader = (date: Date) => {
 // Helper function to group tasks by date
 const groupTasksByDate = (tasks: readonly Task[]) => {
   return tasks.reduce(
-    (groups: Record<string, { date: Date; tasks: Task[] }>, task) => {
+    (groups: Record<string, {date: Date; tasks: Task[]}>, task) => {
       const date = new Date(task.start_date!)
       const dateKey = date.toISOString()
       if (!groups[dateKey]) {
@@ -72,7 +72,7 @@ export default function Page() {
       )}
 
       {Object.entries(groupedTasks).map(
-        ([dateKey, { date, tasks: tasksForDate }]) => (
+        ([dateKey, {date, tasks: tasksForDate}]) => (
           <div key={dateKey} className="mb-8">
             <h2 className="task-outside-click mx-4 mb-4 text-lg font-medium">
               {formatDateHeader(date)}

@@ -1,11 +1,11 @@
 'use client'
 
-import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import {ChevronLeftIcon, ChevronRightIcon} from 'lucide-react'
 import * as React from 'react'
-import { DayPicker } from 'react-day-picker'
+import {DayPicker} from 'react-day-picker'
 
-import { buttonVariants } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import {buttonVariants} from '@/components/ui/button'
+import {cn} from '@/lib/utils'
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
@@ -26,7 +26,7 @@ function Calendar({
         caption_label: 'text-sm font-medium',
         nav: 'space-x-3 flex items-center',
         nav_button: cn(
-          buttonVariants({ variant: 'secondary' }),
+          buttonVariants({variant: 'secondary'}),
           'size-7 bg-transparent p-0 opacity-50 hover:opacity-100',
         ),
         nav_button_previous: 'absolute left-1',
@@ -38,7 +38,7 @@ function Calendar({
         row: 'flex w-full mt-2',
         cell: 'text-center text-sm p-0 relative rounded-[16px] [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
         day: cn(
-          buttonVariants({ variant: 'ghost' }),
+          buttonVariants({variant: 'ghost'}),
           'h-9 w-9 p-0 font-normal aria-selected:opacity-100',
         ),
         day_selected:
@@ -61,4 +61,4 @@ function Calendar({
 }
 Calendar.displayName = 'Calendar'
 
-export { Calendar }
+export {Calendar}

@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import {useState} from 'react'
 
-import { Dialog, DialogContent } from '@/components/ui/dialog'
-import { TagRow } from '@/schema'
+import {Dialog, DialogContent} from '@/components/ui/dialog'
+import {TagRow} from '@/schema'
 
-import { TagDialogForm } from './tag-dialog-form'
-import { TagDialogList } from './tag-dialog-list'
-import { TagDialogManage } from './tag-dialog-manage'
-import { Task } from './types'
+import {TagDialogForm} from './tag-dialog-form'
+import {TagDialogList} from './tag-dialog-list'
+import {TagDialogManage} from './tag-dialog-manage'
+import {Task} from './types'
 
 type Props = {
   open: boolean
@@ -16,7 +16,7 @@ type Props = {
 
 type View = 'list' | 'form' | 'manage'
 
-export const TagDialog = ({ open, setOpen, task }: Props) => {
+export const TagDialog = ({open, setOpen, task}: Props) => {
   const [view, setView] = useState<View>('list')
   const [editingTag, setEditingTag] = useState<TagRow | null>(null)
 

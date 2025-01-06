@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import * as React from 'react'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
 type KbdIcon =
   | 'mod'
@@ -42,7 +42,7 @@ const iconMap: Record<KbdIcon, React.ReactNode> = {
 }
 
 const Kbd = React.forwardRef<HTMLElement, KbdProps>(
-  ({ className, children, icon, ...props }, ref) => {
+  ({className, children, icon, ...props}, ref) => {
     const content = icon ? iconMap[icon] : children
 
     return (
@@ -61,4 +61,4 @@ const Kbd = React.forwardRef<HTMLElement, KbdProps>(
 )
 Kbd.displayName = 'Kbd'
 
-export { Kbd }
+export {Kbd}

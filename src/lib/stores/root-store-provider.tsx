@@ -1,10 +1,10 @@
 'use client'
 
-import { PropsWithChildren } from 'react'
+import {PropsWithChildren} from 'react'
 
-import { rootStore, RootStoreContext } from './root-store'
+import {rootStore, RootStoreContext} from './root-store'
 
-export const RootStoreProvider = ({ children }: PropsWithChildren) => {
+export const RootStoreProvider = ({children}: PropsWithChildren) => {
   return (
     <RootStoreContext.Provider value={rootStore}>
       {children}

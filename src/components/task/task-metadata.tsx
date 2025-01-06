@@ -1,17 +1,17 @@
-import { differenceInDays, format } from 'date-fns'
-import { ClockIcon, FileIcon, ListIcon } from 'lucide-react'
+import {differenceInDays, format} from 'date-fns'
+import {ClockIcon, FileIcon, ListIcon} from 'lucide-react'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
-import { Badge } from '../ui/badge'
-import { Task } from './types'
+import {Badge} from '../ui/badge'
+import {Task} from './types'
 
 type Props = {
   task: Task
   className?: string
 }
 
-export const TaskMetadata = ({ task, className }: Props) => {
+export const TaskMetadata = ({task, className}: Props) => {
   const getDaysLeft = (deadline_at: Date) => {
     const days = differenceInDays(deadline_at, new Date())
     return `${days} days left`

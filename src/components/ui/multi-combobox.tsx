@@ -6,7 +6,7 @@ import {
 } from 'downshift'
 import lodashSnakeCase from 'lodash/snakeCase'
 import lodashUniqBy from 'lodash/uniqBy'
-import { ChevronDownIcon, XIcon } from 'lucide-react'
+import {ChevronDownIcon, XIcon} from 'lucide-react'
 import React, {
   forwardRef,
   useImperativeHandle,
@@ -15,10 +15,10 @@ import React, {
   useState,
 } from 'react'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
-import { Badge, BadgeProps } from './badge'
-import { ComboboxOption } from './combobox'
+import {Badge, BadgeProps} from './badge'
+import {ComboboxOption} from './combobox'
 
 export type MultiComboBoxOption = ComboboxOption & {
   variant?: BadgeProps['variant']
@@ -50,7 +50,7 @@ const getFilteredOptions = (
 
   return options.filter((option) => {
     return (
-      !selectedItems.find(({ id }) => id === option.id) &&
+      !selectedItems.find(({id}) => id === option.id) &&
       (option?.label || '').toLowerCase().includes(lowerCasedInputValue)
     )
   })
@@ -87,10 +87,10 @@ export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
       selectedItems,
       // Handle removal
       onStateChange(data) {
-        const { selectedItems: newSelectedItems, type } = data
+        const {selectedItems: newSelectedItems, type} = data
         // For some reason we get multiple of the same option when selecting
         // a predefined option.
-        const uniqueItems = lodashUniqBy(newSelectedItems, ({ id }) => id)
+        const uniqueItems = lodashUniqBy(newSelectedItems, ({id}) => id)
         switch (type) {
           case useMultipleSelection.stateChangeTypes
             .SelectedItemKeyDownBackspace:
@@ -104,7 +104,7 @@ export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
             break
         }
         if (onChange) {
-          onChange({ selectedItems: uniqueItems, type })
+          onChange({selectedItems: uniqueItems, type})
         }
       },
     })
@@ -227,7 +227,7 @@ export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
                   className="placeholder:text-placeholder-foreground grow bg-transparent outline-none"
                   placeholder={selectedItems.length === 0 ? placeholder : ''}
                   {...getInputProps(
-                    getDropdownProps({ preventKeyAction: isOpen, id }),
+                    getDropdownProps({preventKeyAction: isOpen, id}),
                   )}
                   onClick={() => {}}
                 />
@@ -257,7 +257,7 @@ export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
           >
             <div
               className="w-full overflow-y-auto p-1"
-              {...getMenuProps({}, { suppressRefError: true })}
+              {...getMenuProps({}, {suppressRefError: true})}
             >
               {shouldCreate && (
                 <div
@@ -276,7 +276,7 @@ export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
                       'bg-accent text-accent-foreground':
                         highlightedIndex === index,
                     })}
-                    {...getItemProps({ item, index })}
+                    {...getItemProps({item, index})}
                   >
                     {item.label}
                   </div>

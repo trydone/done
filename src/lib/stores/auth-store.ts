@@ -1,18 +1,18 @@
-import { deleteCookie, getCookie } from 'cookies-next'
-import { decodeJwt } from 'jose'
-import { makeAutoObservable, runInAction } from 'mobx'
+import {deleteCookie, getCookie} from 'cookies-next'
+import {decodeJwt} from 'jose'
+import {makeAutoObservable, runInAction} from 'mobx'
 
-import { RootStore } from './root-store'
+import {RootStore} from './root-store'
 
 export class AuthStore {
   rootStore: RootStore
-  loginState: undefined | { decoded: any } // Update type based on your needs
+  loginState: undefined | {decoded: any} // Update type based on your needs
   isLoading: boolean = true
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
     this.loginState = undefined
-    makeAutoObservable(this, undefined, { autoBind: true })
+    makeAutoObservable(this, undefined, {autoBind: true})
 
     // Check auth state on initialization
     if (typeof window !== 'undefined') {

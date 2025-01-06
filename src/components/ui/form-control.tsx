@@ -1,9 +1,9 @@
-import React, { ReactNode } from 'react'
+import React, {ReactNode} from 'react'
 
-import { Label } from '@/components/ui/label'
-import { cn } from '@/lib/utils'
+import {Label} from '@/components/ui/label'
+import {cn} from '@/lib/utils'
 
-import { Validation } from './validation'
+import {Validation} from './validation'
 
 export type FormControlProps = {
   name: string

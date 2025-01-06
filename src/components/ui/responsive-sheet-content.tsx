@@ -1,10 +1,10 @@
-import { MutableRefObject } from 'react'
+import {MutableRefObject} from 'react'
 
-import { useBreakpoint } from '@/hooks/use-breakpoint'
-import { cn } from '@/lib/utils'
+import {useBreakpoint} from '@/hooks/use-breakpoint'
+import {cn} from '@/lib/utils'
 
-import { DialogContent } from './dialog'
-import { SheetContent } from './sheet'
+import {DialogContent} from './dialog'
+import {SheetContent} from './sheet'
 
 type Props = {
   children: React.ReactNode

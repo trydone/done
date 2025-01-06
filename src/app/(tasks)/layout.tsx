@@ -1,19 +1,19 @@
 'use client'
-import { observer } from 'mobx-react-lite'
-import { ReactNode, useCallback, useContext } from 'react'
+import {observer} from 'mobx-react-lite'
+import {ReactNode, useCallback, useContext} from 'react'
 
-import { DndProvider } from '@/components/dnd/dnd-context'
-import { AppSidebar } from '@/components/nav/app-sidebar'
-import { Footer } from '@/components/nav/footer'
-import { QuickFindCommand } from '@/components/quick-find/quick-find-command'
-import { Separator } from '@/components/ui/separator'
+import {DndProvider} from '@/components/dnd/dnd-context'
+import {AppSidebar} from '@/components/nav/app-sidebar'
+import {Footer} from '@/components/nav/footer'
+import {QuickFindCommand} from '@/components/quick-find/quick-find-command'
+import {Separator} from '@/components/ui/separator'
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
-import { RootStoreContext } from '@/lib/stores/root-store'
-import { cn } from '@/lib/utils'
+import {RootStoreContext} from '@/lib/stores/root-store'
+import {cn} from '@/lib/utils'
 
 const Layout = observer(
   ({
@@ -22,7 +22,7 @@ const Layout = observer(
     children: ReactNode
   }>) => {
     const {
-      localStore: { openTaskId, setOpenTaskId, setSelectedTaskIds },
+      localStore: {openTaskId, setOpenTaskId, setSelectedTaskIds},
     } = useContext(RootStoreContext)
 
     const handleBackgroundClick = useCallback(

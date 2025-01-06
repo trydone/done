@@ -1,18 +1,18 @@
-import { useQuery } from '@rocicorp/zero/react'
-import { addDays, startOfDay } from 'date-fns'
-import { CalendarIcon, PlusIcon, SearchIcon, TrashIcon } from 'lucide-react'
-import { observer } from 'mobx-react-lite'
-import { usePathname } from 'next/navigation'
-import { useCallback, useContext, useState } from 'react'
-import { useHotkeys } from 'react-hotkeys-hook'
-import { v4 } from 'uuid'
+import {useQuery} from '@rocicorp/zero/react'
+import {addDays, startOfDay} from 'date-fns'
+import {CalendarIcon, PlusIcon, SearchIcon, TrashIcon} from 'lucide-react'
+import {observer} from 'mobx-react-lite'
+import {usePathname} from 'next/navigation'
+import {useCallback, useContext, useState} from 'react'
+import {useHotkeys} from 'react-hotkeys-hook'
+import {v4} from 'uuid'
 
-import { useZero } from '@/hooks/use-zero'
-import { INITIAL_GAP } from '@/lib/constants'
-import { RootStoreContext } from '@/lib/stores/root-store'
+import {useZero} from '@/hooks/use-zero'
+import {INITIAL_GAP} from '@/lib/constants'
+import {RootStoreContext} from '@/lib/stores/root-store'
 
-import { WhenDialog } from '../task/when-dialog'
-import { FooterButton } from './footer-button'
+import {WhenDialog} from '../task/when-dialog'
+import {FooterButton} from './footer-button'
 
 export const Footer = observer(() => {
   const pathname = usePathname()

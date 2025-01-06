@@ -1,17 +1,17 @@
-import { Calendar1Icon } from 'lucide-react'
+import {Calendar1Icon} from 'lucide-react'
 import * as React from 'react'
-import { DateRange } from 'react-day-picker'
+import {DateRange} from 'react-day-picker'
 
-import { Button } from '@/components/ui/button'
+import {Button} from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
-export type DateRangeOption = { id: string; label: string; value: DateRange }
+export type DateRangeOption = {id: string; label: string; value: DateRange}
 
 type Props = {
   options: DateRangeOption[]

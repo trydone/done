@@ -1,13 +1,13 @@
 'use client'
-import { useQuery } from '@rocicorp/zero/react'
-import { TrashIcon } from 'lucide-react'
-import { useCallback } from 'react'
+import {useQuery} from '@rocicorp/zero/react'
+import {TrashIcon} from 'lucide-react'
+import {useCallback} from 'react'
 
-import { PageContainer } from '@/components/shared/page-container'
-import { Section } from '@/components/shared/section'
-import { TaskList } from '@/components/task/task-list'
-import { Button } from '@/components/ui/button'
-import { useZero } from '@/hooks/use-zero'
+import {PageContainer} from '@/components/shared/page-container'
+import {Section} from '@/components/shared/section'
+import {TaskList} from '@/components/task/task-list'
+import {Button} from '@/components/ui/button'
+import {useZero} from '@/hooks/use-zero'
 
 export default function PageTrash() {
   return (

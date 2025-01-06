@@ -3,7 +3,7 @@ type Props = {
   strokeWidth?: number
 }
 
-export const Spinner = ({ size = 48, strokeWidth = 2 }: Props) => {
+export const Spinner = ({size = 48, strokeWidth = 2}: Props) => {
   return (
     <div className="flex items-center justify-center">
       <svg

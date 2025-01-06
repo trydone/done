@@ -1,7 +1,7 @@
-import { useBreakpoint } from '@/hooks/use-breakpoint'
+import {useBreakpoint} from '@/hooks/use-breakpoint'
 
-import { Dialog } from './dialog'
-import { Sheet } from './sheet'
+import {Dialog} from './dialog'
+import {Sheet} from './sheet'
 
 type Props = {
   open: boolean

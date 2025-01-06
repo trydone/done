@@ -1,8 +1,8 @@
 'use client'
-import { createContext } from 'react'
+import {createContext} from 'react'
 
-import { AuthStore } from './auth-store'
-import { LocalStore } from './local-store'
+import {AuthStore} from './auth-store'
+import {LocalStore} from './local-store'
 
 export class RootStore {
   private static instance: RootStore | null = null

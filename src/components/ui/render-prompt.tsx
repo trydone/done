@@ -2,9 +2,9 @@
 
 import * as React from 'react'
 
-import { Input } from './input'
-import { Label } from './label'
-import { Prompt } from './prompt'
+import {Input} from './input'
+import {Label} from './label'
+import {Prompt} from './prompt'
 
 export interface RenderPromptProps {
   open: boolean

@@ -1,15 +1,15 @@
-import { LucideIcon } from 'lucide-react'
-import { ComponentProps } from 'react'
+import {LucideIcon} from 'lucide-react'
+import {ComponentProps} from 'react'
 
-import { Button } from '@/components/ui/button'
+import {Button} from '@/components/ui/button'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { ButtonState } from '@/lib/stores/local-store'
-import { cn } from '@/lib/utils'
+import {ButtonState} from '@/lib/stores/local-store'
+import {cn} from '@/lib/utils'
 
 type FooterButtonProps = {
   icon: LucideIcon

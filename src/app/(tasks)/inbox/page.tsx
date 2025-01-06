@@ -1,11 +1,11 @@
 'use client'
 
-import { useQuery } from '@rocicorp/zero/react'
-import { InboxIcon } from 'lucide-react'
+import {useQuery} from '@rocicorp/zero/react'
+import {InboxIcon} from 'lucide-react'
 
-import { PageContainer } from '@/components/shared/page-container'
-import { TaskList } from '@/components/task/task-list'
-import { useZero } from '@/hooks/use-zero'
+import {PageContainer} from '@/components/shared/page-container'
+import {TaskList} from '@/components/task/task-list'
+import {useZero} from '@/hooks/use-zero'
 
 export default function Page() {
   const zero = useZero()

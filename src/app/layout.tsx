@@ -1,15 +1,15 @@
 'use client'
 import './globals.css'
 
-import { ZeroProvider } from '@rocicorp/zero/react'
-import { Inter } from 'next/font/google'
-import { ReactNode } from 'react'
+import {ZeroProvider} from '@rocicorp/zero/react'
+import {Inter} from 'next/font/google'
+import {ReactNode} from 'react'
 
-import { Toaster } from '@/components/ui/sonner'
-import { RootStoreProvider } from '@/lib/stores/root-store-provider'
-import { createZero } from '@/lib/zero-setup'
+import {Toaster} from '@/components/ui/sonner'
+import {RootStoreProvider} from '@/lib/stores/root-store-provider'
+import {createZero} from '@/lib/zero-setup'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const inter = Inter({subsets: ['latin'], variable: '--font-inter'})
 
 const zero = createZero()
 

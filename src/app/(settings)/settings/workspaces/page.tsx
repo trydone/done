@@ -1,19 +1,19 @@
 'use client'
 
-import { useQuery } from '@rocicorp/zero/react'
-import { LogOut, MoreVertical, Plus, Settings2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
+import {useQuery} from '@rocicorp/zero/react'
+import {LogOut, MoreVertical, Plus, Settings2} from 'lucide-react'
+import {useRouter} from 'next/navigation'
+import {toast} from 'sonner'
 
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import {Button} from '@/components/ui/button'
+import {Card, CardContent} from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useZero } from '@/hooks/use-zero'
+import {useZero} from '@/hooks/use-zero'
 
 export default function Page() {
   const zero = useZero()
@@ -24,7 +24,7 @@ export default function Page() {
 
   const handleLeave = async (workspaceId: string) => {
     try {
-      await zero.mutate.workspace.delete({ id: workspaceId })
+      await zero.mutate.workspace.delete({id: workspaceId})
       toast.success('Left workspace successfully')
     } catch (_error) {
       toast.error('Failed to leave workspace')

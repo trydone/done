@@ -10,11 +10,11 @@ import {
   useReactTable,
   VisibilityState,
 } from '@tanstack/react-table'
-import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import {ArrowDownIcon, ArrowUpIcon} from 'lucide-react'
+import {useRouter} from 'next/navigation'
 import * as React from 'react'
 
-import { Button } from '@/components/ui/button'
+import {Button} from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -23,7 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -126,7 +126,7 @@ export function DataTable<TData, TValue>({
                       }
                     }}
                     key={row.id}
-                    className={cn({ 'cursor-pointer': !!baseUrl || !!onClick })}
+                    className={cn({'cursor-pointer': !!baseUrl || !!onClick})}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>

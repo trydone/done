@@ -1,9 +1,9 @@
-import React, { ReactNode } from 'react'
-import { useController } from 'react-hook-form'
+import React, {ReactNode} from 'react'
+import {useController} from 'react-hook-form'
 
-import { FormControl } from '@/components/ui/form-control'
-import { Input, InputProps } from '@/components/ui/input'
-import { useErrorState } from '@/hooks/use-error-state'
+import {FormControl} from '@/components/ui/form-control'
+import {Input, InputProps} from '@/components/ui/input'
+import {useErrorState} from '@/hooks/use-error-state'
 
 type Props = InputProps & {
   name: string
@@ -28,7 +28,7 @@ export const InputField = ({
   disabled,
   ...rest
 }: Props) => {
-  const { field, fieldState } = useController({ control, name })
+  const {field, fieldState} = useController({control, name})
   const hasError = useErrorState(fieldState, control)
 
   return (

@@ -1,9 +1,9 @@
-import React, { ReactNode } from 'react'
-import { useController } from 'react-hook-form'
+import React, {ReactNode} from 'react'
+import {useController} from 'react-hook-form'
 
-import { Checkbox } from '@/components/ui/checkbox'
-import { FormControl } from '@/components/ui/form-control'
-import { Switch } from '@/components/ui/switch'
+import {Checkbox} from '@/components/ui/checkbox'
+import {FormControl} from '@/components/ui/form-control'
+import {Switch} from '@/components/ui/switch'
 
 type Props = {
   id?: string
@@ -35,7 +35,7 @@ export const CheckboxField = ({
   labelClassName,
   ...props
 }: Props) => {
-  const { field, fieldState } = useController({ name, control })
+  const {field, fieldState} = useController({name, control})
   const hasError = !!fieldState.error
 
   return (

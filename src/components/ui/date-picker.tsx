@@ -1,17 +1,13 @@
-import { format } from 'date-fns'
-import { Calendar1Icon, CircleXIcon } from 'lucide-react'
+import {format} from 'date-fns'
+import {Calendar1Icon, CircleXIcon} from 'lucide-react'
 import * as React from 'react'
-import { useCallback } from 'react'
-import { SelectSingleEventHandler } from 'react-day-picker'
+import {useCallback} from 'react'
+import {SelectSingleEventHandler} from 'react-day-picker'
 
-import { Button } from '@/components/ui/button'
-import { Calendar, CalendarProps } from '@/components/ui/calendar'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
+import {Button} from '@/components/ui/button'
+import {Calendar, CalendarProps} from '@/components/ui/calendar'
+import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
+import {cn} from '@/lib/utils'
 
 type Props = CalendarProps & {
   date?: Date

@@ -1,23 +1,19 @@
-import { addMonths, format } from 'date-fns'
-import { Calendar1Icon } from 'lucide-react'
+import {addMonths, format} from 'date-fns'
+import {Calendar1Icon} from 'lucide-react'
 import * as React from 'react'
-import { DateRange } from 'react-day-picker'
+import {DateRange} from 'react-day-picker'
 
-import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
+import {Button} from '@/components/ui/button'
+import {Calendar} from '@/components/ui/calendar'
+import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
+import {cn} from '@/lib/utils'
 
 type Props = {
   date: DateRange | undefined
   setDate: (value: DateRange | undefined) => void
 } & React.HTMLAttributes<HTMLDivElement>
 
-export const DateRangePicker = ({ className, date, setDate }: Props) => {
+export const DateRangePicker = ({className, date, setDate}: Props) => {
   const [currentDate, setCurrentDate] = React.useState(date)
 
   return (

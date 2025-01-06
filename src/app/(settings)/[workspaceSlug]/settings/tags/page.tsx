@@ -1,18 +1,18 @@
 'use client'
 
-import { useQuery } from '@rocicorp/zero/react'
-import { MoreHorizontal, Plus, Search } from 'lucide-react'
-import { useMemo, useState } from 'react'
-import { toast } from 'sonner'
+import {useQuery} from '@rocicorp/zero/react'
+import {MoreHorizontal, Plus, Search} from 'lucide-react'
+import {useMemo, useState} from 'react'
+import {toast} from 'sonner'
 
-import { Button } from '@/components/ui/button'
+import {Button} from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
+import {Input} from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -21,13 +21,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useZero } from '@/hooks/use-zero'
+import {useZero} from '@/hooks/use-zero'
 
 type Props = {
-  params: { workspaceSlug: string }
+  params: {workspaceSlug: string}
 }
 
-export default function Page({ params: {} }: Props) {
+export default function Page({params: {}}: Props) {
   const zero = useZero()
   const [tags] = useQuery(zero.query.tag)
   const [search, setSearch] = useState('')

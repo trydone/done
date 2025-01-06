@@ -3,19 +3,19 @@
 import * as AvatarPrimitive from '@radix-ui/react-avatar'
 import * as React from 'react'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> & {
     rounded?: boolean
   }
->(({ className, rounded = true, ...props }, ref) => (
+>(({className, rounded = true, ...props}, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
     className={cn(
       'relative flex size-10 shrink-0 overflow-hidden',
-      { 'rounded-full': rounded, 'rounded-none': !rounded },
+      {'rounded-full': rounded, 'rounded-none': !rounded},
       className,
     )}
     {...props}
@@ -26,7 +26,7 @@ Avatar.displayName = AvatarPrimitive.Root.displayName
 const AvatarImage = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Image>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
->(({ className, ...props }, ref) => (
+>(({className, ...props}, ref) => (
   <AvatarPrimitive.Image
     ref={ref}
     className={cn('aspect-square size-full object-cover', className)}
@@ -38,7 +38,7 @@ AvatarImage.displayName = AvatarPrimitive.Image.displayName
 const AvatarFallback = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Fallback>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
->(({ className, ...props }, ref) => (
+>(({className, ...props}, ref) => (
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
@@ -50,4 +50,4 @@ const AvatarFallback = React.forwardRef<
 ))
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 
-export { Avatar, AvatarImage, AvatarFallback }
+export {Avatar, AvatarImage, AvatarFallback}

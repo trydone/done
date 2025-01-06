@@ -1,9 +1,9 @@
-import { ArrowRightIcon } from 'lucide-react'
-import { Metadata } from 'next'
+import {ArrowRightIcon} from 'lucide-react'
+import {Metadata} from 'next'
 import Link from 'next/link'
 
-import { AuthNavbar } from '@/components/auth/auth-navbar'
-import { UpdatePasswordForm } from '@/components/auth/update-password-form'
+import {AuthNavbar} from '@/components/auth/auth-navbar'
+import {UpdatePasswordForm} from '@/components/auth/update-password-form'
 
 export const metadata: Metadata = {
   title: 'Update Password',

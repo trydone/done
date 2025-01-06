@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
 export const ListMenuContent = ({
   className,
@@ -36,7 +36,7 @@ export const ListMenuItem = ({
   <div
     className={cn(
       'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-      { 'pl-8': inset, 'cursor-pointer hover:bg-muted': !!onClick },
+      {'pl-8': inset, 'cursor-pointer hover:bg-muted': !!onClick},
       className,
     )}
     onClick={() => onClick?.()}
@@ -65,6 +65,6 @@ export const ListMenuLabel = ({
   </div>
 )
 
-export const ListMenuSeparator = ({ className }: { className?: string }) => (
+export const ListMenuSeparator = ({className}: {className?: string}) => (
   <div className={cn('mx-3 my-1 h-px bg-input', className)} />
 )

@@ -1,11 +1,11 @@
-import { format } from 'date-fns'
-import { MoonIcon, StarIcon } from 'lucide-react'
+import {format} from 'date-fns'
+import {MoonIcon, StarIcon} from 'lucide-react'
 
-import { Checkbox } from '@/components/ui/checkbox'
-import { cn } from '@/lib/utils'
+import {Checkbox} from '@/components/ui/checkbox'
+import {cn} from '@/lib/utils'
 
-import { TaskMetadata } from './task-metadata'
-import { Task } from './types'
+import {TaskMetadata} from './task-metadata'
+import {Task} from './types'
 
 type Props = {
   task: Task

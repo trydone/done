@@ -1,15 +1,15 @@
-import { CalendarIcon } from 'lucide-react'
+import {CalendarIcon} from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
+import {Button} from '@/components/ui/button'
 
-import { Task } from './types'
+import {Task} from './types'
 
 type Props = {
   task: Task
   setOpen: (open: boolean) => void
 }
 
-export const WhenButton = ({ setOpen }: Props) => {
+export const WhenButton = ({setOpen}: Props) => {
   return (
     <Button
       variant="ghost"

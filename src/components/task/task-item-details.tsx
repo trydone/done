@@ -1,17 +1,17 @@
-import { observer } from 'mobx-react-lite'
-import { useState } from 'react'
+import {observer} from 'mobx-react-lite'
+import {useState} from 'react'
 
-import { ChecklistButton } from './checklist-button'
-import { ChecklistList } from './checklist-list'
-import { TagButton } from './tag-button'
-import { TagDialog } from './tag-dialog'
-import { TagList } from './tag-list'
-import { TaskHeader } from './task-header'
-import { TaskNotes } from './task-notes'
-import { Task } from './types'
-import { WhenButton } from './when-button'
-import { WhenDialog } from './when-dialog'
-import { WhenLabel } from './when-label'
+import {ChecklistButton} from './checklist-button'
+import {ChecklistList} from './checklist-list'
+import {TagButton} from './tag-button'
+import {TagDialog} from './tag-dialog'
+import {TagList} from './tag-list'
+import {TaskHeader} from './task-header'
+import {TaskNotes} from './task-notes'
+import {Task} from './types'
+import {WhenButton} from './when-button'
+import {WhenDialog} from './when-dialog'
+import {WhenLabel} from './when-label'
 
 type Props = {
   task: Task
@@ -20,7 +20,7 @@ type Props = {
 }
 
 export const TaskItemDetails = observer(
-  ({ task, checked, onComplete }: Props) => {
+  ({task, checked, onComplete}: Props) => {
     const [tagOpen, setTagOpen] = useState(false)
     const [whenOpen, setWhenOpen] = useState(false)
 

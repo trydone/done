@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import {NextRequest, NextResponse} from 'next/server'
 
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID as string
 

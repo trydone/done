@@ -1,15 +1,15 @@
-import { useQuery } from '@rocicorp/zero/react'
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { v4 } from 'uuid'
+import {useQuery} from '@rocicorp/zero/react'
+import {useState} from 'react'
+import {toast} from 'sonner'
+import {v4} from 'uuid'
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { useZero } from '@/hooks/use-zero'
-import { TagRow } from '@/schema'
+import {Button} from '@/components/ui/button'
+import {Input} from '@/components/ui/input'
+import {useZero} from '@/hooks/use-zero'
+import {TagRow} from '@/schema'
 
-import { DialogTitle } from '../ui/dialog'
-import { Task } from './types'
+import {DialogTitle} from '../ui/dialog'
+import {Task} from './types'
 
 type Props = {
   task: Task
@@ -18,7 +18,7 @@ type Props = {
   onCancel: () => void
 }
 
-export const TagDialogForm = ({ task, tag, onSuccess, onCancel }: Props) => {
+export const TagDialogForm = ({task, tag, onSuccess, onCancel}: Props) => {
   const [title, setTitle] = useState(tag?.title || '')
   const zero = useZero()
   const [availableTags] = useQuery(zero.query.tag)

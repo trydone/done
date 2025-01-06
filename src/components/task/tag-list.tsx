@@ -1,12 +1,12 @@
-import { Badge } from '../ui/badge'
-import { Task } from './types'
+import {Badge} from '../ui/badge'
+import {Task} from './types'
 
 type Props = {
   task: Task
   setOpen: (open: boolean) => void
 }
 
-export const TagList = ({ task, setOpen }: Props) => {
+export const TagList = ({task, setOpen}: Props) => {
   return (
     <div
       onClick={() => setOpen(true)}

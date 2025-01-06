@@ -1,16 +1,16 @@
 // components/tag-dialog/tag-list.tsx
-import { useQuery } from '@rocicorp/zero/react'
-import { Check } from 'lucide-react'
-import { useState } from 'react'
+import {useQuery} from '@rocicorp/zero/react'
+import {Check} from 'lucide-react'
+import {useState} from 'react'
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { useZero } from '@/hooks/use-zero'
-import { TagRow } from '@/schema'
+import {Button} from '@/components/ui/button'
+import {Input} from '@/components/ui/input'
+import {ScrollArea} from '@/components/ui/scroll-area'
+import {useZero} from '@/hooks/use-zero'
+import {TagRow} from '@/schema'
 
-import { DialogTitle } from '../ui/dialog'
-import { Task } from './types'
+import {DialogTitle} from '../ui/dialog'
+import {Task} from './types'
 
 type Props = {
   task: Task

@@ -1,12 +1,12 @@
-import { LogoLink } from '@/components/ui/logo-link'
-import { cn } from '@/lib/utils'
+import {LogoLink} from '@/components/ui/logo-link'
+import {cn} from '@/lib/utils'
 
 type Props = {
   className?: string
   isSticky?: boolean
 }
 
-export const AuthNavbar = ({ className, isSticky }: Props) => {
+export const AuthNavbar = ({className, isSticky}: Props) => {
   return (
     <div
       className={cn(

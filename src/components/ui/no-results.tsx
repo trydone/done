@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import {ReactNode} from 'react'
 
 type Props = {
   dataSetLength: number
@@ -6,11 +6,7 @@ type Props = {
   children?: ReactNode
 }
 
-export const NoResults = ({
-  dataSetLength,
-  resultsLength,
-  children,
-}: Props) => {
+export const NoResults = ({dataSetLength, resultsLength, children}: Props) => {
   if (dataSetLength === 0 || resultsLength === 0) {
     return children ? (
       <div>{children}</div>

@@ -1,12 +1,12 @@
 'use client'
 
-import { useQuery } from '@rocicorp/zero/react'
-import { Lock, Mail, Shield } from 'lucide-react'
-import { ChangeEvent, useContext, useState } from 'react'
-import { toast } from 'sonner'
+import {useQuery} from '@rocicorp/zero/react'
+import {Lock, Mail, Shield} from 'lucide-react'
+import {ChangeEvent, useContext, useState} from 'react'
+import {toast} from 'sonner'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
+import {Button} from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -14,19 +14,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+import {Input} from '@/components/ui/input'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { useZero } from '@/hooks/use-zero'
-import { RootStoreContext } from '@/lib/stores/root-store'
+import {useZero} from '@/hooks/use-zero'
+import {RootStoreContext} from '@/lib/stores/root-store'
 
 export default function Page() {
   const {
-    authStore: { loginState },
+    authStore: {loginState},
   } = useContext(RootStoreContext)
 
   const zero = useZero()

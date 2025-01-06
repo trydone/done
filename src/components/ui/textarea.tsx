@@ -1,8 +1,8 @@
-import { CircleXIcon } from 'lucide-react'
+import {CircleXIcon} from 'lucide-react'
 import * as React from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
 export interface TextareaProps
   extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'style'> {
@@ -101,4 +101,4 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 )
 Textarea.displayName = 'Textarea'
 
-export { Textarea }
+export {Textarea}

@@ -1,15 +1,15 @@
 'use client'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {useCallback, useState} from 'react'
+import {useForm} from 'react-hook-form'
+import {toast} from 'sonner'
 import * as z from 'zod'
 
-import { PasswordField } from '@/components/fields/password-field'
-import { Button } from '@/components/ui/button'
+import {PasswordField} from '@/components/fields/password-field'
+import {Button} from '@/components/ui/button'
 
 const schema = z.object({
-  password: z.string().min(1, { message: 'Required' }),
+  password: z.string().min(1, {message: 'Required'}),
 })
 
 type Schema = z.infer<typeof schema>
@@ -19,7 +19,7 @@ const redirectTo = '/sites'
 export const UpdatePasswordForm = () => {
   const [loading, setLoading] = useState(false)
 
-  const { control, handleSubmit } = useForm<Schema>({
+  const {control, handleSubmit} = useForm<Schema>({
     resolver: zodResolver(schema),
     mode: 'all',
     defaultValues: {

@@ -1,14 +1,14 @@
 import * as React from 'react'
 
-import { Button, ButtonProps } from '@/components/ui/button'
-import { Surface } from '@/components/ui/surface'
+import {Button, ButtonProps} from '@/components/ui/button'
+import {Surface} from '@/components/ui/surface'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
 // Toolbar Wrapper
 interface ToolbarWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -52,7 +52,7 @@ interface ToolbarDividerProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const ToolbarDivider = React.forwardRef<HTMLDivElement, ToolbarDividerProps>(
-  ({ horizontal, className, ...props }, ref) => {
+  ({horizontal, className, ...props}, ref) => {
     return (
       <div
         className={cn(
@@ -140,4 +140,4 @@ export const Toolbar = {
   Button: ToolbarButton,
 }
 
-export type { ToolbarWrapperProps, ToolbarDividerProps, ToolbarButtonProps }
+export type {ToolbarWrapperProps, ToolbarDividerProps, ToolbarButtonProps}

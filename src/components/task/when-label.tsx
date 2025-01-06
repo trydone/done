@@ -1,16 +1,16 @@
-import { observer } from 'mobx-react-lite'
+import {observer} from 'mobx-react-lite'
 
-import { TaskRow } from '@/schema'
+import {TaskRow} from '@/schema'
 
-import { Button } from '../ui/button'
-import { getButtonIcon, getButtonText } from './when-dialog'
+import {Button} from '../ui/button'
+import {getButtonIcon, getButtonText} from './when-dialog'
 
 type Props = {
   task: TaskRow
   setOpen: (open: boolean) => void
 }
 
-export const WhenLabel = observer(({ task, setOpen }: Props) => {
+export const WhenLabel = observer(({task, setOpen}: Props) => {
   return (
     <Button
       variant="ghost"

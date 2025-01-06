@@ -1,10 +1,10 @@
-import { cva, VariantProps } from 'class-variance-authority'
-import { CheckIcon, TriangleAlertIcon } from 'lucide-react'
+import {cva, VariantProps} from 'class-variance-authority'
+import {CheckIcon, TriangleAlertIcon} from 'lucide-react'
 import * as React from 'react'
-import { ReactNode } from 'react'
+import {ReactNode} from 'react'
 
-import { Spinner } from '@/components/ui/spinner'
-import { cn } from '@/lib/utils'
+import {Spinner} from '@/components/ui/spinner'
+import {cn} from '@/lib/utils'
 
 export const validationVariants = cva(
   'mt-2 flex flex-row items-center text-sm',
@@ -28,9 +28,9 @@ type Props = {
   className?: string
 } & VariantProps<typeof validationVariants>
 
-export const Validation = ({ children, className, variant }: Props) => {
+export const Validation = ({children, className, variant}: Props) => {
   return (
-    <p className={cn(validationVariants({ variant, className }))}>
+    <p className={cn(validationVariants({variant, className}))}>
       {children}
       {variant === 'error' && (
         <TriangleAlertIcon width={16} height={16} className="ml-1" />

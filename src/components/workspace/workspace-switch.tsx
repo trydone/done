@@ -1,17 +1,17 @@
 'use client'
 
-import { useQuery } from '@rocicorp/zero/react'
-import { observer } from 'mobx-react-lite'
-import { FC, ReactNode, useContext } from 'react'
+import {useQuery} from '@rocicorp/zero/react'
+import {observer} from 'mobx-react-lite'
+import {FC, ReactNode, useContext} from 'react'
 
-import { H2 } from '@/components/shared/typography'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { useZero } from '@/hooks/use-zero'
-import { RootStoreContext } from '@/lib/stores/root-store'
-import { UserRow, WorkspaceMemberRow, WorkspaceRow } from '@/schema'
+import {H2} from '@/components/shared/typography'
+import {Label} from '@/components/ui/label'
+import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
+import {useZero} from '@/hooks/use-zero'
+import {RootStoreContext} from '@/lib/stores/root-store'
+import {UserRow, WorkspaceMemberRow, WorkspaceRow} from '@/schema'
 
-import { WorkspaceSignout } from './workspace-signout'
+import {WorkspaceSignout} from './workspace-signout'
 
 type ExtendedWorkspaceMemberRow = WorkspaceMemberRow & {
   workspace: readonly WorkspaceRow[]
@@ -26,7 +26,7 @@ interface Compound
     users?: readonly ExtendedUserRow[]
     selectedUserId?: string
     selectedWorkspaceId?: string
-    onWorkspaceChange: (params: { userId: string; workspaceId: string }) => void
+    onWorkspaceChange: (params: {userId: string; workspaceId: string}) => void
     onAllWorkspacesClick?: () => void
     renderUserTitle?: (user: ExtendedUserRow) => ReactNode
   }> {
@@ -81,7 +81,7 @@ export const WorkspaceSwitch: Compound = ({
   </>
 )
 
-const AllWorkspaces: Compound['AllWorkspaces'] = ({ active, onClick }) => (
+const AllWorkspaces: Compound['AllWorkspaces'] = ({active, onClick}) => (
   <RadioGroup value={active ? `all` : ``} onValueChange={onClick}>
     <div className="flex items-center space-x-2">
       <RadioGroupItem value="all" id="all" />

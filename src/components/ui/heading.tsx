@@ -1,7 +1,7 @@
-import { cva, VariantProps } from 'class-variance-authority'
+import {cva, VariantProps} from 'class-variance-authority'
 import * as React from 'react'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
 const headingVariants = cva('font-sans font-medium', {
   variants: {
@@ -38,11 +38,8 @@ const Heading = ({
   const Component = level || 'h1'
 
   return (
-    <Component
-      className={cn(headingVariants({ level }), className)}
-      {...props}
-    />
+    <Component className={cn(headingVariants({level}), className)} {...props} />
   )
 }
 
-export { Heading, headingVariants }
+export {Heading, headingVariants}

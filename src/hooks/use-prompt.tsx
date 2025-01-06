@@ -1,9 +1,9 @@
 'use client'
 
 import * as React from 'react'
-import { createRoot } from 'react-dom/client'
+import {createRoot} from 'react-dom/client'
 
-import { RenderPrompt, RenderPromptProps } from '@/components/ui/render-prompt'
+import {RenderPrompt, RenderPromptProps} from '@/components/ui/render-prompt'
 
 type UsePromptProps = Omit<RenderPromptProps, 'onConfirm' | 'onCancel' | 'open'>
 

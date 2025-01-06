@@ -1,4 +1,4 @@
-import { MutableRefObject, useMemo, useSyncExternalStore } from 'react'
+import {MutableRefObject, useMemo, useSyncExternalStore} from 'react'
 
 const subscribe = (callback: () => void) => {
   window.addEventListener('resize', callback)
@@ -8,7 +8,7 @@ const subscribe = (callback: () => void) => {
 }
 
 const useDimensions = (
-  ref: MutableRefObject<{ offsetWidth?: number; offsetHeight?: number } | null>,
+  ref: MutableRefObject<{offsetWidth?: number; offsetHeight?: number} | null>,
 ) => {
   const dimensions = useSyncExternalStore(subscribe, () =>
     JSON.stringify({
@@ -19,4 +19,4 @@ const useDimensions = (
   return useMemo(() => JSON.parse(dimensions), [dimensions])
 }
 
-export { useDimensions }
+export {useDimensions}

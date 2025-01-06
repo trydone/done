@@ -1,11 +1,11 @@
 'use client'
 
-import { useQuery } from '@rocicorp/zero/react'
-import { ExternalLink } from 'lucide-react'
-import { ChangeEvent, useCallback } from 'react'
-import { toast } from 'sonner'
+import {useQuery} from '@rocicorp/zero/react'
+import {ExternalLink} from 'lucide-react'
+import {ChangeEvent, useCallback} from 'react'
+import {toast} from 'sonner'
 
-import { Button } from '@/components/ui/button'
+import {Button} from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -13,15 +13,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { useZero } from '@/hooks/use-zero'
+import {Input} from '@/components/ui/input'
+import {Label} from '@/components/ui/label'
+import {useZero} from '@/hooks/use-zero'
 
 type Props = {
-  params: { workspaceSlug: string }
+  params: {workspaceSlug: string}
 }
 
-export default function Page({ params: {} }: Props) {
+export default function Page({params: {}}: Props) {
   const zero = useZero()
   const [workspace] = useQuery(zero.query.workspace)
 
@@ -39,7 +39,7 @@ export default function Page({ params: {} }: Props) {
 
   const handleDelete = useCallback(async () => {
     try {
-      await zero.mutate.workspace.delete({ id: workspace?.id })
+      await zero.mutate.workspace.delete({id: workspace?.id})
       toast.success('Workspace scheduled for deletion')
     } catch (_error) {
       toast.error('Failed to delete workspace')

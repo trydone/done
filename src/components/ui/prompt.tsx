@@ -3,10 +3,10 @@
 import * as Primitives from '@radix-ui/react-alert-dialog'
 import * as React from 'react'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
-import { Button } from './button'
-import { Heading } from './heading'
+import {Button} from './button'
+import {Heading} from './heading'
 
 /**
  * This component is based on the [Radix UI Alert Dialog](https://www.radix-ui.com/primitives/docs/components/alert-dialog) primitives.
@@ -17,7 +17,7 @@ Root.displayName = 'Prompt'
 const Trigger = Primitives.Trigger
 Trigger.displayName = 'Prompt.Trigger'
 
-const Portal = ({ ...props }: Primitives.AlertDialogPortalProps) => {
+const Portal = ({...props}: Primitives.AlertDialogPortalProps) => {
   return <Primitives.AlertDialogPortal {...props} />
 }
 Portal.displayName = 'Prompt.Portal'
@@ -25,7 +25,7 @@ Portal.displayName = 'Prompt.Portal'
 const Overlay = React.forwardRef<
   React.ElementRef<typeof Primitives.Overlay>,
   React.ComponentPropsWithoutRef<typeof Primitives.Overlay>
->(({ className, ...props }, ref) => {
+>(({className, ...props}, ref) => {
   return (
     <Primitives.Overlay
       ref={ref}
@@ -42,7 +42,7 @@ Overlay.displayName = 'Prompt.Overlay'
 const Title = React.forwardRef<
   React.ElementRef<typeof Primitives.Title>,
   Omit<React.ComponentPropsWithoutRef<typeof Primitives.Title>, 'asChild'>
->(({ className, children, ...props }, ref) => {
+>(({className, children, ...props}, ref) => {
   return (
     <Primitives.Title ref={ref} className={cn(className)} {...props} asChild>
       <Heading level="h4">{children}</Heading>
@@ -54,7 +54,7 @@ Title.displayName = 'Prompt.Title'
 const Content = React.forwardRef<
   React.ElementRef<typeof Primitives.Content>,
   React.ComponentPropsWithoutRef<typeof Primitives.Content>
->(({ className, ...props }, ref) => {
+>(({className, ...props}, ref) => {
   return (
     <Portal>
       <Overlay />
@@ -74,7 +74,7 @@ Content.displayName = 'Prompt.Content'
 const Description = React.forwardRef<
   React.ElementRef<typeof Primitives.Description>,
   React.ComponentPropsWithoutRef<typeof Primitives.Description>
->(({ className, ...props }, ref) => {
+>(({className, ...props}, ref) => {
   return (
     <Primitives.Description ref={ref} className={cn(className)} {...props} />
   )
@@ -84,7 +84,7 @@ Description.displayName = 'Prompt.Description'
 const Action = React.forwardRef<
   React.ElementRef<typeof Primitives.Action>,
   Omit<React.ComponentPropsWithoutRef<typeof Primitives.Action>, 'asChild'>
->(({ className, children, type, ...props }, ref) => {
+>(({className, children, type, ...props}, ref) => {
   return (
     <Primitives.Action
       ref={ref}
@@ -103,7 +103,7 @@ Action.displayName = 'Prompt.Action'
 const Cancel = React.forwardRef<
   React.ElementRef<typeof Primitives.Cancel>,
   Omit<React.ComponentPropsWithoutRef<typeof Primitives.Cancel>, 'asChild'>
->(({ className, children, ...props }, ref) => {
+>(({className, children, ...props}, ref) => {
   return (
     <Primitives.Cancel
       ref={ref}
@@ -162,4 +162,4 @@ const Prompt = Object.assign(Root, {
   Footer,
 })
 
-export { Prompt }
+export {Prompt}

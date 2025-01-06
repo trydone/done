@@ -1,6 +1,6 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover'
-import { useCombobox, UseComboboxStateChange } from 'downshift'
-import { ChevronDownIcon } from 'lucide-react'
+import {useCombobox, UseComboboxStateChange} from 'downshift'
+import {ChevronDownIcon} from 'lucide-react'
 import React, {
   forwardRef,
   ReactNode,
@@ -9,9 +9,9 @@ import React, {
   useRef,
 } from 'react'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
-import { Input, InputProps } from './input'
+import {Input, InputProps} from './input'
 
 export type ComboboxOption = {
   id?: string | number
@@ -118,7 +118,7 @@ export const Combobox: React.FC<ComboboxProps> = forwardRef(
                   onClear?.()
                 }}
                 clearable={clearable}
-                {...getInputProps({}, { suppressRefError: true })}
+                {...getInputProps({}, {suppressRefError: true})}
                 {...inputProps}
                 ref={comboboxRef}
               />
@@ -149,7 +149,7 @@ export const Combobox: React.FC<ComboboxProps> = forwardRef(
             >
               <div
                 className="w-full overflow-y-auto p-1"
-                {...getMenuProps({}, { suppressRefError: true })}
+                {...getMenuProps({}, {suppressRefError: true})}
               >
                 {children}
 

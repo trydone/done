@@ -1,25 +1,19 @@
 'use client'
 
-import { useQuery } from '@rocicorp/zero/react'
-import {
-  ChevronLeft,
-  Download,
-  MoreHorizontal,
-  Plus,
-  Search,
-} from 'lucide-react'
+import {useQuery} from '@rocicorp/zero/react'
+import {ChevronLeft, Download, MoreHorizontal, Plus, Search} from 'lucide-react'
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import {useMemo, useState} from 'react'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
+import {Button} from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
+import {Input} from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -28,14 +22,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useZero } from '@/hooks/use-zero'
-import { cn } from '@/lib/utils'
+import {useZero} from '@/hooks/use-zero'
+import {cn} from '@/lib/utils'
 
 type Props = {
-  params: { workspaceSlug: string }
+  params: {workspaceSlug: string}
 }
 
-export default function Page({ params: {} }: Props) {
+export default function Page({params: {}}: Props) {
   const zero = useZero()
   const [members] = useQuery(zero.query.workspace_member)
   const [search, setSearch] = useState('')
@@ -65,7 +59,7 @@ export default function Page({ params: {} }: Props) {
       .map((row) => row.join(','))
       .join('\n')
 
-    const blob = new Blob([csv], { type: 'text/csv' })
+    const blob = new Blob([csv], {type: 'text/csv'})
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url

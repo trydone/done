@@ -1,16 +1,16 @@
-import { useQuery } from '@rocicorp/zero/react'
-import { Pencil, Trash } from 'lucide-react'
-import { useState } from 'react'
+import {useQuery} from '@rocicorp/zero/react'
+import {Pencil, Trash} from 'lucide-react'
+import {useState} from 'react'
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { usePrompt } from '@/hooks/use-prompt'
-import { useZero } from '@/hooks/use-zero'
-import { TagRow } from '@/schema'
+import {Button} from '@/components/ui/button'
+import {Input} from '@/components/ui/input'
+import {ScrollArea} from '@/components/ui/scroll-area'
+import {usePrompt} from '@/hooks/use-prompt'
+import {useZero} from '@/hooks/use-zero'
+import {TagRow} from '@/schema'
 
-import { DialogTitle } from '../ui/dialog'
-import { Task } from './types'
+import {DialogTitle} from '../ui/dialog'
+import {Task} from './types'
 
 type Props = {
   task: Task
@@ -18,7 +18,7 @@ type Props = {
   onCancel: () => void
 }
 
-export const TagDialogManage = ({ onEditTag, onCancel }: Props) => {
+export const TagDialogManage = ({onEditTag, onCancel}: Props) => {
   const [search, setSearch] = useState('')
   const zero = useZero()
   const [availableTags] = useQuery(zero.query.tag)
@@ -39,7 +39,7 @@ export const TagDialogManage = ({ onEditTag, onCancel }: Props) => {
       return
     }
 
-    await zero.mutate.tag.delete({ id: tag.id })
+    await zero.mutate.tag.delete({id: tag.id})
   }
 
   return (

@@ -1,12 +1,12 @@
 'use client'
 
-import { useQuery } from '@rocicorp/zero/react'
-import { Plus, Search } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import {useQuery} from '@rocicorp/zero/react'
+import {Plus, Search} from 'lucide-react'
+import {useRouter} from 'next/navigation'
+import {useMemo, useState} from 'react'
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import {Button} from '@/components/ui/button'
+import {Input} from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -15,13 +15,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useZero } from '@/hooks/use-zero'
+import {useZero} from '@/hooks/use-zero'
 
 type Props = {
-  params: { workspaceSlug: string }
+  params: {workspaceSlug: string}
 }
 
-export default function Page({ params: {} }: Props) {
+export default function Page({params: {}}: Props) {
   const zero = useZero()
   const router = useRouter()
   const [teams] = useQuery(zero.query.team)

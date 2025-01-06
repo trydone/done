@@ -1,7 +1,7 @@
-import { cva, type VariantProps } from 'class-variance-authority'
+import {cva, type VariantProps} from 'class-variance-authority'
 import * as React from 'react'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
 const stickerVariants = cva(
   'inline-flex items-center rounded-[12px] px-[35px] py-2.5 text-[24px] font-bold leading-none tracking-tight text-white shadow-[0px_10px_20px_0px_rgba(0,0,0,0.15)] ring-4 ring-[rgba(255,255,255,0.5)]',
@@ -25,10 +25,10 @@ export interface StickerProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof stickerVariants> {}
 
-function Sticker({ className, variant, ...props }: StickerProps) {
+function Sticker({className, variant, ...props}: StickerProps) {
   return (
-    <div className={cn(stickerVariants({ variant }), className)} {...props} />
+    <div className={cn(stickerVariants({variant}), className)} {...props} />
   )
 }
 
-export { Sticker, stickerVariants }
+export {Sticker, stickerVariants}

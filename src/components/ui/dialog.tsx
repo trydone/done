@@ -1,10 +1,10 @@
 'use client'
 
 import * as DialogPrimitive from '@radix-ui/react-dialog'
-import { XIcon } from 'lucide-react'
+import {XIcon} from 'lucide-react'
 import * as React from 'react'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
 const Dialog = DialogPrimitive.Root
 
@@ -17,7 +17,7 @@ const DialogClose = DialogPrimitive.Close
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
+>(({className, ...props}, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
@@ -38,7 +38,7 @@ const DialogContent = React.forwardRef<
   }
 >(
   (
-    { className, children, overlayClassName, hideClose, hideOverlay, ...props },
+    {className, children, overlayClassName, hideClose, hideOverlay, ...props},
     ref,
   ) => (
     <DialogPortal>
@@ -96,7 +96,7 @@ DialogFooter.displayName = 'DialogFooter'
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
->(({ className, ...props }, ref) => (
+>(({className, ...props}, ref) => (
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
@@ -111,7 +111,7 @@ DialogTitle.displayName = DialogPrimitive.Title.displayName
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
->(({ className, ...props }, ref) => (
+>(({className, ...props}, ref) => (
   <DialogPrimitive.Description
     ref={ref}
     className={cn('text-base text-muted-foreground', className)}

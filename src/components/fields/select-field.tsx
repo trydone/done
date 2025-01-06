@@ -1,8 +1,8 @@
-import React, { ReactNode, useRef } from 'react'
-import { useController } from 'react-hook-form'
+import React, {ReactNode, useRef} from 'react'
+import {useController} from 'react-hook-form'
 
-import { Button } from '@/components/ui/button'
-import { FormControl } from '@/components/ui/form-control'
+import {Button} from '@/components/ui/button'
+import {FormControl} from '@/components/ui/form-control'
 import {
   Select,
   SelectContent,
@@ -10,8 +10,8 @@ import {
   SelectItem,
   SelectTrigger,
 } from '@/components/ui/select'
-import { useDimensions } from '@/hooks/use-dimensions'
-import { useErrorState } from '@/hooks/use-error-state'
+import {useDimensions} from '@/hooks/use-dimensions'
+import {useErrorState} from '@/hooks/use-error-state'
 
 type SelectOption = {
   id: string | number
@@ -49,10 +49,10 @@ export const SelectField = ({
   isInt,
   ...props
 }: Props) => {
-  const { field, fieldState } = useController({ name, control })
+  const {field, fieldState} = useController({name, control})
   const hasError = useErrorState(fieldState, control)
   const ref = useRef<HTMLDivElement>(null)
-  const { width } = useDimensions(ref)
+  const {width} = useDimensions(ref)
 
   return (
     <div ref={ref}>
@@ -80,7 +80,7 @@ export const SelectField = ({
               placeholder}
           </SelectTrigger>
 
-          <SelectContent style={{ maxHeight: maxDropdownHeight }}>
+          <SelectContent style={{maxHeight: maxDropdownHeight}}>
             <SelectGroup>
               {options.map((option, index) => {
                 return (
@@ -88,7 +88,7 @@ export const SelectField = ({
                     id={String(option.id)}
                     key={index}
                     value={String(option.id)}
-                    style={{ maxWidth: width }}
+                    style={{maxWidth: width}}
                   >
                     {option.label && (
                       <div className="mb-1 text-wrap">{option.label}</div>

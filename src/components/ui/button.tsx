@@ -1,8 +1,8 @@
-import { cva, VariantProps } from 'class-variance-authority'
+import {cva, VariantProps} from 'class-variance-authority'
 import * as React from 'react'
 
-import { Spinner } from '@/components/ui/spinner'
-import { cn } from '@/lib/utils'
+import {Spinner} from '@/components/ui/spinner'
+import {cn} from '@/lib/utils'
 
 const buttonVariants = cva(
   'relative inline-flex select-none items-center justify-center whitespace-nowrap font-sans text-base font-normal transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
@@ -59,13 +59,10 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { className, variant, size, loading, children, disabled, ...props },
-    ref,
-  ) => {
+  ({className, variant, size, loading, children, disabled, ...props}, ref) => {
     return (
       <button
-        className={cn(buttonVariants({ variant, size, className }), {
+        className={cn(buttonVariants({variant, size, className}), {
           'cursor-wait': loading,
         })}
         ref={ref}
@@ -109,7 +106,7 @@ const ButtonDiv = ({
 }: ButtonProps) => {
   return (
     <div
-      className={cn('truncate', buttonVariants({ variant, size, className }), {
+      className={cn('truncate', buttonVariants({variant, size, className}), {
         'cursor-wait': loading,
         'pointer-events-none opacity-50': disabled,
       })}
@@ -139,4 +136,4 @@ const ButtonDiv = ({
   )
 }
 
-export { Button, buttonVariants, ButtonDiv }
+export {Button, buttonVariants, ButtonDiv}

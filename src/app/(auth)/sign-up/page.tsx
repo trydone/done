@@ -1,7 +1,7 @@
-import { Metadata } from 'next'
+import {Metadata} from 'next'
 
-import { AuthNavbar } from '@/components/auth/auth-navbar'
-import { SignUpPage } from '@/components/auth/sign-up-page'
+import {AuthNavbar} from '@/components/auth/auth-navbar'
+import {SignUpPage} from '@/components/auth/sign-up-page'
 
 export const metadata: Metadata = {
   title: 'Sign Up',

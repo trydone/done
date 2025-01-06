@@ -1,4 +1,4 @@
-import { format, isBefore, isSameDay, isToday, startOfToday } from 'date-fns'
+import {format, isBefore, isSameDay, isToday, startOfToday} from 'date-fns'
 import {
   Check,
   ChevronLeft,
@@ -10,21 +10,21 @@ import {
   Star,
   StarIcon,
 } from 'lucide-react'
-import { observer } from 'mobx-react-lite'
-import { useCallback, useContext } from 'react'
-import { DayPicker, DayProps } from 'react-day-picker'
+import {observer} from 'mobx-react-lite'
+import {useCallback, useContext} from 'react'
+import {DayPicker, DayProps} from 'react-day-picker'
 
-import { Button } from '@/components/ui/button'
+import {Button} from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { useZero } from '@/hooks/use-zero'
-import { RootStoreContext } from '@/lib/stores/root-store'
-import { cn } from '@/lib/utils'
-import { TaskRow } from '@/schema'
+import {useZero} from '@/hooks/use-zero'
+import {RootStoreContext} from '@/lib/stores/root-store'
+import {cn} from '@/lib/utils'
+import {TaskRow} from '@/schema'
 
 type BaseDialogProps = {
   open: boolean
@@ -68,9 +68,9 @@ export const getButtonText = (task: TaskRow) => {
 }
 
 const CustomDaycell = (
-  props: DayProps & { selected?: Date; onClick?: (date: Date) => void },
+  props: DayProps & {selected?: Date; onClick?: (date: Date) => void},
 ) => {
-  const { date, selected, onClick, ...rest } = props
+  const {date, selected, onClick, ...rest} = props
 
   const isSelectedDate = selected && isSameDay(date, selected)
 
@@ -99,7 +99,7 @@ export const WhenDialog = observer((props: Props) => {
   const zero = useZero()
 
   const {
-    localStore: { setOpenTaskId, setSelectedTaskIds },
+    localStore: {setOpenTaskId, setSelectedTaskIds},
   } = useContext(RootStoreContext)
 
   const updateTasks = useCallback(

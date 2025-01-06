@@ -1,13 +1,13 @@
 'use client'
 // import { AppleIcon, FacebookIcon, GoogleIcon } from "lucide-react";
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import {useSearchParams} from 'next/navigation'
 import queryString from 'query-string'
-import { useState } from 'react'
+import {useState} from 'react'
 
-import { AuthNavbar } from '@/components/auth/auth-navbar'
-import { SignInForm } from '@/components/auth/sign-in-form'
-import { ButtonDiv } from '@/components/ui/button'
+import {AuthNavbar} from '@/components/auth/auth-navbar'
+import {SignInForm} from '@/components/auth/sign-in-form'
+import {ButtonDiv} from '@/components/ui/button'
 
 type Provider = 'google' | 'apple' | 'facebook'
 

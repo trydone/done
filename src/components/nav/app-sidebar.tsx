@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useQuery } from '@rocicorp/zero/react'
+import {useQuery} from '@rocicorp/zero/react'
 import {
   ArchiveIcon,
   BookCheckIcon,
@@ -9,7 +9,7 @@ import {
   StarIcon,
   TrashIcon,
 } from 'lucide-react'
-import { useContext } from 'react'
+import {useContext} from 'react'
 
 import {
   Sidebar,
@@ -18,11 +18,11 @@ import {
   SidebarGroupContent,
   SidebarMenu,
 } from '@/components/ui/sidebar'
-import { useZero } from '@/hooks/use-zero'
-import { RootStoreContext } from '@/lib/stores/root-store'
+import {useZero} from '@/hooks/use-zero'
+import {RootStoreContext} from '@/lib/stores/root-store'
 
-import { WorkspaceSwitch } from '../workspace/workspace-switch'
-import { AppSidebarItem, AppSidebarItemType } from './app-sidebar-item'
+import {WorkspaceSwitch} from '../workspace/workspace-switch'
+import {AppSidebarItem, AppSidebarItemType} from './app-sidebar-item'
 
 const items: AppSidebarItemType[] = [
   {
@@ -71,7 +71,7 @@ const items: AppSidebarItemType[] = [
 
 export const AppSidebar = () => {
   const {
-    authStore: { loginState },
+    authStore: {loginState},
   } = useContext(RootStoreContext)
 
   const zero = useZero()

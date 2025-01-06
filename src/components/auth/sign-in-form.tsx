@@ -1,40 +1,40 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useCallback, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import * as z from 'zod'
 
-import { InputField } from "@/components/fields/input-field";
-import { PasswordField } from "@/components/fields/password-field";
-import { Button } from "@/components/ui/button";
+import { InputField } from '@/components/fields/input-field'
+import { PasswordField } from '@/components/fields/password-field'
+import { Button } from '@/components/ui/button'
 
 const schema = z.object({
-  email: z.string().email().min(1, { message: "Required" }),
-  password: z.string().min(1, { message: "Required" }),
-});
+  email: z.string().email().min(1, { message: 'Required' }),
+  password: z.string().min(1, { message: 'Required' }),
+})
 
-type Schema = z.infer<typeof schema>;
+type Schema = z.infer<typeof schema>
 
 type Props = {
-  redirectTo: string;
-};
+  redirectTo: string
+}
 
 export const SignInForm = ({ redirectTo }: Props) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const { control, handleSubmit } = useForm<Schema>({
     resolver: zodResolver(schema),
-    mode: "all",
+    mode: 'all',
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
-  });
+  })
 
   const submitHandler = useCallback(
-    async ({ email, password }: Schema) => {
+    async ({}: Schema) => {
       try {
-        setLoading(true);
+        setLoading(true)
 
         // const { error } = await supabase.auth.signInWithPassword({
         //   email,
@@ -46,15 +46,15 @@ export const SignInForm = ({ redirectTo }: Props) => {
         // }
 
         setTimeout(() => {
-          window.location.href = redirectTo;
-        }, 500);
+          window.location.href = redirectTo
+        }, 500)
       } catch (error: any) {
-        toast.error(error.message);
-        setLoading(false);
+        toast.error(error.message)
+        setLoading(false)
       }
     },
     [redirectTo],
-  );
+  )
 
   return (
     <form onSubmit={handleSubmit(submitHandler)}>
@@ -77,5 +77,5 @@ export const SignInForm = ({ redirectTo }: Props) => {
         Sign in
       </Button>
     </form>
-  );
-};
+  )
+}

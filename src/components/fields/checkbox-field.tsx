@@ -1,24 +1,24 @@
-import React, { ReactNode } from "react";
-import { useController } from "react-hook-form";
+import React, { ReactNode } from 'react'
+import { useController } from 'react-hook-form'
 
-import { Checkbox } from "@/components/ui/checkbox";
-import { FormControl } from "@/components/ui/form-control";
-import { Switch } from "@/components/ui/switch";
+import { Checkbox } from '@/components/ui/checkbox'
+import { FormControl } from '@/components/ui/form-control'
+import { Switch } from '@/components/ui/switch'
 
 type Props = {
-  id?: string;
-  name: string;
-  label?: ReactNode;
-  caption?: ReactNode;
-  control: any;
-  children?: ReactNode;
-  disabled?: boolean;
-  switchToggle?: boolean;
-  onChange?: (value: boolean | "indeterminate") => void;
-  className?: string;
-  captionClassName?: string;
-  labelClassName?: string;
-};
+  id?: string
+  name: string
+  label?: ReactNode
+  caption?: ReactNode
+  control: any
+  children?: ReactNode
+  disabled?: boolean
+  switchToggle?: boolean
+  onChange?: (value: boolean | 'indeterminate') => void
+  className?: string
+  captionClassName?: string
+  labelClassName?: string
+}
 
 export const CheckboxField = ({
   id,
@@ -35,8 +35,8 @@ export const CheckboxField = ({
   labelClassName,
   ...props
 }: Props) => {
-  const { field, fieldState } = useController({ name, control });
-  const hasError = !!fieldState.error;
+  const { field, fieldState } = useController({ name, control })
+  const hasError = !!fieldState.error
 
   return (
     <FormControl
@@ -53,8 +53,8 @@ export const CheckboxField = ({
             disabled={disabled}
             checked={field.value}
             onCheckedChange={(value) => {
-              field.onChange?.(value);
-              onChange?.(value);
+              field.onChange?.(value)
+              onChange?.(value)
             }}
             {...props}
             {...field}
@@ -65,8 +65,8 @@ export const CheckboxField = ({
             disabled={disabled}
             checked={field.value}
             onCheckedChange={(value) => {
-              field.onChange?.(value);
-              onChange?.(value);
+              field.onChange?.(value)
+              onChange?.(value)
             }}
             {...props}
             {...field}
@@ -82,5 +82,5 @@ export const CheckboxField = ({
         </label>
       </div>
     </FormControl>
-  );
-};
+  )
+}

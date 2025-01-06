@@ -1,16 +1,25 @@
-"use client";
+'use client'
 
-import { useZero } from "@/hooks/use-zero";
-import { useQuery } from "@rocicorp/zero/react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useQuery } from '@rocicorp/zero/react'
+import {
+  ChevronLeft,
+  Download,
+  MoreHorizontal,
+  Plus,
+  Search,
+} from 'lucide-react'
+import Link from 'next/link'
+import { useMemo, useState } from 'react'
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -18,42 +27,33 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import {
-  ChevronLeft,
-  Download,
-  MoreHorizontal,
-  Plus,
-  Search,
-} from "lucide-react";
-import { Schema } from "@/schema";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { useMemo, useState } from "react";
+} from '@/components/ui/table'
+import { useZero } from '@/hooks/use-zero'
+import { cn } from '@/lib/utils'
 
 type Props = {
-  params: { workspaceSlug: string };
-};
+  params: { workspaceSlug: string }
+}
 
-export default function Page({ params: { workspaceSlug } }: Props) {
-  const zero = useZero();
-  const [members] = useQuery(zero.query.workspace_member);
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<"All" | "Admin" | "Member">("All");
+export default function Page({ params: {} }: Props) {
+  const zero = useZero()
+  const [members] = useQuery(zero.query.workspace_member)
+  const [search, setSearch] = useState('')
+  const [filter, setFilter] = useState<'All' | 'Admin' | 'Member'>('All')
 
   const filteredMembers = useMemo(() => {
     return members.filter((member) => {
       const matchesSearch =
         member.name.toLowerCase().includes(search.toLowerCase()) ||
-        member.username.toLowerCase().includes(search.toLowerCase());
-      const matchesFilter = filter === "All" || member.role === filter;
-      return matchesSearch && matchesFilter;
-    });
-  }, [members, search, filter]);
+        member.username.toLowerCase().includes(search.toLowerCase())
+      const matchesFilter = filter === 'All' || member.role === filter
+      return matchesSearch && matchesFilter
+    })
+  }, [members, search, filter])
 
   const exportCSV = () => {
     const csv = [
-      ["Name", "Username", "Email", "Role", "Joined"],
+      ['Name', 'Username', 'Email', 'Role', 'Joined'],
       ...filteredMembers.map((member) => [
         member.name,
         member.username,
@@ -62,23 +62,23 @@ export default function Page({ params: { workspaceSlug } }: Props) {
         new Date(member.joinedAt).toLocaleDateString(),
       ]),
     ]
-      .map((row) => row.join(","))
-      .join("\n");
+      .map((row) => row.join(','))
+      .join('\n')
 
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "members.csv";
-    a.click();
-  };
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'members.csv'
+    a.click()
+  }
 
   return (
-    <div className="container max-w-6xl mx-auto py-6 space-y-6">
+    <div className="container mx-auto max-w-6xl space-y-6 py-6">
       {/* Header */}
       <div className="flex items-center space-x-4">
         <Link href="/teams" className="hover:opacity-80">
-          <ChevronLeft className="h-6 w-6" />
+          <ChevronLeft className="size-6" />
         </Link>
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
@@ -92,9 +92,9 @@ export default function Page({ params: { workspaceSlug } }: Props) {
 
       {/* Controls */}
       <div className="flex items-center justify-between gap-4">
-        <div className="flex-1 flex items-center gap-4">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <div className="flex flex-1 items-center gap-4">
+          <div className="relative max-w-sm flex-1">
+            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search by name or email"
               value={search}
@@ -107,13 +107,13 @@ export default function Page({ params: { workspaceSlug } }: Props) {
               <Button variant="outline">{filter}</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setFilter("All")}>
+              <DropdownMenuItem onClick={() => setFilter('All')}>
                 All
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setFilter("Admin")}>
+              <DropdownMenuItem onClick={() => setFilter('Admin')}>
                 Admin
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setFilter("Member")}>
+              <DropdownMenuItem onClick={() => setFilter('Member')}>
                 Member
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -121,11 +121,11 @@ export default function Page({ params: { workspaceSlug } }: Props) {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={exportCSV}>
-            <Download className="h-4 w-4 mr-2" />
+            <Download className="mr-2 size-4" />
             Export CSV
           </Button>
           <Button>
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="mr-2 size-4" />
             Add a member
           </Button>
         </div>
@@ -152,13 +152,13 @@ export default function Page({ params: { workspaceSlug } }: Props) {
                       <AvatarImage src={member.avatar} />
                       <AvatarFallback>
                         {member.name
-                          .split(" ")
+                          .split(' ')
                           .map((n) => n[0])
-                          .join("")}
+                          .join('')}
                       </AvatarFallback>
                     </Avatar>
                     {member.isOnline && (
-                      <div className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 ring-2 ring-background" />
+                      <div className="absolute bottom-0 right-0 size-3 rounded-full bg-green-500 ring-2 ring-background" />
                     )}
                   </div>
                   <div>
@@ -173,10 +173,10 @@ export default function Page({ params: { workspaceSlug } }: Props) {
               <TableCell>
                 <span
                   className={cn(
-                    "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium",
-                    member.role === "Admin"
-                      ? "bg-primary/10 text-primary"
-                      : "bg-muted text-muted-foreground",
+                    'inline-flex items-center rounded-full px-2 py-1 text-xs font-medium',
+                    member.role === 'Admin'
+                      ? 'bg-primary/10 text-primary'
+                      : 'bg-muted text-muted-foreground',
                   )}
                 >
                   {member.role}
@@ -189,7 +189,7 @@ export default function Page({ params: { workspaceSlug } }: Props) {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm">
-                      <MoreHorizontal className="h-4 w-4" />
+                      <MoreHorizontal className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -205,5 +205,5 @@ export default function Page({ params: { workspaceSlug } }: Props) {
         </TableBody>
       </Table>
     </div>
-  );
+  )
 }

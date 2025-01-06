@@ -1,25 +1,27 @@
 import {
-  DndContext,
   closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
+  DndContext,
   DragEndEvent,
   DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
   UniqueIdentifier,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import {
+  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-  arrayMove,
 } from "@dnd-kit/sortable";
-import { useState, useCallback } from "react";
-import { ChecklistItemRow, TaskRow } from "@/schema";
-import { ChecklistItem } from "./checklist-item";
-import { useZero } from "@/hooks/use-zero";
+import { useCallback, useState } from "react";
 import { v4 } from "uuid";
+
+import { useZero } from "@/hooks/use-zero";
+import { ChecklistItemRow, TaskRow } from "@/schema";
+
+import { ChecklistItem } from "./checklist-item";
 
 type Props = {
   task: TaskRow & { checklistItems: readonly ChecklistItemRow[] };
@@ -46,12 +48,14 @@ export const ChecklistList = ({ task }: Props) => {
   );
 
   const handleUpdateSortOrders = useCallback(
-    (items: ChecklistItemRow[]) => {
+    (items: ChecklistItemRow[], excludeId?: string) => {
       items.forEach((item, index) => {
-        zero.mutate.checklist_item.update({
-          id: item.id,
-          sort_order: index,
-        });
+        if (item.id !== excludeId) {
+          zero.mutate.checklist_item.update({
+            id: item.id,
+            sort_order: index,
+          });
+        }
       });
     },
     [zero.mutate.checklist_item],
@@ -103,15 +107,15 @@ export const ChecklistList = ({ task }: Props) => {
         title: "",
         completed_at: null,
         sort_order: newSortOrder,
-        created_at: Math.floor(Date.now() / 1000),
-        updated_at: Math.floor(Date.now() / 1000),
+        created_at: Date.now(),
+        updated_at: Date.now(),
       };
 
       // Insert the new item at the correct position
       items.splice(currentIndex + 1, 0, newItem);
 
       // Update all sort orders
-      handleUpdateSortOrders(items);
+      handleUpdateSortOrders(items, newItem.id);
 
       // Create the new item
       zero.mutate.checklist_item.insert(newItem);

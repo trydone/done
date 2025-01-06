@@ -1,18 +1,18 @@
-import { EyeIcon, EyeOffIcon } from "lucide-react";
-import React, { ReactNode, useState } from "react";
-import { useController } from "react-hook-form";
+import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import React, { ReactNode, useState } from 'react'
+import { useController } from 'react-hook-form'
 
-import { FormControl } from "@/components/ui/form-control";
-import { Input, InputProps } from "@/components/ui/input";
-import { useErrorState } from "@/hooks/use-error-state";
+import { FormControl } from '@/components/ui/form-control'
+import { Input, InputProps } from '@/components/ui/input'
+import { useErrorState } from '@/hooks/use-error-state'
 
-interface Props extends Exclude<InputProps, "type"> {
-  name: string;
-  label?: ReactNode;
-  labelRight?: ReactNode;
-  caption?: ReactNode;
-  controlLeft?: ReactNode;
-  control: any;
+interface Props extends Exclude<InputProps, 'type'> {
+  name: string
+  label?: ReactNode
+  labelRight?: ReactNode
+  caption?: ReactNode
+  controlLeft?: ReactNode
+  control: any
 }
 
 export const PasswordField = ({
@@ -24,16 +24,16 @@ export const PasswordField = ({
   control,
   ...rest
 }: Props) => {
-  const { field, fieldState } = useController({ name, control });
-  const hasError = useErrorState(fieldState, control);
+  const { field, fieldState } = useController({ name, control })
+  const hasError = useErrorState(fieldState, control)
 
-  const [passwordType, setPasswordType] = useState<"password" | "text">(
-    "password",
-  );
+  const [passwordType, setPasswordType] = useState<'password' | 'text'>(
+    'password',
+  )
 
   const togglePassword = () => {
-    setPasswordType(passwordType === "password" ? "text" : "password");
-  };
+    setPasswordType(passwordType === 'password' ? 'text' : 'password')
+  }
 
   return (
     <FormControl
@@ -52,7 +52,7 @@ export const PasswordField = ({
           hasError={hasError}
           type={passwordType}
           style={{
-            width: "calc(100% - 49px)",
+            width: 'calc(100% - 49px)',
             borderTopRightRadius: 0,
             borderBottomRightRadius: 0,
           }}
@@ -63,7 +63,7 @@ export const PasswordField = ({
           onClick={togglePassword}
           className="absolute inset-y-0 right-0 flex h-[52px] items-center rounded-r-2xl border border-input bg-muted px-3 text-sm text-foreground"
         >
-          {passwordType === "password" ? (
+          {passwordType === 'password' ? (
             <EyeIcon className="size-6" />
           ) : (
             <EyeOffIcon className="size-6" />
@@ -71,5 +71,5 @@ export const PasswordField = ({
         </button>
       </div>
     </FormControl>
-  );
-};
+  )
+}

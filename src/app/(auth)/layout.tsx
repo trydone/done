@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react'
 
 export default async function Layout({ children }: { children: ReactNode }) {
   return (
@@ -7,5 +7,5 @@ export default async function Layout({ children }: { children: ReactNode }) {
         <div className="container mx-auto max-w-lg px-4">{children}</div>
       </div>
     </>
-  );
+  )
 }

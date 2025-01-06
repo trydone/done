@@ -1,9 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { FlagIcon, PlusIcon } from "lucide-react";
+import { FlagIcon } from "lucide-react";
 import { useCallback } from "react";
-import { ChecklistItemRow, TaskRow } from "@/schema";
-import { useZero } from "@/hooks/use-zero";
 import { v4 } from "uuid";
+
+import { Button } from "@/components/ui/button";
+import { useZero } from "@/hooks/use-zero";
+import { ChecklistItemRow, TaskRow } from "@/schema";
 
 type Props = {
   task: TaskRow & { checklistItems: readonly ChecklistItemRow[] };
@@ -19,8 +20,8 @@ export const ChecklistButton = ({ task }: Props) => {
       title: "",
       completed_at: null,
       sort_order: 0,
-      created_at: Math.floor(Date.now() / 1000),
-      updated_at: Math.floor(Date.now() / 1000),
+      created_at: Date.now(),
+      updated_at: Date.now(),
     });
   }, [task.id, zero.mutate.checklist_item]);
 

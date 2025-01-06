@@ -1,100 +1,101 @@
-"use client";
+'use client'
 
-import { useQuery } from "@rocicorp/zero/react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useQuery } from '@rocicorp/zero/react'
+import { Lock, Mail, Shield } from 'lucide-react'
+import { ChangeEvent, useContext, useState } from 'react'
+import { toast } from 'sonner'
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Lock, Mail, Shield } from "lucide-react";
-import { toast } from "sonner";
-import { useZero } from "@/hooks/use-zero";
-import { ChangeEvent, useContext, useState } from "react";
-import { RootStoreContext } from "@/lib/stores/root-store";
+} from '@/components/ui/tooltip'
+import { useZero } from '@/hooks/use-zero'
+import { RootStoreContext } from '@/lib/stores/root-store'
 
 export default function Page() {
   const {
     authStore: { loginState },
-  } = useContext(RootStoreContext);
+  } = useContext(RootStoreContext)
 
-  const zero = useZero();
+  const zero = useZero()
   const [session] = useQuery(
     zero.query.session
-      .where("id", loginState?.decoded.sub || "")
+      .where('id', loginState?.decoded.sub || '')
       .one()
-      .related("user"),
-  );
-  const [isUploading, setIsUploading] = useState(false);
+      .related('user'),
+  )
+  const [isUploading, setIsUploading] = useState(false)
 
-  const user = session?.user?.[0];
+  const user = session?.user?.[0]
 
   const handleNameChange = async (e: ChangeEvent<HTMLInputElement>) => {
     try {
       await zero.mutate.user.update({
         id: user?.id,
         name: e.target.value,
-      });
-      toast.success("Name updated successfully");
-    } catch (error) {
-      toast.error("Failed to update name");
+      })
+      toast.success('Name updated successfully')
+    } catch (_error) {
+      toast.error('Failed to update name')
     }
-  };
+  }
 
   const handleAvatarUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.[0]) return;
-    setIsUploading(true);
+    if (!e.target.files?.[0]) return
+    setIsUploading(true)
 
     try {
-      const file = e.target.files[0];
+      const file = e.target.files[0]
       // Implement your file upload logic here
       await zero.mutate.user.update({
         id: user?.id,
-        avatar: "uploaded-url",
-      });
-      toast.success("Profile picture updated successfully");
-    } catch (error) {
-      toast.error("Failed to upload user picture");
+        avatar: 'uploaded-url',
+      })
+      toast.success('Profile picture updated successfully')
+    } catch (_error) {
+      toast.error('Failed to upload user picture')
     } finally {
-      setIsUploading(false);
+      setIsUploading(false)
     }
-  };
+  }
 
   const handleEmailChange = () => {
     // Implement email change modal/flow
-    toast.info("Email change functionality coming soon");
-  };
+    toast.info('Email change functionality coming soon')
+  }
 
   const handlePasswordChange = () => {
     // Implement password change modal/flow
-    toast.info("Password change functionality coming soon");
-  };
+    toast.info('Password change functionality coming soon')
+  }
 
   const handleVerificationAdd = () => {
     // Implement 2FA setup modal/flow
-    toast.info("2FA setup functionality coming soon");
-  };
+    toast.info('2FA setup functionality coming soon')
+  }
 
   const getInitials = (name: string) => {
     return name
-      .split(" ")
+      .split(' ')
       .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-  };
+      .join('')
+      .toUpperCase()
+  }
 
   return (
-    <div className="container max-w-3xl mx-auto py-6 space-y-8">
+    <div className="container mx-auto max-w-3xl space-y-8 py-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Profile Settings</h1>
         <p className="text-muted-foreground">
@@ -116,16 +117,16 @@ export default function Page() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="relative">
-                    <Avatar className="h-20 w-20">
-                      <AvatarImage src={user?.avatar} />
+                    <Avatar className="size-20">
+                      <AvatarImage src={user?.avatar || ''} />
                       <AvatarFallback>
-                        {user?.name ? getInitials(user.name) : "?"}
+                        {user?.name ? getInitials(user.name) : '?'}
                       </AvatarFallback>
                     </Avatar>
                     <input
                       type="file"
                       accept="image/*"
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      className="absolute inset-0 size-full cursor-pointer opacity-0"
                       onChange={handleAvatarUpload}
                       disabled={isUploading}
                     />
@@ -159,7 +160,7 @@ export default function Page() {
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center space-x-2">
-                <Mail className="w-4 h-4" />
+                <Mail className="size-4" />
                 <h3 className="font-medium">Email</h3>
               </div>
               <p className="text-sm text-muted-foreground">{user?.username}</p>
@@ -173,7 +174,7 @@ export default function Page() {
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center space-x-2">
-                <Lock className="w-4 h-4" />
+                <Lock className="size-4" />
                 <h3 className="font-medium">Password</h3>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -189,7 +190,7 @@ export default function Page() {
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center space-x-2">
-                <Shield className="w-4 h-4" />
+                <Shield className="size-4" />
                 <h3 className="font-medium">2-step verification</h3>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -203,5 +204,5 @@ export default function Page() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

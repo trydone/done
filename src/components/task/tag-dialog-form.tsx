@@ -1,11 +1,14 @@
+import { useQuery } from "@rocicorp/zero/react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { v4 } from "uuid";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { TaskRow, TagRow } from "@/schema";
-import { useState } from "react";
 import { useZero } from "@/hooks/use-zero";
-import { useQuery } from "@rocicorp/zero/react";
-import { v4 } from "uuid";
-import { toast } from "sonner";
+import { TagRow, TaskRow } from "@/schema";
+
+import { DialogTitle } from "../ui/dialog";
 
 type Props = {
   task: TaskRow & { tags: readonly TagRow[] };
@@ -40,15 +43,15 @@ export const TagDialogForm = ({ task, tag, onSuccess, onCancel }: Props) => {
       await zero.mutate.tag.update({
         id: tag.id,
         title: title.trim(),
-        updated_at: Math.floor(Date.now() / 1000),
+        updated_at: Date.now(),
       });
     } else {
       const newTag = {
         id: v4(),
         title: title.trim(),
         workspace_id: task.workspace_id,
-        created_at: Math.floor(Date.now() / 1000),
-        updated_at: Math.floor(Date.now() / 1000),
+        created_at: Date.now(),
+        updated_at: Date.now(),
       };
 
       await zero.mutate.tag.insert(newTag);
@@ -63,7 +66,7 @@ export const TagDialogForm = ({ task, tag, onSuccess, onCancel }: Props) => {
         <Button variant="ghost" onClick={onCancel}>
           Cancel
         </Button>
-        <span>{isEditing ? "Edit Tag" : "New Tag"}</span>
+        <DialogTitle>{isEditing ? "Edit Tag" : "New Tag"}</DialogTitle>
         <Button variant="ghost" type="submit" disabled={!title.trim()}>
           Save
         </Button>

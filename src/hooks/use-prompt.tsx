@@ -1,33 +1,30 @@
-"use client";
+'use client'
 
-import * as React from "react";
-import { createRoot } from "react-dom/client";
+import * as React from 'react'
+import { createRoot } from 'react-dom/client'
 
-import { RenderPrompt, RenderPromptProps } from "@/components/ui/render-prompt";
+import { RenderPrompt, RenderPromptProps } from '@/components/ui/render-prompt'
 
-type UsePromptProps = Omit<
-  RenderPromptProps,
-  "onConfirm" | "onCancel" | "open"
->;
+type UsePromptProps = Omit<RenderPromptProps, 'onConfirm' | 'onCancel' | 'open'>
 
 export const usePrompt = () => {
   const prompt = async (props: UsePromptProps): Promise<boolean> => {
     return new Promise((resolve) => {
-      let open = true;
+      let open = true
 
       const onCancel = () => {
-        open = false;
-        render();
-        resolve(false);
-      };
+        open = false
+        render()
+        resolve(false)
+      }
 
       const onConfirm = () => {
-        open = false;
-        resolve(true);
-        render();
-      };
+        open = false
+        resolve(true)
+        render()
+      }
 
-      const mountRoot = createRoot(document.createElement("div"));
+      const mountRoot = createRoot(document.createElement('div'))
 
       const render = () => {
         mountRoot.render(
@@ -37,12 +34,12 @@ export const usePrompt = () => {
             onCancel={onCancel}
             {...props}
           />,
-        );
-      };
+        )
+      }
 
-      render();
-    });
-  };
+      render()
+    })
+  }
 
-  return prompt;
-};
+  return prompt
+}

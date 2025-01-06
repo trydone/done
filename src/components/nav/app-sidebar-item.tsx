@@ -1,30 +1,32 @@
-import { useDroppable } from "@dnd-kit/core";
-import { observer } from "mobx-react-lite";
-import { SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { useDndContext } from "../dnd/dnd-context";
+import { useDroppable } from '@dnd-kit/core'
+import { observer } from 'mobx-react-lite'
+import Link from 'next/link'
+
+import { cn } from '@/lib/utils'
+
+import { useDndContext } from '../dnd/dnd-context'
+import { SidebarMenuButton, SidebarMenuItem } from '../ui/sidebar'
 
 type Props = {
-  item: any;
-};
+  item: any
+}
 
 export const AppSidebarItem = observer(({ item }: Props) => {
-  const { isDragging } = useDndContext();
+  const { isDragging } = useDndContext()
   const { setNodeRef, isOver } = useDroppable({
     id: item.id,
     data: {
-      type: "bucket",
+      type: 'bucket',
     },
-  });
+  })
 
   return (
     <SidebarMenuItem
       key={item.title}
       ref={setNodeRef}
       className={cn(
-        isOver && isDragging && "bg-blue-50 border-2 border-blue-200",
-        !isOver && "hover:bg-gray-50",
+        isOver && isDragging && 'border-2 border-blue-200 bg-blue-50',
+        !isOver && 'hover:bg-muted',
       )}
     >
       <SidebarMenuButton asChild>
@@ -34,5 +36,5 @@ export const AppSidebarItem = observer(({ item }: Props) => {
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>
-  );
-});
+  )
+})

@@ -1,14 +1,13 @@
 "use client";
 import { useQuery } from "@rocicorp/zero/react";
+import { TrashIcon } from "lucide-react";
+import { useCallback } from "react";
 
-import { TaskList } from "@/components/task/task-list";
 import { PageContainer } from "@/components/shared/page-container";
 import { Section } from "@/components/shared/section";
-import { H1, H2 } from "@/components/shared/typography";
-import { useZero } from "@/hooks/use-zero";
-import { TrashIcon } from "lucide-react";
+import { TaskList } from "@/components/task/task-list";
 import { Button } from "@/components/ui/button";
-import { useCallback } from "react";
+import { useZero } from "@/hooks/use-zero";
 
 export default function PageTrash() {
   return (
@@ -36,11 +35,11 @@ const SectionTrash = () => {
         id: task.id,
       });
     });
-  }, []);
+  }, [tasks, zero.mutate.task]);
 
   return (
     <Section>
-      <div className="flex gap-2 items-center mx-4 mb-6">
+      <div className="mx-4 mb-6 flex items-center gap-2">
         <TrashIcon className="size-6" />
         <h1 className="text-2xl font-semibold tracking-tight">Trash</h1>
       </div>

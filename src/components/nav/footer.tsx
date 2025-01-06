@@ -1,39 +1,42 @@
-import { useCallback, useContext, useState } from "react";
-import { observer } from "mobx-react-lite";
 import {
-  PlusIcon,
+  ArrowRightIcon,
   CalendarIcon,
-  MoveIcon,
+  MoreHorizontalIcon,
+  PlusIcon,
   SearchIcon,
   TrashIcon,
-  MoreHorizontalIcon,
-  ArrowRightIcon,
 } from "lucide-react";
-import { NewTaskDialog } from "../task/new-task-dialog";
-import { useZero } from "@/hooks/use-zero";
-import { RootStoreContext } from "@/lib/stores/root-store";
+import { observer } from "mobx-react-lite";
+import { useCallback, useContext, useState } from "react";
+import { v4 } from "uuid";
+
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { FooterButton } from "./footer-button";
+import { Popover, PopoverTrigger } from "@/components/ui/popover";
+import { useZero } from "@/hooks/use-zero";
+import { RootStoreContext } from "@/lib/stores/root-store";
+
+import { WhenDialog } from "../task/when-dialog";
 import { PopoverWrapper } from "../ui/popover-wrapper";
-import { v4 } from "uuid";
+import { FooterButton } from "./footer-button";
 
 export const Footer = observer(() => {
   const zero = useZero();
+  const [whenOpen, setWhenOpen] = useState(false);
+
   const {
     localStore: {
       openTaskId,
       setOpenTaskId,
-      setSelectedTaskIds,
       setQuickSearchQuery,
       buttonStates,
       selectedWorkspaceId,
+      selectedTaskIds,
     },
   } = useContext(RootStoreContext);
 
@@ -44,11 +47,11 @@ export const Footer = observer(() => {
 
     await zero.mutate.task.update({
       id: openTaskId,
-      archived_at: Math.floor(Date.now() / 1000),
+      archived_at: Date.now(),
     });
 
     setOpenTaskId(null);
-  }, []);
+  }, [openTaskId, setOpenTaskId, zero.mutate.task]);
 
   const handleNewTask = useCallback(async () => {
     const taskId = v4();
@@ -67,7 +70,7 @@ export const Footer = observer(() => {
     });
 
     setOpenTaskId(taskId);
-  }, []);
+  }, [selectedWorkspaceId, setOpenTaskId, zero.mutate.task]);
 
   const handleQuickFind = () => {
     setQuickSearchQuery("");
@@ -75,7 +78,7 @@ export const Footer = observer(() => {
 
   return (
     <>
-      <footer className="flex items-center justify-between gap-1 p-2 w-full border-t bg-background">
+      <footer className="flex w-full items-center justify-between gap-1 border-t bg-background p-2">
         <FooterButton
           icon={PlusIcon}
           title="New To-Do"
@@ -84,39 +87,12 @@ export const Footer = observer(() => {
         />
 
         {buttonStates.when !== "hidden" && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <FooterButton
-                icon={CalendarIcon}
-                title="When"
-                state={buttonStates.when}
-              />
-            </PopoverTrigger>
-
-            <PopoverWrapper
-              title="When"
-              description="Decide when to start. Today or later?"
-            >
-              <Button variant="ghost" className="justify-start">
-                Today
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                This Evening
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Tomorrow
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                This Weekend
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Next Week
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Someday
-              </Button>
-            </PopoverWrapper>
-          </Popover>
+          <FooterButton
+            icon={CalendarIcon}
+            title="When"
+            state={buttonStates.when}
+            onClick={() => setWhenOpen(true)}
+          />
         )}
 
         {buttonStates.move !== "hidden" && (
@@ -131,25 +107,7 @@ export const Footer = observer(() => {
 
             <PopoverWrapper title="Move to">
               <Button variant="ghost" className="justify-start">
-                Today
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                This Evening
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Upcoming
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Anytime
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Someday
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Logbook
-              </Button>
-              <Button variant="ghost" className="justify-start">
-                Trash
+                Inbox
               </Button>
             </PopoverWrapper>
           </Popover>
@@ -180,22 +138,31 @@ export const Footer = observer(() => {
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end" className="w-48 rounded-lg p-1">
-              <DropdownMenuItem className="text-sm px-3 py-1.5 rounded-md cursor-pointer">
+              <DropdownMenuItem className="cursor-pointer rounded-md px-3 py-1.5 text-sm">
                 Repeat...
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-sm px-3 py-1.5 rounded-md cursor-pointer">
+              <DropdownMenuItem className="cursor-pointer rounded-md px-3 py-1.5 text-sm">
                 Duplicate
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-sm px-3 py-1.5 rounded-md cursor-pointer">
+              <DropdownMenuItem className="cursor-pointer rounded-md px-3 py-1.5 text-sm">
                 Convert to Project...
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-sm px-3 py-1.5 rounded-md cursor-pointer">
+              <DropdownMenuItem className="cursor-pointer rounded-md px-3 py-1.5 text-sm">
                 Share...
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )}
       </footer>
+
+      {whenOpen && (
+        <WhenDialog
+          type="multiple"
+          taskIds={selectedTaskIds}
+          open={whenOpen}
+          setOpen={setWhenOpen}
+        />
+      )}
     </>
   );
 });

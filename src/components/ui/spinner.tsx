@@ -1,7 +1,7 @@
 type Props = {
-  size?: number;
-  strokeWidth?: number;
-};
+  size?: number
+  strokeWidth?: number
+}
 
 export const Spinner = ({ size = 48, strokeWidth = 2 }: Props) => {
   return (
@@ -33,5 +33,5 @@ export const Spinner = ({ size = 48, strokeWidth = 2 }: Props) => {
         </g>
       </svg>
     </div>
-  );
-};
+  )
+}

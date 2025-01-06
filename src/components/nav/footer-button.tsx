@@ -1,30 +1,31 @@
-import { ComponentProps } from "react";
-import { LucideIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { LucideIcon } from 'lucide-react'
+import { ComponentProps } from 'react'
+
+import { Button } from '@/components/ui/button'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { ButtonState } from "@/lib/stores/local-store";
+} from '@/components/ui/tooltip'
+import { ButtonState } from '@/lib/stores/local-store'
+import { cn } from '@/lib/utils'
 
 type FooterButtonProps = {
-  icon: LucideIcon;
-  title: string;
-  state?: ButtonState;
-} & Omit<ComponentProps<typeof Button>, "children" | "disabled">;
+  icon: LucideIcon
+  title: string
+  state?: ButtonState
+} & Omit<ComponentProps<typeof Button>, 'children' | 'disabled'>
 
 export const FooterButton = ({
   icon: Icon,
   title,
-  state = "visible",
-  className = "",
+  state = 'visible',
+  className = '',
   ...props
 }: FooterButtonProps) => {
-  if (state === "hidden") {
-    return null;
+  if (state === 'hidden') {
+    return null
   }
 
   return (
@@ -34,28 +35,30 @@ export const FooterButton = ({
           <Button
             variant="ghost"
             size="sm"
-            disabled={state === "disabled"}
+            disabled={state === 'disabled'}
             className={cn(
-              "h-8 w-full p-0",
-              "hover:bg-gray-100 focus:bg-gray-100",
-              "disabled:opacity-50 disabled:cursor-not-allowed",
-              "transition-colors rounded-md",
+              'h-8 w-full p-0',
+              'hover:bg-border focus:bg-border',
+              'disabled:cursor-not-allowed disabled:opacity-50',
+              'rounded-md transition-colors',
               className,
             )}
             {...props}
           >
             <Icon
               className={cn(
-                "h-4 w-4",
-                state === "disabled" ? "text-gray-400" : "text-gray-700",
+                'h-4 w-4',
+                state === 'disabled'
+                  ? 'text-muted-foreground opacity-60'
+                  : 'text-muted-foreground',
               )}
             />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="top" className="text-xs px-2 py-1">
+        <TooltipContent side="top" className="px-2 py-1 text-xs">
           {title}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-  );
-};
+  )
+}

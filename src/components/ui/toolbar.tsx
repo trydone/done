@@ -32,7 +32,7 @@ const ToolbarWrapper = React.forwardRef<HTMLDivElement, ToolbarWrapperProps>(
     return (
       <Surface
         className={cn(
-          'inline-flex h-full leading-none gap-0.5',
+          'inline-flex h-full gap-0.5 leading-none',
           isVertical ? 'flex-col p-2' : 'flex-row items-center p-1',
           className,
         )}
@@ -58,8 +58,8 @@ const ToolbarDivider = React.forwardRef<HTMLDivElement, ToolbarDividerProps>(
         className={cn(
           'bg-muted',
           horizontal
-            ? 'h-[1px] w-full min-w-[1.5rem] my-1 first:mt-0 last:mt-0'
-            : 'w-[1px] h-full min-h-[1.5rem] mx-1 first:ml-0 last:mr-0',
+            ? 'my-1 h-[1px] w-full min-w-[1.5rem] first:mt-0 last:mt-0'
+            : 'mx-1 h-full min-h-[1.5rem] w-[1px] first:ml-0 last:mr-0',
           className,
         )}
         ref={ref}
@@ -101,7 +101,7 @@ const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonProps>(
         variant={variant}
         size={size}
         className={cn(
-          'gap-1 min-w-[2rem] px-2 w-auto',
+          'w-auto min-w-[2rem] gap-1 px-2',
           props.active && activeClassName,
           className,
         )}

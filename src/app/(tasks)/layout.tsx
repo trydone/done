@@ -1,17 +1,19 @@
 "use client";
+import { observer } from "mobx-react-lite";
 import { ReactNode, useCallback, useContext } from "react";
-import { cn } from "@/lib/utils";
-import { RootStoreContext } from "@/lib/stores/root-store";
+
+import { DndProvider } from "@/components/dnd/dnd-context";
+import { AppSidebar } from "@/components/nav/app-sidebar";
+import { Footer } from "@/components/nav/footer";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/nav/app-sidebar";
-import { DndProvider } from "@/components/dnd/dnd-context";
-import { Footer } from "@/components/nav/footer";
-import { observer } from "mobx-react-lite";
+import { useZero } from "@/hooks/use-zero";
+import { RootStoreContext } from "@/lib/stores/root-store";
+import { cn } from "@/lib/utils";
 
 const Layout = observer(
   ({
@@ -19,6 +21,8 @@ const Layout = observer(
   }: Readonly<{
     children: ReactNode;
   }>) => {
+    const zero = useZero();
+
     const {
       localStore: { openTaskId, setOpenTaskId },
     } = useContext(RootStoreContext);

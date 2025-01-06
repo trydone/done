@@ -1,60 +1,60 @@
-import { ChevronDownIcon, XIcon } from "lucide-react";
-import * as PopoverPrimitive from "@radix-ui/react-popover";
+import * as PopoverPrimitive from '@radix-ui/react-popover'
 import {
   useCombobox,
   useMultipleSelection,
   UseMultipleSelectionStateChange,
-} from "downshift";
-import lodashSnakeCase from "lodash/snakeCase";
-import lodashUniqBy from "lodash/uniqBy";
+} from 'downshift'
+import lodashSnakeCase from 'lodash/snakeCase'
+import lodashUniqBy from 'lodash/uniqBy'
+import { ChevronDownIcon, XIcon } from 'lucide-react'
 import React, {
   forwardRef,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
-} from "react";
+} from 'react'
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils'
 
-import { Badge, BadgeProps } from "./badge";
-import { ComboboxOption } from "./combobox";
+import { Badge, BadgeProps } from './badge'
+import { ComboboxOption } from './combobox'
 
 export type MultiComboBoxOption = ComboboxOption & {
-  variant?: BadgeProps["variant"];
-};
+  variant?: BadgeProps['variant']
+}
 
 export type OnMultiChangeParams =
   | ((changes: UseMultipleSelectionStateChange<MultiComboBoxOption>) => void)
-  | undefined;
+  | undefined
 export type MultiComboboxProps = {
-  options: MultiComboBoxOption[];
-  values?: MultiComboBoxOption[];
-  onChange?: OnMultiChangeParams;
-  onInputChange?: (value: string) => void;
-  maxDropdownHeight?: number;
-  startOpen?: boolean;
-  create?: boolean;
-  id?: string;
-  ref?: any;
-  placeholder?: string;
-  inputClassName?: string;
-};
+  options: MultiComboBoxOption[]
+  values?: MultiComboBoxOption[]
+  onChange?: OnMultiChangeParams
+  onInputChange?: (value: string) => void
+  maxDropdownHeight?: number
+  startOpen?: boolean
+  create?: boolean
+  id?: string
+  ref?: any
+  placeholder?: string
+  inputClassName?: string
+}
 
 const getFilteredOptions = (
   options: MultiComboBoxOption[],
   selectedItems: MultiComboBoxOption[],
   inputValue: string,
 ) => {
-  const lowerCasedInputValue = inputValue.toLowerCase();
+  const lowerCasedInputValue = inputValue.toLowerCase()
 
   return options.filter((option) => {
     return (
       !selectedItems.find(({ id }) => id === option.id) &&
-      (option?.label || "").toLowerCase().includes(lowerCasedInputValue)
-    );
-  });
-};
+      (option?.label || '').toLowerCase().includes(lowerCasedInputValue)
+    )
+  })
+}
 
 export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
   (
@@ -64,20 +64,20 @@ export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
       onChange,
       onInputChange,
       startOpen,
-      placeholder = "Filter",
+      placeholder = 'Filter',
       create = false,
       id,
       inputClassName,
     },
     ref,
   ) => {
-    values ??= [];
-    const [inputValue, setInputValue] = useState("");
-    const [selectedItems, setSelectedItems] = useState(values);
+    values ??= []
+    const [inputValue, setInputValue] = useState('')
+    const [selectedItems, setSelectedItems] = useState(values)
     const items = useMemo(
       () => getFilteredOptions(options, selectedItems, inputValue),
       [options, selectedItems, inputValue],
-    );
+    )
     const {
       getSelectedItemProps,
       getDropdownProps,
@@ -87,10 +87,10 @@ export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
       selectedItems,
       // Handle removal
       onStateChange(data) {
-        const { selectedItems: newSelectedItems, type } = data;
+        const { selectedItems: newSelectedItems, type } = data
         // For some reason we get multiple of the same option when selecting
         // a predefined option.
-        const uniqueItems = lodashUniqBy(newSelectedItems, ({ id }) => id);
+        const uniqueItems = lodashUniqBy(newSelectedItems, ({ id }) => id)
         switch (type) {
           case useMultipleSelection.stateChangeTypes
             .SelectedItemKeyDownBackspace:
@@ -98,16 +98,16 @@ export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
           case useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace:
           case useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem:
           case useMultipleSelection.stateChangeTypes.FunctionAddSelectedItem:
-            setSelectedItems(uniqueItems);
-            break;
+            setSelectedItems(uniqueItems)
+            break
           default:
-            break;
+            break
         }
         if (onChange) {
-          onChange({ selectedItems: uniqueItems, type });
+          onChange({ selectedItems: uniqueItems, type })
         }
       },
-    });
+    })
     const {
       isOpen,
       getToggleButtonProps,
@@ -120,73 +120,73 @@ export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
       labelId: id,
       items,
       itemToString(item) {
-        return item?.label || "";
+        return item?.label || ''
       },
       defaultHighlightedIndex: 0, // after selection, highlight the first item.
       selectedItem: null,
       initialIsOpen: startOpen,
       onStateChange(changes) {
-        const localSelectedItems: MultiComboBoxOption[] = selectedItems;
+        const localSelectedItems: MultiComboBoxOption[] = selectedItems
         if (changes.selectedItem) {
-          localSelectedItems.push(changes.selectedItem);
+          localSelectedItems.push(changes.selectedItem)
         }
         switch (changes.type) {
           case useCombobox.stateChangeTypes.InputKeyDownEnter:
           case useCombobox.stateChangeTypes.ItemClick: {
             if (changes.selectedItem) {
-              addSelectedItem(changes.selectedItem);
+              addSelectedItem(changes.selectedItem)
             }
-            setInputValue("");
+            setInputValue('')
             if (onChange) {
               onChange({
                 selectedItems: localSelectedItems,
                 type: useMultipleSelection.stateChangeTypes.SelectedItemClick,
-              });
+              })
             }
-            break;
+            break
           }
           case useCombobox.stateChangeTypes.InputChange: {
-            setInputValue("");
-            onInputChange?.(changes.inputValue || "");
-            break;
+            setInputValue('')
+            onInputChange?.(changes.inputValue || '')
+            break
           }
           default:
-            break;
+            break
         }
       },
-    });
+    })
 
     const handleCreate = () => {
       if (!inputValue) {
-        return;
+        return
       }
       const newItem = {
         id: lodashSnakeCase(inputValue),
         label: inputValue,
-      };
-      addSelectedItem(newItem);
-      setInputValue("");
-      comboBoxSetInputValue("");
-    };
+      }
+      addSelectedItem(newItem)
+      setInputValue('')
+      comboBoxSetInputValue('')
+    }
 
-    const comboboxRef = useRef<HTMLInputElement>(null);
-    const listboxRef = useRef<HTMLDivElement>(null);
-    const shouldCreate = create && inputValue;
+    const comboboxRef = useRef<HTMLInputElement>(null)
+    const listboxRef = useRef<HTMLDivElement>(null)
+    const shouldCreate = create && inputValue
 
     const clearInput = () => {
-      comboBoxSetInputValue("");
-    };
+      comboBoxSetInputValue('')
+    }
 
     useImperativeHandle(ref, () => ({
       clearInput,
-    }));
+    }))
 
     return (
       <PopoverPrimitive.Root defaultOpen={startOpen} open={isOpen}>
         <PopoverPrimitive.Anchor asChild>
           <div
             className={cn(
-              "flex min-h-[52px] grow appearance-none rounded-2xl border-[1.5px] border-input bg-card bg-clip-border text-base hover:border-input-hover focus-within:border-ring focus-within:outline-none",
+              'hover:border-input-hover flex min-h-[52px] grow appearance-none rounded-2xl border-[1.5px] border-input bg-card bg-clip-border text-base focus-within:border-ring focus-within:outline-none',
               inputClassName,
             )}
           >
@@ -212,20 +212,20 @@ export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
                         <span
                           className="cursor-pointer pl-1"
                           onClick={(e) => {
-                            e.stopPropagation();
-                            removeSelectedItem(selectedItemForRender);
+                            e.stopPropagation()
+                            removeSelectedItem(selectedItemForRender)
                           }}
                         >
                           <XIcon width={14} height={14} />
                         </span>
                       </Badge>
-                    );
+                    )
                   },
                 )}
                 <input
                   data-testid="the-input"
-                  className="grow bg-transparent outline-none placeholder:text-placeholder-foreground"
-                  placeholder={selectedItems.length === 0 ? placeholder : ""}
+                  className="placeholder:text-placeholder-foreground grow bg-transparent outline-none"
+                  placeholder={selectedItems.length === 0 ? placeholder : ''}
                   {...getInputProps(
                     getDropdownProps({ preventKeyAction: isOpen, id }),
                   )}
@@ -243,15 +243,15 @@ export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
         <PopoverPrimitive.Portal>
           <PopoverPrimitive.Content
             align="start"
-            className="popover-content relative z-[110] max-h-[250px] min-w-32 translate-y-1 overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-soft animate-in fade-in-80"
+            className="popover-content relative z-[110] max-h-[250px] min-w-32 translate-y-1 overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-lg animate-in fade-in-80"
             asChild
             onOpenAutoFocus={(event) => event.preventDefault()}
             onInteractOutside={(event) => {
-              const target = event.target as Element | null;
-              const isCombobox = target === comboboxRef.current;
-              const inListbox = target && listboxRef.current?.contains(target);
+              const target = event.target as Element | null
+              const isCombobox = target === comboboxRef.current
+              const inListbox = target && listboxRef.current?.contains(target)
               if (isCombobox || inListbox) {
-                event.preventDefault();
+                event.preventDefault()
               }
             }}
           >
@@ -272,8 +272,8 @@ export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
                 items.map((item, index) => (
                   <div
                     key={`${item.id}${index}`}
-                    className={cn("rounded-lg cursor-pointer px-4 py-2", {
-                      "bg-accent text-accent-foreground":
+                    className={cn('cursor-pointer rounded-lg px-4 py-2', {
+                      'bg-accent text-accent-foreground':
                         highlightedIndex === index,
                     })}
                     {...getItemProps({ item, index })}
@@ -293,6 +293,6 @@ export const MultiComboBox: React.FC<MultiComboboxProps> = forwardRef(
           </PopoverPrimitive.Content>
         </PopoverPrimitive.Portal>
       </PopoverPrimitive.Root>
-    );
+    )
   },
-);
+)

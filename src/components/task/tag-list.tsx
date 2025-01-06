@@ -1,10 +1,11 @@
-import { TagRow, TaskRow } from "@/schema";
-import { Badge } from "../ui/badge";
+import { TagRow, TaskRow } from '@/schema'
+
+import { Badge } from '../ui/badge'
 
 type Props = {
-  task: TaskRow & { tags: readonly TagRow[] };
-  setOpen: (open: boolean) => void;
-};
+  task: TaskRow & { tags: readonly TagRow[] }
+  setOpen: (open: boolean) => void
+}
 
 export const TagList = ({ task, setOpen }: Props) => {
   return (
@@ -20,5 +21,5 @@ export const TagList = ({ task, setOpen }: Props) => {
         </Badge>
       ))}
     </div>
-  );
-};
+  )
+}

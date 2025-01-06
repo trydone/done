@@ -1,9 +1,9 @@
-import { Metadata } from "next";
-import Link from "next/link";
+import { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: "trydone.io",
-};
+  title: 'trydone.io',
+}
 
 export default function Page() {
   return (
@@ -12,5 +12,5 @@ export default function Page() {
         Go to Done inbox
       </Link>
     </div>
-  );
+  )
 }

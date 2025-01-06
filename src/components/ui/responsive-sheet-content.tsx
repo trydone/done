@@ -1,19 +1,19 @@
-import { MutableRefObject } from "react";
+import { MutableRefObject } from 'react'
 
-import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { cn } from "@/lib/utils";
+import { useBreakpoint } from '@/hooks/use-breakpoint'
+import { cn } from '@/lib/utils'
 
-import { DialogContent } from "./dialog";
-import { SheetContent } from "./sheet";
+import { DialogContent } from './dialog'
+import { SheetContent } from './sheet'
 
 type Props = {
-  children: React.ReactNode;
-  ref?: MutableRefObject<any>;
-  mobileClassName?: string;
-  desktopClassName?: string;
-  className?: string;
-  overlayClassName?: string;
-};
+  children: React.ReactNode
+  ref?: MutableRefObject<any>
+  mobileClassName?: string
+  desktopClassName?: string
+  className?: string
+  overlayClassName?: string
+}
 
 export const ResponsiveSheetContent = ({
   children,
@@ -23,20 +23,20 @@ export const ResponsiveSheetContent = ({
   overlayClassName,
   className,
 }: Props) => {
-  const breakpoint = useBreakpoint();
-  const isDesktop = ["lg", "xl"].includes(breakpoint);
+  const breakpoint = useBreakpoint()
+  const isDesktop = ['lg', 'xl'].includes(breakpoint)
 
   if (!isDesktop) {
     return (
       <SheetContent
         side="bottom"
         ref={ref}
-        className={cn(className, "rounded-t-[32px]", mobileClassName)}
+        className={cn(className, 'rounded-t-[32px]', mobileClassName)}
         overlayClassName={overlayClassName}
       >
         {children}
       </SheetContent>
-    );
+    )
   }
 
   return (
@@ -47,5 +47,5 @@ export const ResponsiveSheetContent = ({
     >
       {children}
     </DialogContent>
-  );
-};
+  )
+}

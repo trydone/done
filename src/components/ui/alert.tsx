@@ -9,14 +9,13 @@ export const alertVariants = cva(
     variants: {
       variant: {
         default:
-          'border-transparent bg-info-background text-info-foreground [&>svg]:text-info',
+          'border-transparent bg-blue-200 text-blue-600 [&>svg]:text-blue-600',
         success:
-          'border-transparent bg-success-background text-success-foreground [&>svg]:text-success',
+          'border-transparent bg-green-200 text-blue-600 [&>svg]:text-green-600',
         destructive:
-          'border-transparent bg-destructive-background text-destructive-foreground [&>svg]:text-destructive',
+          'border-transparent bg-red-200 text-red-600 [&>svg]:text-red-600',
         warning:
-          'border-transparent bg-warning-background text-warning-foreground [&>svg]:text-warning',
-        tip: 'border-transparent bg-warning-background text-warning-foreground [&>svg]:text-warning',
+          'border-transparent bg-orange-600 text-orange-200 [&>svg]:text-orange-600',
       },
     },
     defaultVariants: {

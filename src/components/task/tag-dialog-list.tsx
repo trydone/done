@@ -1,12 +1,15 @@
 // components/tag-dialog/tag-list.tsx
+import { useQuery } from "@rocicorp/zero/react";
 import { Check } from "lucide-react";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { TagRow, TaskRow } from "@/schema";
-import { useState } from "react";
 import { useZero } from "@/hooks/use-zero";
-import { useQuery } from "@rocicorp/zero/react";
+import { TagRow, TaskRow } from "@/schema";
+
+import { DialogTitle } from "../ui/dialog";
 
 type Props = {
   task: TaskRow & { tags: readonly TagRow[] };
@@ -41,7 +44,7 @@ export const TagDialogList = ({
       await zero.mutate.task_tag.insert({
         task_id: task.id,
         tag_id: tag.id,
-        created_at: Math.floor(Date.now() / 1000),
+        created_at: Date.now(),
       });
     }
   };
@@ -50,7 +53,7 @@ export const TagDialogList = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="w-[52px]" />
-        <span>Tags</span>
+        <DialogTitle>Tags</DialogTitle>
         <Button variant="ghost" onClick={onClose}>
           Done
         </Button>
@@ -67,19 +70,19 @@ export const TagDialogList = ({
           {filteredTags?.map((tag) => (
             <div
               key={tag.id}
-              className="flex items-center justify-between p-2 hover:bg-accent rounded-md cursor-pointer"
+              className="flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-accent"
               onClick={() => handleToggleTag(tag)}
             >
               <span>{tag.title}</span>
               {task.tags.some((t) => t.id === tag.id) && (
-                <Check className="w-4 h-4 text-blue-500" />
+                <Check className="size-4 text-blue-500" />
               )}
             </div>
           ))}
         </div>
       </ScrollArea>
 
-      <div className="flex justify-between pt-4 border-t gap-2">
+      <div className="flex justify-between gap-2 border-t pt-4">
         <Button variant="secondary" onClick={onManageTags} className="w-full">
           Manage Tags
         </Button>

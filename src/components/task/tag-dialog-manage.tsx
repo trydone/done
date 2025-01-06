@@ -1,12 +1,15 @@
+import { useQuery } from "@rocicorp/zero/react";
 import { Pencil, Trash } from "lucide-react";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { TagRow, TaskRow } from "@/schema";
-import { useState } from "react";
-import { useZero } from "@/hooks/use-zero";
-import { useQuery } from "@rocicorp/zero/react";
 import { usePrompt } from "@/hooks/use-prompt";
+import { useZero } from "@/hooks/use-zero";
+import { TagRow, TaskRow } from "@/schema";
+
+import { DialogTitle } from "../ui/dialog";
 
 type Props = {
   task: TaskRow & { tags: readonly TagRow[] };
@@ -14,7 +17,7 @@ type Props = {
   onCancel: () => void;
 };
 
-export const TagDialogManage = ({ task, onEditTag, onCancel }: Props) => {
+export const TagDialogManage = ({ onEditTag, onCancel }: Props) => {
   const [search, setSearch] = useState("");
   const zero = useZero();
   const [availableTags] = useQuery(zero.query.tag);
@@ -42,7 +45,7 @@ export const TagDialogManage = ({ task, onEditTag, onCancel }: Props) => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="w-[52px]" />
-        <span>Manage Tags</span>
+        <DialogTitle>Manage Tags</DialogTitle>
         <Button variant="ghost" onClick={onCancel}>
           Done
         </Button>
@@ -59,7 +62,7 @@ export const TagDialogManage = ({ task, onEditTag, onCancel }: Props) => {
           {filteredTags?.map((tag) => (
             <div
               key={tag.id}
-              className="flex items-center justify-between p-2 hover:bg-accent rounded-md"
+              className="flex items-center justify-between rounded-md p-2 hover:bg-accent"
             >
               <span>{tag.title}</span>
               <div className="space-x-2">
@@ -68,7 +71,7 @@ export const TagDialogManage = ({ task, onEditTag, onCancel }: Props) => {
                   size="sm"
                   onClick={() => onEditTag(tag)}
                 >
-                  <Pencil className="w-4 h-4" />
+                  <Pencil className="size-4" />
                 </Button>
 
                 <Button
@@ -76,7 +79,7 @@ export const TagDialogManage = ({ task, onEditTag, onCancel }: Props) => {
                   size="sm"
                   onClick={() => handleDelete(tag)}
                 >
-                  <Trash className="w-4 h-4" />
+                  <Trash className="size-4" />
                 </Button>
               </div>
             </div>

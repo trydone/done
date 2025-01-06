@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import * as React from "react";
+import * as CheckboxPrimitive from '@radix-ui/react-checkbox'
+import * as React from 'react'
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils'
 
 export interface CheckboxProps
   extends React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> {
-  hasError?: boolean;
+  hasError?: boolean
 }
 
 const Checkbox = React.forwardRef<
@@ -17,7 +17,7 @@ const Checkbox = React.forwardRef<
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
-      "ft-checkbox peer size-[14px] shrink-0 relative overflow-hidden rounded-[3px] bg-background hover:bg-muted transition-colors ring-offset-background focus-visible:outline-none focus-visible:ring focus-visible:ring-ring focus-visible:ring-offset-px disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:text-primary-foreground",
+      'ft-checkbox focus-visible:ring-offset-px peer relative size-[14px] shrink-0 overflow-hidden rounded-[3px] bg-background ring-offset-background transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:text-primary-foreground',
       className,
     )}
     {...props}
@@ -42,7 +42,7 @@ const Checkbox = React.forwardRef<
       </svg>
     </div>
   </CheckboxPrimitive.Root>
-));
-Checkbox.displayName = CheckboxPrimitive.Root.displayName;
+))
+Checkbox.displayName = CheckboxPrimitive.Root.displayName
 
-export { Checkbox };
+export { Checkbox }

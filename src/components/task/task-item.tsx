@@ -1,25 +1,40 @@
-import { observer } from "mobx-react-lite";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useCallback, useContext, useRef, useState } from "react";
+import { observer } from "mobx-react-lite";
+import {
+  MouseEvent,
+  MouseEventHandler,
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+} from "react";
+
+import { useZero } from "@/hooks/use-zero";
 import { RootStoreContext } from "@/lib/stores/root-store";
-import { TaskItemContent } from "./task-item-content";
 import { cn } from "@/lib/utils";
 import { TaskRow } from "@/schema";
+
 import { useDndContext } from "../dnd/dnd-context";
-import { useZero } from "@/hooks/use-zero";
+import { TaskItemContent } from "./task-item-content";
 import { TaskItemDetails } from "./task-item-details";
 
 type Props = {
   task: TaskRow;
   isDragging?: boolean;
   isSelected?: boolean;
+  showWhenIcon?: boolean;
 };
 
 export const TaskItem = observer(
-  ({ task, isDragging: isOverlayDragging, isSelected }: Props) => {
+  ({
+    task,
+    isDragging: isOverlayDragging,
+    isSelected,
+    showWhenIcon,
+  }: Props) => {
     const zero = useZero();
-    const timeoutRef = useRef<NodeJS.Timeout>();
+    const timeoutRef = useRef<NodeJS.Timeout>(null);
     const [isCheckedLocally, setIsCheckedLocally] = useState(
       !!task.completed_at,
     );
@@ -58,7 +73,7 @@ export const TaskItem = observer(
       opacity: isDragging ? 0.5 : 1,
     };
 
-    const handleClick = (e: MouseEvent) => {
+    const handleClick = (e: MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
 
       if (e.metaKey || e.ctrlKey) {
@@ -67,53 +82,42 @@ export const TaskItem = observer(
           ? selectedTaskIds.filter((id) => id !== task.id)
           : [...selectedTaskIds, task.id];
         setSelectedTaskIds(newSelected);
-      } else if (e.shiftKey && selectedTaskIds.length > 0) {
-        const lastSelectedId = selectedTaskIds[selectedTaskIds.length - 1];
-        // You'll need to implement this logic based on your task store structure
-        const items = Array.from(tasks.values());
-        const lastSelectedIndex = items.findIndex(
-          (t) => t.id === lastSelectedId,
-        );
-        const currentIndex = items.findIndex((t) => t.id === task.id);
-
-        const start = Math.min(lastSelectedIndex, currentIndex);
-        const end = Math.max(lastSelectedIndex, currentIndex);
-
-        const rangeIds = items.slice(start, end + 1).map((t) => t.id);
-        setSelectedTaskIds(rangeIds);
       } else {
         setSelectedTaskIds([task.id]);
       }
     };
 
-    const handleDoubleClick = (e: MouseEvent) => {
+    const handleDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
       setSelectedTaskIds([]);
       setOpenTaskId(task.id);
     };
 
-    const handleComplete = useCallback(async (checked: boolean) => {
-      setIsCheckedLocally(checked);
+    const handleComplete = useCallback(
+      async (checked: boolean) => {
+        setIsCheckedLocally(checked);
 
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
 
-      if (!checked) {
-        await zero.mutate.task.update({
-          id: task.id,
-          completed_at: null,
-        });
-        return;
-      }
+        if (!checked) {
+          await zero.mutate.task.update({
+            id: task.id,
+            completed_at: null,
+          });
+          return;
+        }
 
-      timeoutRef.current = setTimeout(async () => {
-        await zero.mutate.task.update({
-          id: task.id,
-          completed_at: Math.floor(Date.now() / 1000),
-        });
-      }, 3000);
-    }, []);
+        timeoutRef.current = setTimeout(async () => {
+          await zero.mutate.task.update({
+            id: task.id,
+            completed_at: Date.now(),
+          });
+        }, 3000);
+      },
+      [task.id, zero.mutate.task],
+    );
 
     if (openTaskId === task.id) {
       return (
@@ -133,9 +137,9 @@ export const TaskItem = observer(
           {...attributes}
           {...listeners}
           className={cn(
-            "group relative flex items-center gap-2 p-2 rounded-lg transition-all duration-200 ease-in-out hover:bg-gray-200",
+            "group relative flex items-center gap-2 rounded-lg p-2 transition-all duration-200 ease-in-out hover:bg-muted",
             {
-              "!bg-blue-200": isSelected,
+              "bg-blue-200 dark:bg-blue-800": isSelected,
               "shadow-lg": isDragging,
               "opacity-50": isContextDragging && !isSelected,
             },
@@ -147,6 +151,7 @@ export const TaskItem = observer(
             task={task}
             onComplete={handleComplete}
             checked={isCheckedLocally}
+            showWhenIcon={showWhenIcon}
           />
         </div>
       </div>

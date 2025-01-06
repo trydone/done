@@ -90,6 +90,30 @@ body {
   }
 }
 
+.h1 {
+  @apply scroll-m-20 text-3xl font-semibold leading-tight tracking-tight lg:text-4xl;
+}
+
+.h2 {
+  @apply scroll-m-20 text-3xl font-semibold leading-tight tracking-tight transition-colors;
+}
+
+.h3 {
+  @apply scroll-m-20 text-2xl font-semibold leading-tight tracking-tight;
+}
+
+.h4 {
+  @apply scroll-m-20 text-xl font-semibold leading-tight tracking-tight;
+}
+
+.h5 {
+  @apply scroll-m-20 text-lg font-semibold tracking-tight;
+}
+
+.h6 {
+  @apply scroll-m-20 text-base font-semibold tracking-tight;
+}
+
 .ft-checkbox[data-state="checked"] .ft-checkbox-polyline {
   stroke-dashoffset: 44;
   transition: stroke-dashoffset 250ms linear 0.2s;
@@ -101,14 +125,22 @@ body {
 
 .ft-checkbox::after {
   content: "";
-  @apply bg-blue-600 rounded-[3px] opacity-0 scale-50 transition-all ease-linear duration-200 origin-center absolute inset-0;
+  @apply absolute inset-0 origin-center scale-50 rounded-[3px] bg-blue-600 opacity-0 transition-all duration-200 ease-linear;
 }
 
 .ft-checkbox[data-state="checked"]::after {
-  @apply opacity-100 scale-100;
+  @apply scale-100 opacity-100;
 }
 
 .ft-checkbox::before {
   content: "";
-  @apply border border-gray-400 rounded-[3px] transition-all origin-center absolute inset-0;
+  @apply absolute inset-0 origin-center rounded-[3px] border border-muted-foreground transition-all;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }

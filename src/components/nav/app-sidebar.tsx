@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+import { useQuery } from '@rocicorp/zero/react'
 import {
   ArchiveIcon,
   BookCheckIcon,
@@ -6,7 +8,8 @@ import {
   LayersIcon,
   StarIcon,
   TrashIcon,
-} from "lucide-react";
+} from 'lucide-react'
+import { useContext } from 'react'
 
 import {
   Sidebar,
@@ -14,70 +17,68 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar'
+import { useZero } from '@/hooks/use-zero'
+import { RootStoreContext } from '@/lib/stores/root-store'
 
-import { AppSidebarItem } from "./app-sidebar-item";
-import { useZero } from "@/hooks/use-zero";
-import { useQuery } from "@rocicorp/zero/react";
-import { WorkspaceSwitch } from "../workspace/workspace-switch";
-import { useContext } from "react";
-import { RootStoreContext } from "@/lib/stores/root-store";
+import { WorkspaceSwitch } from '../workspace/workspace-switch'
+import { AppSidebarItem } from './app-sidebar-item'
 
 const items = [
   {
-    title: "Inbox",
-    url: "/inbox",
+    title: 'Inbox',
+    url: '/inbox',
     icon: InboxIcon,
   },
   {
-    title: "Today",
-    url: "/today",
+    title: 'Today',
+    url: '/today',
     icon: StarIcon,
   },
   {
-    title: "Upcoming",
-    url: "/upcoming",
+    title: 'Upcoming',
+    url: '/upcoming',
     icon: CalendarIcon,
   },
   {
-    title: "Anytime",
-    url: "/anytime",
+    title: 'Anytime',
+    url: '/anytime',
     icon: LayersIcon,
   },
   {
-    title: "Someday",
-    url: "/someday",
+    title: 'Someday',
+    url: '/someday',
     icon: ArchiveIcon,
   },
   {
-    title: "Logbook",
-    url: "/logbook",
+    title: 'Logbook',
+    url: '/logbook',
     icon: BookCheckIcon,
   },
   {
-    title: "Trash",
-    url: "/trash",
+    title: 'Trash',
+    url: '/trash',
     icon: TrashIcon,
   },
-];
+]
 
 export const AppSidebar = () => {
   const {
     authStore: { loginState },
-  } = useContext(RootStoreContext);
+  } = useContext(RootStoreContext)
 
-  const zero = useZero();
+  const zero = useZero()
   const [user] = useQuery(
-    zero.query.user.where("id", loginState?.decoded.sub ?? "").one(),
-  );
+    zero.query.user.where('id', loginState?.decoded.sub ?? '').one(),
+  )
 
   const loginHref =
-    "/api/auth/github?redirect=" +
+    '/api/auth/github?redirect=' +
     encodeURIComponent(
       window.location.search
         ? window.location.pathname + window.location.search
         : window.location.pathname,
-    );
+    )
 
   return (
     <Sidebar>
@@ -95,8 +96,7 @@ export const AppSidebar = () => {
                 <a href={loginHref}>Login</a>
               ) : (
                 <img
-                  src={user?.avatar || ""}
-                  className="issue-creator-avatar"
+                  src={user?.avatar || '#'}
                   alt={user?.name ?? undefined}
                   title={user?.username}
                 />
@@ -106,5 +106,5 @@ export const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  );
-};
+  )
+}

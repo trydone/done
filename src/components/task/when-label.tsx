@@ -1,21 +1,23 @@
-import { TagRow, TaskRow } from "@/schema";
-import { Badge } from "../ui/badge";
-import { getButtonIcon, getButtonText } from "./when-dialog";
-import { Button } from "../ui/button";
+import { observer } from 'mobx-react-lite'
+
+import { TaskRow } from '@/schema'
+
+import { Button } from '../ui/button'
+import { getButtonIcon, getButtonText } from './when-dialog'
 
 type Props = {
-  task: TaskRow;
-  setOpen: (open: boolean) => void;
-};
+  task: TaskRow
+  setOpen: (open: boolean) => void
+}
 
-export const WhenLabel = ({ task, setOpen }: Props) => {
+export const WhenLabel = observer(({ task, setOpen }: Props) => {
   return (
     <Button
       variant="ghost"
-      className="flex items-center gap-2 px-2 py-1 h-auto text-sm"
+      className="flex h-auto items-center gap-2 px-2 py-1 text-sm"
       onClick={() => setOpen(true)}
     >
       {getButtonIcon(task)} {getButtonText(task)}
     </Button>
-  );
-};
+  )
+})

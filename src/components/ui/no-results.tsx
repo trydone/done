@@ -1,10 +1,10 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react'
 
 type Props = {
-  dataSetLength: number;
-  resultsLength: number;
-  children?: ReactNode;
-};
+  dataSetLength: number
+  resultsLength: number
+  children?: ReactNode
+}
 
 export const NoResults = ({
   dataSetLength,
@@ -16,8 +16,8 @@ export const NoResults = ({
       <div>{children}</div>
     ) : (
       <p className="text-center text-muted-foreground">No results found</p>
-    );
+    )
   }
 
-  return null;
-};
+  return null
+}

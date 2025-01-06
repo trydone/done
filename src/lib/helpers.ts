@@ -1,8 +1,8 @@
 export const getUserInitials = (name: string) => {
   return name
-    .split(" ")
+    .split(' ')
     .map((part) => part[0])
-    .join("")
+    .join('')
     .toUpperCase()
-    .slice(0, 2);
-};
+    .slice(0, 2)
+}

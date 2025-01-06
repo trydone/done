@@ -1,12 +1,13 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { GripVertical } from "lucide-react";
+import { KeyboardEvent, useCallback, useRef } from "react";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { GripVertical, X } from "lucide-react";
+import { useZero } from "@/hooks/use-zero";
 import { cn } from "@/lib/utils";
 import { ChecklistItemRow, TaskRow } from "@/schema";
-import { useCallback, KeyboardEvent, useRef } from "react";
-import { useZero } from "@/hooks/use-zero";
 
 type Props = {
   task: TaskRow & { checklistItems: readonly ChecklistItemRow[] };
@@ -73,13 +74,13 @@ export const ChecklistItem = ({
         previousInput.setSelectionRange(length, length);
       }
     }
-  }, [zero.mutate.checklist_item, item.id]);
+  }, [task?.checklistItems, zero.mutate.checklist_item, item.id]);
 
   const handleCheckedChange = useCallback(
     (checked: any) => {
       zero.mutate.checklist_item.update({
         id: item.id,
-        completed_at: checked === true ? Math.floor(Date.now() / 1000) : null,
+        completed_at: checked === true ? Date.now() : null,
       });
     },
     [zero.mutate.checklist_item, item.id],
@@ -156,7 +157,7 @@ export const ChecklistItem = ({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "group relative rounded-md px-1 border-transparent border",
+        "group relative rounded-md border border-transparent px-1",
         {
           "opacity-50": isDragging,
           "border-border bg-muted": isFocused,
@@ -165,7 +166,7 @@ export const ChecklistItem = ({
       {...attributes}
     >
       {showTopLine && (
-        <div className="h-px inset-x-1 bg-border absolute -top-px pointer-events-none" />
+        <div className="pointer-events-none absolute inset-x-1 -top-px h-px bg-border" />
       )}
 
       <div className={cn("flex items-center gap-2 py-1")}>
@@ -182,11 +183,10 @@ export const ChecklistItem = ({
           value={item.title}
           onChange={handleTitleChange}
           onKeyDown={handleKeyDown}
-          className="border-none focus-visible:ring-0 px-0 py-0 h-auto bg-transparent text-sm !rounded-none"
-          placeholder="Add item..."
-          autoFocus
+          className="h-auto !rounded-none border-none bg-transparent p-0 text-sm focus-visible:ring-0"
           onFocus={handleFocus}
           onBlur={handleBlur}
+          autoFocus
         />
 
         <button
@@ -194,12 +194,12 @@ export const ChecklistItem = ({
           {...listeners}
           className="cursor-grab disabled:cursor-not-allowed"
         >
-          <GripVertical className="h-4 w-4 text-muted-foreground" />
+          <GripVertical className="size-4 text-muted-foreground" />
         </button>
       </div>
 
       {showBottomLine && (
-        <div className="h-px inset-x-1 bg-border absolute -bottom-px pointer-events-none" />
+        <div className="pointer-events-none absolute inset-x-1 -bottom-px h-px bg-border" />
       )}
     </div>
   );

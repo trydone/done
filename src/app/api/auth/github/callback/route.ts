@@ -1,8 +1,9 @@
-import { cookies } from "next/headers";
-import { decodeJwt, SignJWT } from "jose";
+/* eslint-disable no-console */
 import { Octokit } from "@octokit/core";
-import postgres from "postgres";
+import { decodeJwt, SignJWT } from "jose";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import postgres from "postgres";
 import { v4 } from "uuid";
 
 const sql = postgres(process.env.ZERO_UPSTREAM_DB as string);
@@ -103,7 +104,7 @@ export async function GET(request: NextRequest) {
 
     if (token) {
       const payload = decodeJwt(token.value);
-      const currentTime = Math.floor(Date.now() / 1000);
+      const currentTime = Date.now();
       if (payload.exp && payload.exp >= currentTime && payload.sub) {
         sessionId = payload.sub;
       }

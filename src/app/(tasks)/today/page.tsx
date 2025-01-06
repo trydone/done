@@ -1,23 +1,23 @@
 'use client'
 
-import { useDroppable } from '@dnd-kit/core'
-import { useQuery } from '@rocicorp/zero/react'
-import { MoonIcon, StarIcon } from 'lucide-react'
+import {useDroppable} from '@dnd-kit/core'
+import {useQuery} from '@rocicorp/zero/react'
+import {MoonIcon, StarIcon} from 'lucide-react'
 
-import { PageContainer } from '@/components/shared/page-container'
-import { TaskList } from '@/components/task/task-list'
-import { useZero } from '@/hooks/use-zero'
-import { cn } from '@/lib/utils'
+import {PageContainer} from '@/components/shared/page-container'
+import {TaskList} from '@/components/task/task-list'
+import {useZero} from '@/hooks/use-zero'
+import {cn} from '@/lib/utils'
 
 export default function Page() {
-  const { setNodeRef: setTodayRef } = useDroppable({
+  const {setNodeRef: setTodayRef} = useDroppable({
     id: 'today-list',
-    data: { type: 'bucket' },
+    data: {type: 'list'},
   })
 
-  const { setNodeRef: setEveningRef } = useDroppable({
+  const {setNodeRef: setEveningRef} = useDroppable({
     id: 'evening-list',
-    data: { type: 'bucket' },
+    data: {type: 'list'},
   })
 
   const zero = useZero()

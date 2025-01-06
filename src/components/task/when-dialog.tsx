@@ -1,4 +1,4 @@
-import { format, isBefore, isSameDay, isToday, startOfToday } from 'date-fns'
+import {format, isBefore, isSameDay, isToday, startOfToday} from 'date-fns'
 import {
   Check,
   ChevronLeft,
@@ -7,25 +7,24 @@ import {
   LayersIcon,
   Moon,
   Package,
-  Plus,
   Star,
   StarIcon,
 } from 'lucide-react'
-import { observer } from 'mobx-react-lite'
-import { useCallback, useContext } from 'react'
-import { DayPicker, DayProps } from 'react-day-picker'
+import {observer} from 'mobx-react-lite'
+import {useCallback, useContext} from 'react'
+import {DayPicker, DayProps} from 'react-day-picker'
 
-import { Button } from '@/components/ui/button'
+import {Button} from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { useZero } from '@/hooks/use-zero'
-import { RootStoreContext } from '@/lib/stores/root-store'
-import { cn } from '@/lib/utils'
-import { TaskRow } from '@/schema'
+import {useZero} from '@/hooks/use-zero'
+import {RootStoreContext} from '@/lib/stores/root-store'
+import {cn} from '@/lib/utils'
+import {TaskRow} from '@/schema'
 
 type BaseDialogProps = {
   open: boolean
@@ -81,9 +80,9 @@ export const getButtonText = (task: TaskRow) => {
 }
 
 const CustomDaycell = (
-  props: DayProps & { selected?: Date; onClick?: (date: Date) => void },
+  props: DayProps & {selected?: Date; onClick?: (date: Date) => void},
 ) => {
-  const { date, selected, onClick, ...rest } = props
+  const {date, selected, onClick, ...rest} = props
 
   const isSelectedDate = selected && isSameDay(date, selected)
 
@@ -112,26 +111,32 @@ export const WhenDialog = observer((props: Props) => {
   const zero = useZero()
 
   const {
-    localStore: { setOpenTaskId, setSelectedTaskIds },
+    localStore: {setOpenTaskId, setSelectedTaskIds, setTempTask},
   } = useContext(RootStoreContext)
 
   const updateTasks = useCallback(
     async (update: TaskUpdate) => {
-      const ids = props.type === 'single' ? [props.task.id] : props.taskIds
-      await Promise.all(
-        ids.map((id) =>
-          zero.mutate.task.update({
-            id,
-            archived_at: null,
-            ...update,
-          }),
-        ),
-      )
+      if (props.type === 'single') {
+        setTempTask({
+          ...props.task,
+          ...update,
+        })
+      } else {
+        await Promise.all(
+          props.taskIds.map((id) =>
+            zero.mutate.task.update({
+              id,
+              archived_at: null,
+              ...update,
+            }),
+          ),
+        )
 
-      setOpenTaskId(null)
-      setSelectedTaskIds([])
+        setOpenTaskId(null)
+        setSelectedTaskIds([])
+      }
     },
-    [props, setOpenTaskId, setSelectedTaskIds, zero.mutate.task],
+    [props, setOpenTaskId, setSelectedTaskIds, setTempTask, zero.mutate.task],
   )
 
   const handleSelect = async (date: Date | undefined) => {

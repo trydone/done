@@ -1,11 +1,10 @@
 import {CalendarIcon} from 'lucide-react'
 
 import {Button} from '@/components/ui/button'
-
-import {Task} from './types'
+import {TaskRow} from '@/schema'
 
 type Props = {
-  task: Task
+  task: TaskRow
   setOpen: (open: boolean) => void
 }
 

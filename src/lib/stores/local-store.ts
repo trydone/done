@@ -1,12 +1,16 @@
-import { makeAutoObservable } from 'mobx'
-import { isHydrated, makePersistable } from 'mobx-persist-store'
+import {makeAutoObservable} from 'mobx'
+import {isHydrated, makePersistable} from 'mobx-persist-store'
 
-import type { RootStore } from './root-store'
+import {useZero} from '@/hooks/use-zero'
+import {TaskRow} from '@/schema'
+
+import type {RootStore} from './root-store'
 
 export type ButtonState = 'visible' | 'hidden' | 'disabled'
 
 export class LocalStore {
   rootStore: RootStore
+  zero: ReturnType<typeof useZero>
 
   selectedUserId?: string
   selectedWorkspaceId?: string
@@ -14,6 +18,7 @@ export class LocalStore {
   // Selection and View States
   selectedTaskIds: string[] = []
   openTaskId: string | null = null
+  tempTask: TaskRow | null = null
   sidebarCollapsed = false
 
   // Find State
@@ -22,7 +27,7 @@ export class LocalStore {
 
   // UI Interaction States
   draggedTaskId: string | null = null
-  contextMenuPosition: { x: number; y: number } | null = null
+  contextMenuPosition: {x: number; y: number} | null = null
 
   // Button States
   buttonStates = {
@@ -34,14 +39,31 @@ export class LocalStore {
     moreActions: 'hidden' as ButtonState,
   }
 
-  constructor(rootStore: RootStore) {
-    makeAutoObservable(this, undefined, { autoBind: true })
+  constructor(rootStore: RootStore, zero: ReturnType<typeof useZero>) {
+    makeAutoObservable(this, undefined, {autoBind: true})
     makePersistable(this, {
       name: 'things-local-store',
       properties: ['sidebarCollapsed'],
       storage: typeof window !== 'undefined' ? window.localStorage : undefined,
     })
     this.rootStore = rootStore
+    this.zero = zero
+  }
+
+  setTempTask(task: TaskRow | null) {
+    this.tempTask = task
+  }
+
+  async commitTempTask() {
+    if (this.openTaskId && this.tempTask) {
+      await this.zero.mutate.task.update({
+        id: this.openTaskId,
+        start: this.tempTask.start,
+        start_bucket: this.tempTask.start_bucket,
+        start_date: this.tempTask.start_date,
+      })
+      this.tempTask = null
+    }
   }
 
   clearWorkspace() {
@@ -49,7 +71,7 @@ export class LocalStore {
     this.selectedWorkspaceId = undefined
   }
 
-  changeWorkspace(params: { userId: string; workspaceId: string }) {
+  changeWorkspace(params: {userId: string; workspaceId: string}) {
     this.selectedUserId = params.userId
     this.selectedWorkspaceId = params.workspaceId
   }
@@ -72,8 +94,16 @@ export class LocalStore {
   }
 
   // View Actions
-  setOpenTaskId(openTaskId: string | null) {
+  async setOpenTaskId(openTaskId: string | null) {
+    if (this.openTaskId && openTaskId === null) {
+      await this.commitTempTask()
+    }
+
     this.openTaskId = openTaskId
+    if (openTaskId === null) {
+      this.tempTask = null
+    }
+
     this.updateButtonStates({
       newTask: openTaskId ? 'hidden' : 'visible',
       quickFind: openTaskId ? 'hidden' : 'visible',
@@ -103,15 +133,15 @@ export class LocalStore {
     this.draggedTaskId = taskId
   }
 
-  setContextMenuPosition(position: { x: number; y: number } | null) {
+  setContextMenuPosition(position: {x: number; y: number} | null) {
     this.contextMenuPosition = position
   }
 
   // Button State Actions
   updateButtonStates(
-    newStates: Partial<{ [K in keyof typeof this.buttonStates]: ButtonState }>,
+    newStates: Partial<{[K in keyof typeof this.buttonStates]: ButtonState}>,
   ) {
-    this.buttonStates = { ...this.buttonStates, ...newStates }
+    this.buttonStates = {...this.buttonStates, ...newStates}
   }
 
   // Computed Properties

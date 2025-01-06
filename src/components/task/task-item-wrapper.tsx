@@ -14,6 +14,8 @@ type Props = {
   isDragging?: boolean
   isSelected?: boolean
   showWhenIcon?: boolean
+  noRadiusTop?: boolean
+  noRadiusBottom?: boolean
 }
 
 export const TaskItemWrapper = observer(({task, ...props}: Props) => {
@@ -71,6 +73,8 @@ export const TaskItemWrapper = observer(({task, ...props}: Props) => {
           {...props}
           onComplete={handleComplete}
           checked={isCheckedLocally}
+          noRadiusTop={props.noRadiusTop}
+          noRadiusBottom={props.noRadiusBottom}
         />
       )}
     </AnimatePresence>

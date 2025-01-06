@@ -10,7 +10,7 @@ import { Task } from './types'
 type Props = {
   task: Task
   checked: boolean
-  onComplete: (checked: boolean) => void
+  onComplete?: (checked: boolean) => void
   showWhenIcon?: boolean
 }
 
@@ -30,7 +30,7 @@ export const TaskItemContent = ({
       <div className="flex h-[20px] w-4 items-center">
         <Checkbox
           checked={checked}
-          onCheckedChange={(checked) => onComplete(checked as boolean)}
+          onCheckedChange={(checked) => onComplete?.(checked as boolean)}
           className="shrink-0"
         />
       </div>

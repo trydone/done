@@ -11,20 +11,20 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
-import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import { useQuery } from '@rocicorp/zero/react'
-import { addDays, startOfDay } from 'date-fns'
+import {sortableKeyboardCoordinates} from '@dnd-kit/sortable'
+import {useQuery} from '@rocicorp/zero/react'
+import {addDays, startOfDay} from 'date-fns'
 import _ from 'lodash'
-import { observer } from 'mobx-react-lite'
-import { createContext, ReactNode, useContext, useMemo, useState } from 'react'
+import {observer} from 'mobx-react-lite'
+import {createContext, ReactNode, useContext, useMemo, useState} from 'react'
 
-import { useZero } from '@/hooks/use-zero'
-import { INITIAL_GAP } from '@/lib/constants'
-import { RootStoreContext } from '@/lib/stores/root-store'
-import { TaskRow } from '@/schema'
+import {useZero} from '@/hooks/use-zero'
+import {INITIAL_GAP} from '@/lib/constants'
+import {RootStoreContext} from '@/lib/stores/root-store'
+import {TaskRow} from '@/schema'
 
-import { MultipleTasksOverlay } from '../task/multiple-task-overlay'
-import { TaskItem } from '../task/task-item'
+import {MultipleTasksOverlay} from '../task/multiple-task-overlay'
+import {TaskItem} from '../task/task-item'
 
 interface DragState {
   activeId: UniqueIdentifier | null
@@ -39,16 +39,16 @@ export const DndContext = createContext<{
   activeType: null,
 })
 
-export const DndProvider = observer(({ children }: { children: ReactNode }) => {
+export const DndProvider = observer(({children}: {children: ReactNode}) => {
   const {
-    localStore: { selectedTaskIds },
+    localStore: {selectedTaskIds},
   } = useContext(RootStoreContext)
 
   const [isOverSidebar, setIsOverSidebar] = useState(false)
 
   const zero = useZero()
 
-  const [{ activeId, activeType }, setDragState] = useState<DragState>({
+  const [{activeId, activeType}, setDragState] = useState<DragState>({
     activeId: null,
     activeType: null,
   })
@@ -256,7 +256,7 @@ export const DndProvider = observer(({ children }: { children: ReactNode }) => {
     await rebalanceBucket(orderedTasks)
   }
 
-  const handleDragStart = ({ active }: DragStartEvent) => {
+  const handleDragStart = ({active}: DragStartEvent) => {
     const isSelected = selectedTaskIds.includes(active.id as string)
     setDragState({
       activeId: active.id,
@@ -265,17 +265,17 @@ export const DndProvider = observer(({ children }: { children: ReactNode }) => {
     })
   }
 
-  const handleDragEnd = async ({ active, over }: DragEndEvent) => {
+  const handleDragEnd = async ({active, over}: DragEndEvent) => {
     if (!over) {
-      setDragState({ activeId: null, activeType: null })
+      setDragState({activeId: null, activeType: null})
       return
     }
 
-    const activeData = active.data.current as { type?: string }
-    const overData = over.data.current as { type?: string }
+    const activeData = active.data.current as {type?: string}
+    const overData = over.data.current as {type?: string}
 
     try {
-      if (overData?.type === 'bucket') {
+      if (['bucket', 'list'].includes(overData?.type || '')) {
         const tasksToMove =
           activeType === 'multiple-tasks'
             ? selectedTaskIds
@@ -292,10 +292,10 @@ export const DndProvider = observer(({ children }: { children: ReactNode }) => {
       console.error('Error during drag operation:', error)
     }
 
-    setDragState({ activeId: null, activeType: null })
+    setDragState({activeId: null, activeType: null})
   }
 
-  const handleDragOver = ({ over }: DragOverEvent) => {
+  const handleDragOver = ({over}: DragOverEvent) => {
     if (!over) {
       setIsOverSidebar(false)
       return
@@ -304,7 +304,7 @@ export const DndProvider = observer(({ children }: { children: ReactNode }) => {
     // Check if dragging over sidebar container
     setIsOverSidebar(
       ['sidebar', 'bucket'].includes(
-        (over?.data?.current as { type?: string })?.type || '',
+        (over?.data?.current as {type?: string})?.type || '',
       ),
     )
   }

@@ -1,6 +1,8 @@
 'use client'
 import {createContext} from 'react'
 
+import {useZero} from '@/hooks/use-zero'
+
 import {AuthStore} from './auth-store'
 import {LocalStore} from './local-store'
 
@@ -9,6 +11,7 @@ export class RootStore {
 
   localStore!: LocalStore
   authStore!: AuthStore
+  zero: ReturnType<typeof useZero> | null = null
 
   public static getInstance(): RootStore {
     if (!RootStore.instance) {
@@ -17,13 +20,18 @@ export class RootStore {
     return RootStore.instance
   }
 
+  public initializeZero(zero: ReturnType<typeof useZero>) {
+    if (!this.zero) {
+      this.zero = zero
+      this.localStore = new LocalStore(this, zero)
+      this.authStore = new AuthStore(this)
+    }
+  }
+
   private constructor() {
     if (RootStore.instance) {
       return RootStore.instance
     }
-
-    this.localStore = new LocalStore(this)
-    this.authStore = new AuthStore(this)
   }
 }
 const rootStoreInstance = RootStore.getInstance()

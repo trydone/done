@@ -1,14 +1,14 @@
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import { observer } from 'mobx-react-lite'
-import { MouseEvent, useContext } from 'react'
+import {useSortable} from '@dnd-kit/sortable'
+import {CSS} from '@dnd-kit/utilities'
+import {observer} from 'mobx-react-lite'
+import {MouseEvent, useContext} from 'react'
 
-import { RootStoreContext } from '@/lib/stores/root-store'
-import { cn } from '@/lib/utils'
+import {RootStoreContext} from '@/lib/stores/root-store'
+import {cn} from '@/lib/utils'
 
-import { useDndContext } from '../dnd/dnd-context'
-import { TaskItemContent } from './task-item-content'
-import { Task } from './types'
+import {useDndContext} from '../dnd/dnd-context'
+import {TaskItemContent} from './task-item-content'
+import {Task} from './types'
 
 type Props = {
   task: Task
@@ -17,6 +17,9 @@ type Props = {
   showWhenIcon?: boolean
   onComplete?: (checked: boolean) => void
   checked: boolean
+  className?: string
+  noRadiusTop?: boolean
+  noRadiusBottom?: boolean
 }
 
 export const TaskItem = observer(
@@ -27,11 +30,14 @@ export const TaskItem = observer(
     showWhenIcon,
     onComplete,
     checked,
+    className,
+    noRadiusTop,
+    noRadiusBottom,
   }: Props) => {
     const {
-      localStore: { selectedTaskIds, setSelectedTaskIds, setOpenTaskId },
+      localStore: {selectedTaskIds, setSelectedTaskIds, setOpenTaskId},
     } = useContext(RootStoreContext)
-    const { isDragging: isContextDragging } = useDndContext()
+    const {isDragging: isContextDragging} = useDndContext()
     const {
       attributes,
       listeners,
@@ -84,10 +90,12 @@ export const TaskItem = observer(
             'group relative flex items-center gap-2 rounded-lg p-2 transition-all duration-200 ease-in-out',
             {
               'bg-blue-200 dark:bg-blue-800': isSelected,
-              'hover:bg-muted': !isSelected,
               'shadow-lg': isDragging,
               'opacity-50': isContextDragging && !isSelected,
+              '!rounded-t-none': noRadiusTop,
+              '!rounded-b-none': noRadiusBottom,
             },
+            className,
           )}
           onClick={handleClick}
           onDoubleClick={handleDoubleClick}

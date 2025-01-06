@@ -12,7 +12,8 @@ export default function Page() {
 
   const [tasks] = useQuery(
     zero.query.task
-      .where('start', '=', 'someday')
+      .where('start', '=', 'postponed')
+      .where('start_date', 'IS', null)
       .where('archived_at', 'IS', null)
       .where('completed_at', 'IS', null)
       .orderBy('sort_order', 'asc')
@@ -22,10 +23,16 @@ export default function Page() {
 
   return (
     <PageContainer>
-      <div className="mx-4 mb-6 flex items-center gap-2">
-        <ArchiveIcon className="size-6" />
-        <h1 className="text-2xl font-semibold tracking-tight">Someday</h1>
+      <div className="task-outside-click mx-4 mb-6 flex items-center gap-2">
+        <ArchiveIcon className="task-outside-click size-6" />
+        <h1 className="h3 task-outside-click">Someday</h1>
       </div>
+
+      {tasks.length === 0 && (
+        <div className="flex items-center justify-center py-10">
+          <ArchiveIcon className="size-16 opacity-30" />
+        </div>
+      )}
 
       <TaskList tasks={tasks} />
     </PageContainer>

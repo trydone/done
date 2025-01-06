@@ -60,6 +60,7 @@
     "@tiptap/starter-kit": "^2.11.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cmdk": "^1.0.0",
     "cookies-next": "^5.0.2",
     "date-fns": "^4.1.0",
     "downshift": "^9.0.8",

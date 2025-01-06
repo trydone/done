@@ -13,7 +13,6 @@ export default function Page() {
   const [tasks] = useQuery(
     zero.query.task
       .where('start', '=', 'not_started')
-      .where('start_bucket', '=', 'inbox')
       .where('archived_at', 'IS', null)
       .where('completed_at', 'IS', null)
       .orderBy('sort_order', 'asc')
@@ -23,10 +22,16 @@ export default function Page() {
 
   return (
     <PageContainer>
-      <div className="mx-4 mb-6 flex items-center gap-2">
-        <InboxIcon className="size-6" />
-        <h1 className="text-2xl font-semibold tracking-tight">Inbox</h1>
+      <div className="task-outside-click mx-4 mb-6 flex items-center gap-2">
+        <InboxIcon className="task-outside-click size-6" />
+        <h1 className="h3 task-outside-click">Inbox</h1>
       </div>
+
+      {tasks.length === 0 && (
+        <div className="flex items-center justify-center py-10">
+          <InboxIcon className="size-16 opacity-30" />
+        </div>
+      )}
 
       <TaskList tasks={tasks} />
     </PageContainer>

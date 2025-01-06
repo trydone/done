@@ -1,80 +1,117 @@
+import { addDays, startOfDay } from 'date-fns'
 import {
-  ArrowRightIcon,
   CalendarIcon,
   MoreHorizontalIcon,
   PlusIcon,
   SearchIcon,
   TrashIcon,
-} from "lucide-react";
-import { observer } from "mobx-react-lite";
-import { useCallback, useContext, useState } from "react";
-import { v4 } from "uuid";
+} from 'lucide-react'
+import { observer } from 'mobx-react-lite'
+import { usePathname } from 'next/navigation'
+import { useCallback, useContext, useState } from 'react'
+import { v4 } from 'uuid'
 
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Popover, PopoverTrigger } from "@/components/ui/popover";
-import { useZero } from "@/hooks/use-zero";
-import { RootStoreContext } from "@/lib/stores/root-store";
+} from '@/components/ui/dropdown-menu'
+import { useZero } from '@/hooks/use-zero'
+import { RootStoreContext } from '@/lib/stores/root-store'
 
-import { WhenDialog } from "../task/when-dialog";
-import { PopoverWrapper } from "../ui/popover-wrapper";
-import { FooterButton } from "./footer-button";
+import { WhenDialog } from '../task/when-dialog'
+import { FooterButton } from './footer-button'
 
 export const Footer = observer(() => {
-  const zero = useZero();
-  const [whenOpen, setWhenOpen] = useState(false);
+  const pathname = usePathname()
+  const zero = useZero()
+  const [whenOpen, setWhenOpen] = useState(false)
 
   const {
     localStore: {
       openTaskId,
       setOpenTaskId,
-      setQuickSearchQuery,
+      setQuickFindQuery,
       buttonStates,
       selectedWorkspaceId,
       selectedTaskIds,
+      setQuickFindOpen,
     },
-  } = useContext(RootStoreContext);
+  } = useContext(RootStoreContext)
 
   const handleDelete = useCallback(async () => {
     if (!openTaskId) {
-      return;
+      return
     }
 
     await zero.mutate.task.update({
       id: openTaskId,
       archived_at: Date.now(),
-    });
+    })
 
-    setOpenTaskId(null);
-  }, [openTaskId, setOpenTaskId, zero.mutate.task]);
+    setOpenTaskId(null)
+  }, [openTaskId, setOpenTaskId, zero.mutate.task])
 
   const handleNewTask = useCallback(async () => {
-    const taskId = v4();
+    const taskId = v4()
+
+    // Default values
+    let start = 'not_started'
+    let start_bucket = 'today'
+    let start_date = null
+
+    switch (pathname) {
+      case '/today':
+        start = 'started'
+        start_bucket = 'today'
+        start_date = startOfDay(new Date()).getTime() // Today at midnight
+        break
+      case '/anytime':
+        start = 'not_started'
+        start_bucket = 'today'
+        start_date = null
+        break
+      case '/upcoming':
+        start = 'postponed'
+        start_bucket = 'today'
+        // Set to tomorrow at midnight
+        start_date = addDays(startOfDay(new Date()), 1).getTime()
+        break
+      case '/someday':
+        start = 'postponed'
+        start_bucket = 'today'
+        start_date = null
+        break
+      case '/inbox':
+      default:
+        start = 'not_started'
+        start_bucket = 'today'
+        start_date = null
+        break
+    }
 
     await zero.mutate.task.insert({
       id: taskId,
       workspace_id:
         selectedWorkspaceId || `9d190060-d582-4136-827d-cd0468d081ec`,
-      title: "",
-      description: "",
+      title: '',
+      description: '',
       created_at: Date.now(),
-      creator_id: "9ecb970e-0fee-4dfd-9721-2c04c8ed7607",
+      creator_id: '9ecb970e-0fee-4dfd-9721-2c04c8ed7607',
       updated_at: Date.now(),
-      start: "not_started",
-      start_bucket: "inbox",
-    });
+      start,
+      start_bucket,
+      start_date,
+    })
 
-    setOpenTaskId(taskId);
-  }, [selectedWorkspaceId, setOpenTaskId, zero.mutate.task]);
+    setOpenTaskId(taskId)
+  }, [pathname, selectedWorkspaceId, setOpenTaskId, zero.mutate.task])
 
   const handleQuickFind = () => {
-    setQuickSearchQuery("");
-  };
+    setQuickFindQuery('')
+    setQuickFindOpen(true)
+  }
 
   return (
     <>
@@ -83,10 +120,15 @@ export const Footer = observer(() => {
           icon={PlusIcon}
           title="New To-Do"
           onClick={handleNewTask}
-          state={buttonStates.newTask}
+          state={
+            buttonStates.newTask === 'visible' &&
+            ['/logbook', '/trash'].includes(pathname)
+              ? 'disabled'
+              : buttonStates.newTask
+          }
         />
 
-        {buttonStates.when !== "hidden" && (
+        {buttonStates.when !== 'hidden' && (
           <FooterButton
             icon={CalendarIcon}
             title="When"
@@ -95,7 +137,7 @@ export const Footer = observer(() => {
           />
         )}
 
-        {buttonStates.move !== "hidden" && (
+        {/* {buttonStates.move !== "hidden" && (
           <Popover>
             <PopoverTrigger asChild>
               <FooterButton
@@ -111,13 +153,13 @@ export const Footer = observer(() => {
               </Button>
             </PopoverWrapper>
           </Popover>
-        )}
+        )} */}
 
         <FooterButton
           icon={SearchIcon}
           title="Quick Find"
           onClick={handleQuickFind}
-          state={buttonStates.quickSearch}
+          state={buttonStates.quickFind}
         />
 
         <FooterButton
@@ -127,7 +169,7 @@ export const Footer = observer(() => {
           state={buttonStates.delete}
         />
 
-        {buttonStates.moreActions !== "hidden" && (
+        {buttonStates.moreActions !== 'hidden' && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <FooterButton
@@ -164,5 +206,5 @@ export const Footer = observer(() => {
         />
       )}
     </>
-  );
-});
+  )
+})

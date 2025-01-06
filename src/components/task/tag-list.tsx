@@ -9,7 +9,7 @@ type Props = {
 
 export const TagList = ({ task, setOpen }: Props) => {
   return (
-    <div className="flex flex-wrap items-center gap-2 pl-10 pr-3 pt-4">
+    <div className="flex flex-wrap items-center gap-2 pb-3 pl-10 pr-3 pt-4">
       {(task?.tags || []).map((tag) => (
         <Badge
           variant="blue"

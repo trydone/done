@@ -1,133 +1,133 @@
-import { makeAutoObservable } from "mobx";
-import { isHydrated, makePersistable } from "mobx-persist-store";
+import { makeAutoObservable } from 'mobx'
+import { isHydrated, makePersistable } from 'mobx-persist-store'
 
-import type { RootStore } from "./root-store";
+import type { RootStore } from './root-store'
 
-export type ButtonState = "visible" | "hidden" | "disabled";
+export type ButtonState = 'visible' | 'hidden' | 'disabled'
 
 export class LocalStore {
-  rootStore: RootStore;
+  rootStore: RootStore
 
-  selectedUserId?: string;
-  selectedWorkspaceId?: string;
+  selectedUserId?: string
+  selectedWorkspaceId?: string
 
   // Selection and View States
-  selectedTaskIds: string[] = [];
-  openTaskId: string | null = null;
-  sidebarCollapsed = false;
+  selectedTaskIds: string[] = []
+  openTaskId: string | null = null
+  sidebarCollapsed = false
 
-  // Search State
-  quickSearchQuery = "";
-  quickSearchActive = false;
+  // Find State
+  quickFindQuery = ''
+  quickFindOpen = false
 
   // UI Interaction States
-  draggedTaskId: string | null = null;
-  contextMenuPosition: { x: number; y: number } | null = null;
+  draggedTaskId: string | null = null
+  contextMenuPosition: { x: number; y: number } | null = null
 
   // Button States
   buttonStates = {
-    newTask: "visible" as ButtonState,
-    when: "disabled" as ButtonState,
-    move: "disabled" as ButtonState,
-    quickSearch: "visible" as ButtonState,
-    delete: "hidden" as ButtonState,
-    moreActions: "hidden" as ButtonState,
-  };
+    newTask: 'visible' as ButtonState,
+    when: 'disabled' as ButtonState,
+    move: 'disabled' as ButtonState,
+    quickFind: 'visible' as ButtonState,
+    delete: 'hidden' as ButtonState,
+    moreActions: 'hidden' as ButtonState,
+  }
 
   constructor(rootStore: RootStore) {
-    makeAutoObservable(this, undefined, { autoBind: true });
+    makeAutoObservable(this, undefined, { autoBind: true })
     makePersistable(this, {
-      name: "things-local-store",
-      properties: ["sidebarCollapsed"],
-      storage: typeof window !== "undefined" ? window.localStorage : undefined,
-    });
-    this.rootStore = rootStore;
+      name: 'things-local-store',
+      properties: ['sidebarCollapsed'],
+      storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+    })
+    this.rootStore = rootStore
   }
 
   clearWorkspace() {
-    this.selectedUserId = undefined;
-    this.selectedWorkspaceId = undefined;
+    this.selectedUserId = undefined
+    this.selectedWorkspaceId = undefined
   }
 
   changeWorkspace(params: { userId: string; workspaceId: string }) {
-    this.selectedUserId = params.userId;
-    this.selectedWorkspaceId = params.workspaceId;
+    this.selectedUserId = params.userId
+    this.selectedWorkspaceId = params.workspaceId
   }
 
   // Selection Actions
   setSelectedTaskIds(taskIds: string[]) {
-    this.selectedTaskIds = taskIds;
-    const hasSelection = taskIds.length > 0;
+    this.selectedTaskIds = taskIds
+    const hasSelection = taskIds.length > 0
 
     this.updateButtonStates({
-      newTask: "visible",
-      when: hasSelection ? "visible" : "disabled",
-      quickSearch: "visible",
-      move: hasSelection ? "visible" : "disabled",
-      delete: "hidden",
-      moreActions: "hidden",
-    });
+      newTask: 'visible',
+      when: hasSelection ? 'visible' : 'disabled',
+      quickFind: 'visible',
+      move: hasSelection ? 'visible' : 'disabled',
+      delete: 'hidden',
+      moreActions: 'hidden',
+    })
 
-    this.setOpenTaskId(null);
+    this.setOpenTaskId(null)
   }
 
   // View Actions
   setOpenTaskId(openTaskId: string | null) {
-    this.openTaskId = openTaskId;
+    this.openTaskId = openTaskId
     this.updateButtonStates({
-      newTask: openTaskId ? "hidden" : "visible",
-      quickSearch: openTaskId ? "hidden" : "visible",
-      when: openTaskId ? "hidden" : "visible",
-      move: "visible",
-      delete: openTaskId ? "visible" : "hidden",
-      moreActions: openTaskId ? "hidden" : "visible",
-    });
+      newTask: openTaskId ? 'hidden' : 'visible',
+      quickFind: openTaskId ? 'hidden' : 'visible',
+      when: openTaskId ? 'hidden' : 'visible',
+      move: 'visible',
+      delete: openTaskId ? 'visible' : 'hidden',
+      moreActions: openTaskId ? 'hidden' : 'visible',
+    })
   }
 
   setSidebarCollapsed(collapsed: boolean) {
-    this.sidebarCollapsed = collapsed;
+    this.sidebarCollapsed = collapsed
   }
 
-  // Search Actions
-  setQuickSearchQuery(query: string) {
-    this.quickSearchQuery = query;
-    this.quickSearchActive = query.length > 0;
+  // Find Actions
+  setQuickFindQuery(query: string) {
+    this.quickFindQuery = query
+  }
+
+  // Find Actions
+  setQuickFindOpen(quickFindOpen: boolean) {
+    this.quickFindOpen = quickFindOpen
   }
 
   // UI Interaction Actions
   setDraggedTaskId(taskId: string | null) {
-    this.draggedTaskId = taskId;
+    this.draggedTaskId = taskId
   }
 
   setContextMenuPosition(position: { x: number; y: number } | null) {
-    this.contextMenuPosition = position;
+    this.contextMenuPosition = position
   }
 
   // Button State Actions
   updateButtonStates(
     newStates: Partial<{ [K in keyof typeof this.buttonStates]: ButtonState }>,
   ) {
-    this.buttonStates = { ...this.buttonStates, ...newStates };
+    this.buttonStates = { ...this.buttonStates, ...newStates }
   }
 
   // Computed Properties
   get isHydrated() {
-    return isHydrated(this);
+    return isHydrated(this)
   }
 
   get hasSelectedTask() {
-    return this.selectedTaskIds.length > 0;
-  }
-
-  get isSearching() {
-    return this.quickSearchActive;
+    return this.selectedTaskIds.length > 0
   }
 
   get isDragging() {
-    return this.draggedTaskId !== null;
+    return this.draggedTaskId !== null
   }
 
   get hasContextMenu() {
-    return this.contextMenuPosition !== null;
+    return this.contextMenuPosition !== null
   }
 }

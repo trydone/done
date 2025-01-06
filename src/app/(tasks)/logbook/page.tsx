@@ -21,10 +21,16 @@ export default function Page() {
 
   return (
     <PageContainer>
-      <div className="mx-4 mb-6 flex items-center gap-2">
-        <BookCheckIcon className="size-6" />
-        <h1 className="text-2xl font-semibold tracking-tight">Logbook</h1>
+      <div className="task-outside-click mx-4 mb-6 flex items-center gap-2">
+        <BookCheckIcon className="task-outside-click size-6" />
+        <h1 className="h3 task-outside-click">Logbook</h1>
       </div>
+
+      {tasks.length === 0 && (
+        <div className="flex items-center justify-center py-10">
+          <BookCheckIcon className="size-16 opacity-30" />
+        </div>
+      )}
 
       <TaskList tasks={tasks} />
     </PageContainer>

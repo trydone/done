@@ -1,17 +1,29 @@
 import { useDroppable } from '@dnd-kit/core'
+import { LucideProps } from 'lucide-react'
 import { observer } from 'mobx-react-lite'
 import Link from 'next/link'
+import { ForwardRefExoticComponent, RefAttributes } from 'react'
 
 import { cn } from '@/lib/utils'
 
 import { useDndContext } from '../dnd/dnd-context'
 import { SidebarMenuButton, SidebarMenuItem } from '../ui/sidebar'
 
-type Props = {
-  item: any
+export type AppSidebarItemType = {
+  id: string
+  title: string
+  url: string
+  icon: ForwardRefExoticComponent<
+    Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
+  >
 }
 
-export const AppSidebarItem = observer(({ item }: Props) => {
+type Props = {
+  item: AppSidebarItemType
+  count: number | undefined
+}
+
+export const AppSidebarItem = observer(({ item, count }: Props) => {
   const { isDragging } = useDndContext()
   const { setNodeRef, isOver } = useDroppable({
     id: item.id,
@@ -30,9 +42,14 @@ export const AppSidebarItem = observer(({ item }: Props) => {
       )}
     >
       <SidebarMenuButton asChild>
-        <Link href={item.url}>
-          <item.icon />
-          <span>{item.title}</span>
+        <Link href={item.url} className="flex items-center gap-2">
+          <item.icon className="size-4" />
+
+          <div className="flex-1">
+            <span>{item.title}</span>
+          </div>
+
+          {(count || 0) > 0 && <span>{count}</span>}
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>

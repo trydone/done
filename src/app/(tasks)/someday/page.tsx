@@ -34,7 +34,7 @@ export default function Page() {
         </div>
       )}
 
-      <TaskList tasks={tasks} />
+      <TaskList tasks={tasks} showDashedCheckbox />
     </PageContainer>
   )
 }

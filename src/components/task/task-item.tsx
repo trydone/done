@@ -15,6 +15,7 @@ type Props = {
   isDragging?: boolean
   isSelected?: boolean
   showWhenIcon?: boolean
+  showDashedCheckbox?: boolean
   onComplete?: (checked: boolean) => void
   checked: boolean
   className?: string
@@ -28,6 +29,7 @@ export const TaskItem = observer(
     isDragging: isOverlayDragging,
     isSelected,
     showWhenIcon,
+    showDashedCheckbox,
     onComplete,
     checked,
     className,
@@ -105,6 +107,7 @@ export const TaskItem = observer(
             onComplete={onComplete}
             checked={checked}
             showWhenIcon={showWhenIcon}
+            showDashedCheckbox={showDashedCheckbox}
           />
         </div>
       </div>

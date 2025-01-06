@@ -3,15 +3,22 @@ import {useCallback} from 'react'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Input} from '@/components/ui/input'
 import {useZero} from '@/hooks/use-zero'
+import {cn} from '@/lib/utils'
 import {TaskRow} from '@/schema'
 
 type Props = {
   task: TaskRow
   checked: boolean
   onComplete: (checked: boolean) => void
+  showDashedCheckbox?: boolean
 }
 
-export const TaskHeader = ({task, checked, onComplete}: Props) => {
+export const TaskHeader = ({
+  task,
+  checked,
+  onComplete,
+  showDashedCheckbox,
+}: Props) => {
   const zero = useZero()
 
   const handleTitleChange = useCallback(
@@ -32,7 +39,9 @@ export const TaskHeader = ({task, checked, onComplete}: Props) => {
             id={`task-${task.id}-status`}
             checked={checked}
             onCheckedChange={onComplete}
-            className="transition-colors data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+            className={cn('shrink-0', {
+              'ft-checkbox-dashed': showDashedCheckbox,
+            })}
           />
         </div>
       </div>

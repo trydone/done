@@ -1,17 +1,18 @@
-import { format } from 'date-fns'
-import { MoonIcon, StarIcon } from 'lucide-react'
+import {format} from 'date-fns'
+import {MoonIcon, StarIcon} from 'lucide-react'
 
-import { Checkbox } from '@/components/ui/checkbox'
-import { cn } from '@/lib/utils'
+import {Checkbox} from '@/components/ui/checkbox'
+import {cn} from '@/lib/utils'
 
-import { TaskMetadata } from './task-metadata'
-import { Task } from './types'
+import {TaskMetadata} from './task-metadata'
+import {Task} from './types'
 
 type Props = {
   task: Task
   checked: boolean
   onComplete?: (checked: boolean) => void
   showWhenIcon?: boolean
+  showDashedCheckbox?: boolean
 }
 
 export const TaskItemContent = ({
@@ -19,6 +20,7 @@ export const TaskItemContent = ({
   onComplete,
   checked,
   showWhenIcon,
+  showDashedCheckbox,
 }: Props) => {
   const formatCompletedDate = (timestamp: number) => {
     const date = new Date(timestamp * 1000) // Convert seconds to milliseconds
@@ -31,7 +33,7 @@ export const TaskItemContent = ({
         <Checkbox
           checked={checked}
           onCheckedChange={(checked) => onComplete?.(checked as boolean)}
-          className="shrink-0"
+          className={cn('shrink-0', {'ft-checkbox-dashed': showDashedCheckbox})}
         />
       </div>
 

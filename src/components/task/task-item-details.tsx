@@ -19,10 +19,11 @@ type Props = {
   task: Task
   checked: boolean
   onComplete: (checked: boolean) => void
+  showDashedCheckbox?: boolean
 }
 
 export const TaskItemDetails = observer(
-  ({task, checked, onComplete}: Props) => {
+  ({task, checked, onComplete, showDashedCheckbox}: Props) => {
     const {
       localStore: {tempTask},
     } = useContext(RootStoreContext)
@@ -34,7 +35,12 @@ export const TaskItemDetails = observer(
     return (
       <div className="py-5">
         <div className="flex h-full flex-col rounded-lg bg-background shadow-md">
-          <TaskHeader task={task} checked={checked} onComplete={onComplete} />
+          <TaskHeader
+            task={task}
+            checked={checked}
+            onComplete={onComplete}
+            showDashedCheckbox={showDashedCheckbox}
+          />
 
           <TaskNotes task={task} />
 

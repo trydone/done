@@ -14,6 +14,7 @@ type Props = {
   isDragging?: boolean
   isSelected?: boolean
   showWhenIcon?: boolean
+  showDashedCheckbox?: boolean
   noRadiusTop?: boolean
   noRadiusBottom?: boolean
 }
@@ -65,6 +66,7 @@ export const TaskItemWrapper = observer(({task, ...props}: Props) => {
             task={task}
             onComplete={handleComplete}
             checked={isCheckedLocally}
+            showDashedCheckbox={props.showDashedCheckbox}
           />
         </motion.div>
       ) : (

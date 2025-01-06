@@ -95,6 +95,7 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
   const handleBucketTransition = async (
     taskIds: string[],
     targetBucket: string,
+    targetData?: {type?: string; date?: number},
   ) => {
     let start: string
     let start_date: number | null
@@ -103,57 +104,62 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
     let completed_at: number | null
 
     // Define bucket transition logic
-    switch (targetBucket) {
-      case 'today':
-      case 'today-list':
-        start = 'started'
-        start_bucket = 'today'
-        start_date = startOfDay(new Date()).getTime()
-        archived_at = null
-        completed_at = null
-        break
-      case 'evening-list':
-        start = 'started'
-        start_bucket = 'evening'
-        start_date = startOfDay(new Date()).getTime()
-        archived_at = null
-        completed_at = null
-        break
-      case 'anytime':
-        start = 'started'
-        start_bucket = 'today'
-        start_date = null
-        archived_at = null
-        completed_at = null
-        break
-      case 'upcoming':
-        start = 'postponed'
-        start_bucket = 'today'
-        start_date = addDays(startOfDay(new Date()), 1).getTime()
-        archived_at = null
-        completed_at = null
-        break
-      case 'someday':
-        start = 'postponed'
-        start_bucket = 'today'
-        start_date = null
-        archived_at = null
-        completed_at = null
-        break
-      case 'logbook':
-        completed_at = new Date().getTime()
-        break
-      case 'trash':
-        archived_at = new Date().getTime()
-        break
-      case 'inbox':
-      default:
-        start = 'not_started'
-        start_bucket = 'today'
-        start_date = null
-        archived_at = null
-        completed_at = null
-        break
+    if (targetData?.type === 'upcoming-day' && targetData.date) {
+      start = 'postponed'
+      start_date = targetData.date
+    } else {
+      switch (targetBucket) {
+        case 'today':
+        case 'today-list':
+          start = 'started'
+          start_bucket = 'today'
+          start_date = startOfDay(new Date()).getTime()
+          archived_at = null
+          completed_at = null
+          break
+        case 'evening-list':
+          start = 'started'
+          start_bucket = 'evening'
+          start_date = startOfDay(new Date()).getTime()
+          archived_at = null
+          completed_at = null
+          break
+        case 'anytime':
+          start = 'started'
+          start_bucket = 'today'
+          start_date = null
+          archived_at = null
+          completed_at = null
+          break
+        case 'upcoming':
+          start = 'postponed'
+          start_bucket = 'today'
+          start_date = addDays(startOfDay(new Date()), 1).getTime()
+          archived_at = null
+          completed_at = null
+          break
+        case 'someday':
+          start = 'postponed'
+          start_bucket = 'today'
+          start_date = null
+          archived_at = null
+          completed_at = null
+          break
+        case 'logbook':
+          completed_at = new Date().getTime()
+          break
+        case 'trash':
+          archived_at = new Date().getTime()
+          break
+        case 'inbox':
+        default:
+          start = 'not_started'
+          start_bucket = 'today'
+          start_date = null
+          archived_at = null
+          completed_at = null
+          break
+      }
     }
 
     const todayStartTime = startOfDay(new Date()).getTime()
@@ -272,15 +278,15 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
     }
 
     const activeData = active.data.current as {type?: string}
-    const overData = over.data.current as {type?: string}
+    const overData = over.data.current as {type?: string; date?: number}
 
     try {
-      if (['bucket', 'list'].includes(overData?.type || '')) {
+      if (['bucket', 'list', 'upcoming-day'].includes(overData?.type || '')) {
         const tasksToMove =
           activeType === 'multiple-tasks'
             ? selectedTaskIds
             : [active.id as string]
-        await handleBucketTransition(tasksToMove, over.id as string)
+        await handleBucketTransition(tasksToMove, over.id as string, overData)
       } else if (activeData?.type === 'task' && overData?.type === 'task') {
         const tasksToReorder =
           activeType === 'multiple-tasks'

@@ -137,6 +137,10 @@ body {
   @apply absolute inset-0 origin-center rounded-[3px] border border-muted-foreground transition-all;
 }
 
+.ft-checkbox-dashed::before {
+  @apply border-[1.5px] border-dashed;
+}
+
 .tiptap p.is-editor-empty:first-child::before {
   color: #adb5bd;
   content: attr(data-placeholder);

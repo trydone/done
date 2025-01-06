@@ -13,6 +13,7 @@ type Props = {
   tasks: readonly Task[]
   className?: string
   showWhenIcon?: boolean
+  showDashedCheckbox?: boolean
 }
 
 function findBorderRadiusGroups(tasks: readonly Task[], selectedIds: string[]) {
@@ -39,43 +40,44 @@ function findBorderRadiusGroups(tasks: readonly Task[], selectedIds: string[]) {
   return {noRadiusTop, noRadiusBottom}
 }
 
-export const TaskList = observer(({tasks, className, showWhenIcon}: Props) => {
-  const {
-    localStore: {selectedTaskIds},
-  } = useContext(RootStoreContext)
+export const TaskList = observer(
+  ({tasks, className, showWhenIcon, showDashedCheckbox}: Props) => {
+    const {
+      localStore: {selectedTaskIds},
+    } = useContext(RootStoreContext)
 
-  const {isDragging} = useDndContext()
+    const {isDragging} = useDndContext()
 
-  const {noRadiusTop, noRadiusBottom} = useMemo(
-    () => findBorderRadiusGroups(tasks, selectedTaskIds),
-    [tasks, selectedTaskIds],
-  )
+    const {noRadiusTop, noRadiusBottom} = useMemo(
+      () => findBorderRadiusGroups(tasks, selectedTaskIds),
+      [tasks, selectedTaskIds],
+    )
 
-  console.log({noRadiusTop, noRadiusBottom})
-
-  return (
-    <SortableContext
-      items={tasks.map((task) => task.id)}
-      strategy={verticalListSortingStrategy}
-    >
-      <div
-        className={cn(
-          'flex flex-col',
-          isDragging && 'cursor-grabbing',
-          className,
-        )}
+    return (
+      <SortableContext
+        items={tasks.map((task) => task.id)}
+        strategy={verticalListSortingStrategy}
       >
-        {tasks.map((task) => (
-          <TaskItemWrapper
-            key={task.id}
-            task={task}
-            isSelected={selectedTaskIds.includes(task.id)}
-            showWhenIcon={showWhenIcon}
-            noRadiusTop={noRadiusTop.includes(task.id)}
-            noRadiusBottom={noRadiusBottom.includes(task.id)}
-          />
-        ))}
-      </div>
-    </SortableContext>
-  )
-})
+        <div
+          className={cn(
+            'flex flex-col',
+            isDragging && 'cursor-grabbing',
+            className,
+          )}
+        >
+          {tasks.map((task) => (
+            <TaskItemWrapper
+              key={task.id}
+              task={task}
+              isSelected={selectedTaskIds.includes(task.id)}
+              showWhenIcon={showWhenIcon}
+              showDashedCheckbox={showDashedCheckbox}
+              noRadiusTop={noRadiusTop.includes(task.id)}
+              noRadiusBottom={noRadiusBottom.includes(task.id)}
+            />
+          ))}
+        </div>
+      </SortableContext>
+    )
+  },
+)

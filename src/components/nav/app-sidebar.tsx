@@ -1,4 +1,5 @@
-"use client";
+import {useDroppable} from '@dnd-kit/core'
+import {useQuery} from '@rocicorp/zero/react'
 import {
   ArchiveIcon,
   BookCheckIcon,
@@ -7,9 +8,8 @@ import {
   LayersIcon,
   StarIcon,
   TrashIcon,
-} from "lucide-react";
-
-import { usePathname, useSearchParams } from "next/navigation";
+} from 'lucide-react'
+import {usePathname, useSearchParams} from 'next/navigation'
 
 import {
   Sidebar,
@@ -17,12 +17,11 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar'
+import {useZero} from '@/hooks/use-zero'
 
-import { AppSidebarItem } from "./app-sidebar-item";
-import { useZero } from "@/hooks/use-zero";
-import { useQuery } from "@rocicorp/zero/react";
-import { WorkspaceSwitch } from "../workspace/workspace-switch";
+import {WorkspaceSwitch} from '../workspace/workspace-switch'
+import {AppSidebarItem, AppSidebarItemType} from './app-sidebar-item'
 
 const items: AppSidebarItemType[] = [
   {
@@ -70,6 +69,13 @@ const items: AppSidebarItemType[] = [
 ]
 
 export const AppSidebar = () => {
+  const {setNodeRef} = useDroppable({
+    id: 'sidebar-container',
+    data: {
+      type: 'sidebar',
+    },
+  })
+
   return (
     <Sidebar ref={setNodeRef}>
       <SidebarContent>
@@ -77,61 +83,93 @@ export const AppSidebar = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               <BlockWorkspaceSwitch />
-              <BlockUsers />
-
-              {items.map((item, index) => (
-                <AppSidebarItem item={item} key={index} />
-              ))}
+              <BlockLoginGoogle />
+              <BlockLoginGithub />
+              <BlockSidebarItems />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  );
-};
+  )
+}
 
 const useGithubLogin = () => {
-  const pathname = usePathname();
-  const searchParams = useSearchParams().toString();
-  const link = [pathname, searchParams].filter(Boolean).join("?");
-  return "/api/auth/github?redirect=" + encodeURIComponent(link);
-};
+  const pathname = usePathname()
+  const searchParams = useSearchParams().toString()
+  const link = [pathname, searchParams].filter(Boolean).join('?')
+  return '/api/auth/github?redirect=' + encodeURIComponent(link)
+}
+
+const useGoogleLogin = () => {
+  const pathname = usePathname()
+  const searchParams = useSearchParams().toString()
+  const link = [pathname, searchParams].filter(Boolean).join('?')
+  return '/api/auth/google?redirect_url=' + encodeURIComponent(link)
+}
+
 
 const useIsLoggedIn = () => {
-  const zero = useZero();
-  const [sessions] = useQuery(zero.query.session);
-  return sessions.length > 0;
-};
+  const zero = useZero()
+  const [sessions] = useQuery(zero.query.session)
+  return sessions.length > 0
+}
+
+const BlockSidebarItems = () => {
+  const pathname = usePathname()
+  const zero = useZero()
+
+  const [inboxTasks] = useQuery(
+    zero.query.task
+      .where('start', '=', 'not_started')
+      .where('archived_at', 'IS', null)
+      .where('completed_at', 'IS', null),
+  )
+
+  const [todayTasks] = useQuery(
+    zero.query.task
+      .where('start', '=', 'started')
+      .where('archived_at', 'IS', null)
+      .where('completed_at', 'IS', null),
+  )
+
+  return items.map((item) => {
+    let count = undefined
+
+    if (item.id === 'inbox' && inboxTasks.length > 0) {
+      count = inboxTasks.length
+    } else if (item.id === 'today' && todayTasks.length > 0) {
+      count = todayTasks.length
+    }
+    return (
+      <AppSidebarItem
+        item={item}
+        key={item.id}
+        count={count}
+        isActive={pathname === item.url}
+      />
+    )
+  })
+}
 
 const BlockWorkspaceSwitch = () => {
-  const isLoggedIn = useIsLoggedIn();
+  const isLoggedIn = useIsLoggedIn()
 
   if (!isLoggedIn) {
-    return null;
+    return null
   }
 
-  return <WorkspaceSwitch.Block />;
-};
+  return <WorkspaceSwitch.Block />
+}
 
-const BlockUsers = () => {
-  const isLoggedIn = useIsLoggedIn();
+const BlockLoginGoogle = () => {
+  const loginRef = useGoogleLogin()
 
-  const zero = useZero();
-  const [users] = useQuery(zero.query.user);
+  return <a href={loginRef}>Login (google)</a>
+}
 
-  const loginRef = useGithubLogin();
+const BlockLoginGithub = () => {
+  const loginRef = useGithubLogin()
 
-  if (!isLoggedIn) {
-    return <a href={loginRef}>Login</a>;
-  }
-
-  return users.map((user) => (
-    <img
-      key={user.id}
-      src={user?.avatar || ""}
-      className="issue-creator-avatar"
-      alt={user?.name ?? undefined}
-      title={user?.username}
-    />
-  ));
-};
+  return <a href={loginRef}>Login (github)</a>
+}

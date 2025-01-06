@@ -650,10 +650,6 @@ table "user" {
     type    = text
     default = "user"
   }
-  column "github_id" {
-    null = true
-    type = integer
-  }
   column "created_at" {
     null    = false
     type    = timestamptz
@@ -671,6 +667,80 @@ table "user" {
   #   unique  = true
   #   columns = [column.username]
   # }
+}
+
+table "account" {
+  schema = schema.public
+  column "id" {
+    null = false
+    type = uuid
+    default = sql("gen_random_uuid()")
+  }
+  column "user_id" {
+    null = false
+    type = uuid
+  }
+  column "provider" {
+    null = false
+    type = text
+    check {
+      expr = "provider IN ('google', 'github')"
+    }
+  }
+  column "provider_user_id" {
+    null = false
+    type = text
+    comment = "Unique identifier from the external provider"
+  }
+  column "email" {
+    null = false
+    type = text
+  }
+  column "access_token" {
+    null = true
+    type = text
+    comment = "Encrypted access token from the provider"
+  }
+  column "refresh_token" {
+    null = true
+    type = text
+    comment = "Encrypted refresh token from the provider"
+  }
+  column "token_expiry" {
+    null = true
+    type = timestamptz
+    comment = "Expiration time of the access token"
+  }
+  column "created_at" {
+    null    = false
+    type    = timestamptz
+    default = sql("now()")
+  }
+  column "updated_at" {
+    null    = false
+    type    = timestamptz
+    default = sql("now()")
+  }
+  
+  primary_key {
+    columns = [column.id]
+  }
+  
+  foreign_key "account_user_id_fk" {
+    columns     = [column.user_id]
+    ref_columns = [table.user.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+  
+  index "account_provider_user_id_idx" {
+    unique  = true
+    columns = [column.provider, column.provider_user_id]
+  }
+  
+  index "account_user_id_idx" {
+    columns = [column.user_id]
+  }
 }
 
 table "view_state" {

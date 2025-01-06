@@ -1,6 +1,7 @@
 'use client'
 
 import {useQuery} from '@rocicorp/zero/react'
+import {X} from 'lucide-react'
 import {observer} from 'mobx-react-lite'
 import {FC, useContext} from 'react'
 
@@ -18,8 +19,8 @@ interface Compound
 }
 
 export const WorkspaceSignout: Compound = ({onSignout}) => (
-  <Button variant="link" onClick={onSignout}>
-    Sign out
+  <Button className="-my-2" variant="ghost" size="xs" onClick={onSignout}>
+    <X size={12} />
   </Button>
 )
 

@@ -1,6 +1,7 @@
 'use client'
 
 import {useQuery} from '@rocicorp/zero/react'
+import {Pencil, User} from 'lucide-react'
 import {observer} from 'mobx-react-lite'
 import {FC, ReactNode, useContext} from 'react'
 
@@ -11,6 +12,7 @@ import {useZero} from '@/hooks/use-zero'
 import {RootStoreContext} from '@/lib/stores/root-store'
 import {UserRow, WorkspaceMemberRow, WorkspaceRow} from '@/schema'
 
+import {Button} from '../ui/button'
 import {WorkspaceSignout} from './workspace-signout'
 
 type ExtendedWorkspaceMemberRow = WorkspaceMemberRow & {
@@ -45,13 +47,13 @@ export const WorkspaceSwitch: Compound = ({
   onAllWorkspacesClick,
   renderUserTitle,
 }) => (
-  <>
+  <div className="flex flex-col gap-2">
     <AllWorkspaces
       active={selectedUserId === undefined && selectedWorkspaceId === undefined}
       onClick={onAllWorkspacesClick}
     />
     {users?.map((user) => (
-      <div key={user.id}>
+      <div key={user.id} className="flex flex-col gap-2">
         {renderUserTitle ? renderUserTitle(user) : <H2>{user.username}</H2>}
 
         <RadioGroup
@@ -66,21 +68,29 @@ export const WorkspaceSwitch: Compound = ({
           {user.workspaceMembers.map((workspaceMember) => (
             <div
               key={workspaceMember.workspace_id}
-              className="flex items-center space-x-2"
+              className="group/wmember flex items-center space-x-2 pl-2"
             >
               <RadioGroupItem
                 value={workspaceMember.workspace_id}
                 id={workspaceMember.workspace_id}
               />
-              <Label htmlFor={workspaceMember.workspace_id}>
+              <Label className="flex-1" htmlFor={workspaceMember.workspace_id}>
                 {workspaceMember.workspace[0]?.name}
               </Label>
+              <Button
+                className="invisible -my-2 group-hover/wmember:visible"
+                variant="ghost"
+                size="xs"
+                onClick={() => {}}
+              >
+                <Pencil size={12} />
+              </Button>
             </div>
           ))}
         </RadioGroup>
       </div>
     ))}
-  </>
+  </div>
 )
 
 const AllWorkspaces: Compound['AllWorkspaces'] = ({active, onClick}) => (
@@ -118,9 +128,14 @@ const Block: Compound['Block'] = observer(() => {
       onWorkspaceChange={changeWorkspace}
       onAllWorkspacesClick={clearWorkspace}
       renderUserTitle={(user) => (
-        <div className="flex flex-row gap-2">
-          <H2>{user.username}</H2>
-          <WorkspaceSignout.Block userId={user.id} />
+        <div className="group/workspace flex flex-row gap-2">
+          <div className="flex flex-1 items-center gap-2 font-semibold">
+            <User className="size-4" />
+            {user.email}
+          </div>
+          <div className="invisible group-hover/workspace:visible">
+            <WorkspaceSignout.Block userId={user.id} />
+          </div>
         </div>
       )}
     />

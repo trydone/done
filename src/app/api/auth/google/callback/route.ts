@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
-import {Octokit} from '@octokit/core'
-import {decodeJwt, SignJWT} from 'jose'
+import {decodeJwt,SignJWT} from 'jose'
 import {cookies} from 'next/headers'
 import {NextRequest, NextResponse} from 'next/server'
 import postgres from 'postgres'
@@ -8,21 +7,25 @@ import {v4} from 'uuid'
 
 const sql = postgres(process.env.ZERO_UPSTREAM_DB as string)
 
-const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID as string
-const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET as string
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID as string
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET as string
 const AUTH_SECRET = process.env.ZERO_AUTH_SECRET as string
 
-async function getGithubAccessToken(code: string): Promise<string> {
-  const response = await fetch('https://github.com/login/oauth/access_token', {
+async function getGoogleAccessToken(code: string): Promise<{
+  access_token: string
+  id_token: string
+}> {
+  const response = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: JSON.stringify({
-      client_id: GITHUB_CLIENT_ID,
-      client_secret: GITHUB_CLIENT_SECRET,
+    body: new URLSearchParams({
+      client_id: GOOGLE_CLIENT_ID,
+      client_secret: GOOGLE_CLIENT_SECRET,
       code,
+      grant_type: 'authorization_code',
+      redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/google/callback`,
     }),
   })
 
@@ -32,28 +35,30 @@ async function getGithubAccessToken(code: string): Promise<string> {
     throw new Error(data.error_description || 'Failed to get access token')
   }
 
-  return data.access_token
+  return {
+    access_token: data.access_token,
+    id_token: data.id_token,
+  }
 }
 
-async function getGitHubEmails(octokit: Octokit) {
-  const emailResponse = await octokit.request('GET /user/emails', {
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28',
-    },
-  })
-
-  // Get primary email
-  const primaryEmail = emailResponse.data.find(
-    (email: any) => email.primary === true,
+async function getGoogleUserDetails(idToken: string) {
+  const response = await fetch(
+    `https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${idToken}`
   )
+  const userDetails = await response.json()
 
-  return primaryEmail?.email || emailResponse.data[0]?.email
+  return {
+    email: userDetails.email,
+    name: userDetails.name,
+    avatar: userDetails.picture,
+    googleId: userDetails.sub,
+  }
 }
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const code = searchParams.get('code')
-  const state = searchParams.get('state') // state contains our redirect URL
+  const state = searchParams.get('state')
 
   if (!code) {
     return NextResponse.json({error: 'No code provided'}, {status: 400})
@@ -61,33 +66,23 @@ export async function GET(request: NextRequest) {
 
   try {
     // Exchange code for access token
-    const accessToken = await getGithubAccessToken(code)
+    const {access_token: accessToken, id_token: idToken} = 
+      await getGoogleAccessToken(code)
 
-    // Get user details from GitHub
-    const octokit = new Octokit({
-      auth: accessToken,
-    })
+    // Get user details from Google
+    const userDetails = await getGoogleUserDetails(idToken)
 
-    const userDetails = await octokit.request('GET /user', {
-      headers: {
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-    })
-
-    // Get primary email
-    const email = await getGitHubEmails(octokit)
-
-    if (!email) {
+    if (!userDetails.email) {
       return NextResponse.json(
-        {error: 'No email found in GitHub account'},
-        {status: 400},
+        {error: 'No email found in Google account'},
+        {status: 400}
       )
     }
 
     // Check if account already exists
     const existingAccount = await sql`
       SELECT user_id FROM "account" 
-      WHERE provider = 'github' AND provider_user_id = ${userDetails.data.id}
+      WHERE provider = 'google' AND provider_user_id = ${userDetails.googleId}
     `
 
     let userId: string
@@ -95,7 +90,7 @@ export async function GET(request: NextRequest) {
       userId = existingAccount[0]?.user_id
     } else {
       const existingUser = await sql`
-        SELECT id FROM "user" WHERE email = ${email}
+        SELECT id FROM "user" WHERE email = ${userDetails.email}
       `
 
       if (existingUser.length > 0) {
@@ -106,10 +101,10 @@ export async function GET(request: NextRequest) {
           INSERT INTO "user" ("id", "username", "name", "avatar", "email") 
           VALUES (
             ${userId},
-            ${userDetails.data.login},
-            ${userDetails.data.name || userDetails.data.login},
-            ${userDetails.data.avatar_url},
-            ${email}
+            ${userDetails.email.split('@')[0]},
+            ${userDetails.name},
+            ${userDetails.avatar},
+            ${userDetails.email}
           )
         `
       }
@@ -127,9 +122,9 @@ export async function GET(request: NextRequest) {
         ) VALUES (
           ${v4()},
           ${userId},
-          'github',
-          ${userDetails.data.id},
-          ${email},
+          'google',
+          ${userDetails.googleId},
+          ${userDetails.email},
           ${accessToken},
           NULL,
           NULL
@@ -167,7 +162,7 @@ export async function GET(request: NextRequest) {
       sub: sessionId,
       iat: Math.floor(Date.now() / 1000),
       role: userRows[0]?.role || 'user',
-      name: userDetails.data.login,
+      name: userDetails.name,
     }
 
     const jwt = await new SignJWT(jwtPayload)

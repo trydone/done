@@ -7,8 +7,7 @@ import {
   type Row,
   type TableSchema,
 } from '@rocicorp/zero'
-// @ts-expect-error - no direct import available
-import type {Condition} from '@rocicorp/zero/out/zero-protocol/src/ast'
+// import type {Condition} from '@rocicorp/zero/out/zero-protocol/src/ast'
 
 export const enterpriseSchema = createTableSchema({
   tableName: 'enterprise',
@@ -478,16 +477,16 @@ export const schema = createSchema({
   },
 })
 
-type PermissionRule<TSchema extends TableSchema> = (
-  authData: AuthData,
-  eb: ExpressionBuilder<TSchema>,
-) => Condition
+// type PermissionRule<TSchema extends TableSchema> = (
+//   authData: AuthData,
+//   eb: ExpressionBuilder<TSchema>,
+// ) => Condition
 
-function and<TSchema extends TableSchema>(
-  ...rules: PermissionRule<TSchema>[]
-): PermissionRule<TSchema> {
-  return (authData, eb) => eb.and(...rules.map((rule) => rule(authData, eb)))
-}
+// function and<TSchema extends TableSchema>(
+//   ...rules: PermissionRule<TSchema>[]
+// ): PermissionRule<TSchema> {
+//   return (authData, eb) => eb.and(...rules.map((rule) => rule(authData, eb)))
+// }
 
 export const permissions: ReturnType<typeof definePermissions> =
   definePermissions<AuthData, Schema>(schema, () => {
@@ -498,16 +497,16 @@ export const permissions: ReturnType<typeof definePermissions> =
       return cmpLit(authData.sub, 'IS NOT', null)
     }
 
-    const loggedInUserIsCreator = (
-      authData: AuthData,
-      eb: ExpressionBuilder<
-        typeof taskCommentSchema | typeof emojiSchema | typeof taskSchema
-      >,
-    ) =>
-      eb.and(
-        userIsLoggedIn(authData, eb),
-        eb.cmp('creator_id', '=', authData.sub),
-      )
+    // const loggedInUserIsCreator = (
+    //   authData: AuthData,
+    //   eb: ExpressionBuilder<
+    //     typeof taskCommentSchema | typeof emojiSchema | typeof taskSchema
+    //   >,
+    // ) =>
+    //   eb.and(
+    //     userIsLoggedIn(authData, eb),
+    //     eb.cmp('creator_id', '=', authData.sub),
+    //   )
 
     const allowYourSession = (
       authData: AuthData,
@@ -519,41 +518,41 @@ export const permissions: ReturnType<typeof definePermissions> =
       )
     }
 
-    const loggedInUserIsAdmin = (
-      authData: AuthData,
-      eb: ExpressionBuilder<TableSchema>,
-    ) =>
-      eb.and(
-        userIsLoggedIn(authData, eb),
-        eb.cmpLit(authData.role, '=', 'admin'),
-      )
+    // const loggedInUserIsAdmin = (
+    //   authData: AuthData,
+    //   eb: ExpressionBuilder<TableSchema>,
+    // ) =>
+    //   eb.and(
+    //     userIsLoggedIn(authData, eb),
+    //     eb.cmpLit(authData.role, '=', 'admin'),
+    //   )
 
-    const allowIfUserIDMatchesLoggedInUser = (
-      authData: AuthData,
-      {cmp}: ExpressionBuilder<typeof viewStateSchema>,
-    ) => cmp('user_id', '=', authData.sub)
+    // const allowIfUserIDMatchesLoggedInUser = (
+    //   authData: AuthData,
+    //   {cmp}: ExpressionBuilder<typeof viewStateSchema>,
+    // ) => cmp('user_id', '=', authData.sub)
 
-    const allowIfAdminOrTaskCreator = (
-      authData: AuthData,
-      eb: ExpressionBuilder<typeof taskTagSchema>,
-    ) =>
-      eb.or(
-        loggedInUserIsAdmin(authData, eb),
-        eb.exists('task', (iq) =>
-          iq.where((eb) => loggedInUserIsCreator(authData, eb)),
-        ),
-      )
+    // const allowIfAdminOrTaskCreator = (
+    //   authData: AuthData,
+    //   eb: ExpressionBuilder<typeof taskTagSchema>,
+    // ) =>
+    //   eb.or(
+    //     loggedInUserIsAdmin(authData, eb),
+    //     eb.exists('task', (iq) =>
+    //       iq.where((eb) => loggedInUserIsCreator(authData, eb)),
+    //     ),
+    //   )
 
-    const allowTask = (
-      authData: AuthData,
-      eb: ExpressionBuilder<typeof taskSchema>,
-    ) =>
-      eb.and(
-        userIsLoggedIn(authData, eb),
-        eb.exists('session', (session) =>
-          session.where('id', '=', authData.sub),
-        ),
-      )
+    // const allowTask = (
+    //   authData: AuthData,
+    //   eb: ExpressionBuilder<typeof taskSchema>,
+    // ) =>
+    //   eb.and(
+    //     userIsLoggedIn(authData, eb),
+    //     eb.exists('session', (session) =>
+    //       session.where('id', '=', authData.sub),
+    //     ),
+    //   )
 
     const allowWorkspace = (
       authData: AuthData,
@@ -575,42 +574,42 @@ export const permissions: ReturnType<typeof definePermissions> =
         ),
       )
 
-    const canSeeTask = (
-      authData: AuthData,
-      eb: ExpressionBuilder<typeof taskSchema>,
-    ) => userIsLoggedIn(authData, eb)
+    // const canSeeTask = (
+    //   authData: AuthData,
+    //   eb: ExpressionBuilder<typeof taskSchema>,
+    // ) => userIsLoggedIn(authData, eb)
 
     /**
      * Comments are only visible if the user can see the task they're attached to.
      */
-    const canSeeComment = (
-      authData: AuthData,
-      eb: ExpressionBuilder<typeof taskCommentSchema>,
-    ) => eb.exists('task', (q) => q.where((eb) => canSeeTask(authData, eb)))
+    // const canSeeComment = (
+    //   authData: AuthData,
+    //   eb: ExpressionBuilder<typeof taskCommentSchema>,
+    // ) => eb.exists('task', (q) => q.where((eb) => canSeeTask(authData, eb)))
 
     /**
      * Task tags are only visible if the user can see the task they're attached to.
      */
-    const canSeeTaskTag = (
-      authData: AuthData,
-      eb: ExpressionBuilder<typeof taskTagSchema>,
-    ) => eb.exists('task', (q) => q.where((eb) => canSeeTask(authData, eb)))
+    // const canSeeTaskTag = (
+    //   authData: AuthData,
+    //   eb: ExpressionBuilder<typeof taskTagSchema>,
+    // ) => eb.exists('task', (q) => q.where((eb) => canSeeTask(authData, eb)))
 
     /**
      * Emoji are only visible if the user can see the task they're attached to.
      */
-    const canSeeEmoji = (
-      authData: AuthData,
-      {exists, or}: ExpressionBuilder<typeof emojiSchema>,
-    ) =>
-      or(
-        exists('task', (q) => {
-          return q.where((eb) => canSeeTask(authData, eb))
-        }),
-        exists('task_comment', (q) => {
-          return q.where((eb) => canSeeComment(authData, eb))
-        }),
-      )
+    // const canSeeEmoji = (
+    //   authData: AuthData,
+    //   {exists, or}: ExpressionBuilder<typeof emojiSchema>,
+    // ) =>
+    //   or(
+    //     exists('task', (q) => {
+    //       return q.where((eb) => canSeeTask(authData, eb))
+    //     }),
+    //     exists('task_comment', (q) => {
+    //       return q.where((eb) => canSeeComment(authData, eb))
+    //     }),
+    //   )
 
     return {
       workspace: {
@@ -619,13 +618,12 @@ export const permissions: ReturnType<typeof definePermissions> =
           insert: ANYONE_CAN,
           update: ANYONE_CAN,
           delete: ANYONE_CAN,
-          select: ANYONE_CAN,
           // insert: NOBODY_CAN,
           // update: {
           //   preMutation: NOBODY_CAN,
           // },
           // delete: NOBODY_CAN,
-          // select: [allowWorkspace],
+          select: [allowWorkspace],
         },
       },
       user: {

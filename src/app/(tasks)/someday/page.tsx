@@ -1,5 +1,6 @@
 'use client'
 
+import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {useQuery} from '@rocicorp/zero/react'
 import {ArchiveIcon} from 'lucide-react'
 
@@ -23,7 +24,7 @@ export default function Page() {
 
   return (
     <PageContainer>
-      <div className="task-outside-click mx-4 mb-6 flex items-center gap-2">
+      <div className="task-outside-click mx-4 flex items-center gap-2">
         <ArchiveIcon className="task-outside-click size-6" />
         <h1 className="h3 task-outside-click">Someday</h1>
       </div>
@@ -34,7 +35,12 @@ export default function Page() {
         </div>
       )}
 
-      <TaskList tasks={tasks} showDashedCheckbox />
+      <SortableContext
+        items={[{id: 'someday'}]}
+        strategy={verticalListSortingStrategy}
+      >
+        <TaskList tasks={tasks} showDashedCheckbox listData={{id: 'someday'}} />
+      </SortableContext>
     </PageContainer>
   )
 }

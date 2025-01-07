@@ -1,10 +1,11 @@
 import {AnimatePresence, motion} from 'framer-motion'
 import {observer} from 'mobx-react-lite'
-import {useCallback, useContext, useRef, useState} from 'react'
+import {useCallback, useContext, useEffect, useRef, useState} from 'react'
 
 import {useZero} from '@/hooks/use-zero'
 import {RootStoreContext} from '@/lib/stores/root-store'
 
+import {DndListData} from '../dnd/dnd-context'
 import {TaskItem} from './task-item'
 import {TaskItemDetails} from './task-item-details'
 import {Task} from './types'
@@ -17,6 +18,7 @@ type Props = {
   showDashedCheckbox?: boolean
   noRadiusTop?: boolean
   noRadiusBottom?: boolean
+  listData: DndListData
 }
 
 export const TaskItemWrapper = observer(({task, ...props}: Props) => {
@@ -53,6 +55,10 @@ export const TaskItemWrapper = observer(({task, ...props}: Props) => {
 
   const isOpen = openTaskId === task.id
 
+  useEffect(() => {
+    setIsCheckedLocally(!!task.completed_at)
+  }, [task.completed_at])
+
   return (
     <AnimatePresence>
       {isOpen ? (
@@ -75,8 +81,6 @@ export const TaskItemWrapper = observer(({task, ...props}: Props) => {
           {...props}
           onComplete={handleComplete}
           checked={isCheckedLocally}
-          noRadiusTop={props.noRadiusTop}
-          noRadiusBottom={props.noRadiusBottom}
         />
       )}
     </AnimatePresence>

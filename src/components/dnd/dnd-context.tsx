@@ -26,6 +26,15 @@ import {TaskRow} from '@/schema'
 import {MultipleTasksOverlay} from '../task/multiple-task-overlay'
 import {TaskItem} from '../task/task-item'
 
+export type DndListData = {
+  id: string
+  start_bucket?: string
+  start_date?: number | null
+  start?: string
+  archived_at?: number | null
+  completed_at?: number | null
+}
+
 interface DragState {
   activeId: UniqueIdentifier | null
   activeType: 'task' | 'multiple-tasks' | null
@@ -34,9 +43,13 @@ interface DragState {
 export const DndContext = createContext<{
   isDragging: boolean
   activeType: DragState['activeType']
+  dragOverId: string | null
+  activeId: DragState['activeId']
 }>({
   isDragging: false,
   activeType: null,
+  dragOverId: null,
+  activeId: null,
 })
 
 export const DndProvider = observer(({children}: {children: ReactNode}) => {
@@ -45,6 +58,7 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
   } = useContext(RootStoreContext)
 
   const [isOverSidebar, setIsOverSidebar] = useState(false)
+  const [dragOverId, setDragOverId] = useState<string | null>(null)
 
   const zero = useZero()
 
@@ -81,9 +95,9 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
     })
   }
 
-  const rebalanceBucket = async (bucketTasks: TaskRow[]) => {
-    const updates = bucketTasks.map((task, index) => ({
-      id: task.id,
+  const rebalanceBucket = async (tasksInBucket: TaskRow[]) => {
+    const updates = tasksInBucket.map((task, index) => ({
+      ...task,
       sort_order: (index + 1) * INITIAL_GAP,
     }))
 
@@ -92,134 +106,136 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
     }
   }
 
-  const handleBucketTransition = async (
-    taskIds: string[],
-    targetBucket: string,
-    targetData?: {type?: string; date?: number},
-  ) => {
+  const handleBucketTransition = async ({
+    taskIds,
+    bucketId,
+    overId,
+  }: {
+    taskIds: string[]
+    bucketId: string
+    overId: string
+  }) => {
     let start: string
     let start_date: number | null
-    let start_bucket: string = targetBucket
+    let start_bucket: string = 'today'
     let archived_at: number | null
     let completed_at: number | null
 
-    // Define bucket transition logic
-    if (targetData?.type === 'upcoming-day' && targetData.date) {
-      start = 'postponed'
-      start_date = targetData.date
-    } else {
-      switch (targetBucket) {
-        case 'today':
-        case 'today-list':
-          start = 'started'
-          start_bucket = 'today'
-          start_date = startOfDay(new Date()).getTime()
-          archived_at = null
-          completed_at = null
-          break
-        case 'evening-list':
-          start = 'started'
-          start_bucket = 'evening'
-          start_date = startOfDay(new Date()).getTime()
-          archived_at = null
-          completed_at = null
-          break
-        case 'anytime':
-          start = 'started'
-          start_bucket = 'today'
-          start_date = null
-          archived_at = null
-          completed_at = null
-          break
-        case 'upcoming':
-          start = 'postponed'
-          start_bucket = 'today'
-          start_date = addDays(startOfDay(new Date()), 1).getTime()
-          archived_at = null
-          completed_at = null
-          break
-        case 'someday':
-          start = 'postponed'
-          start_bucket = 'today'
-          start_date = null
-          archived_at = null
-          completed_at = null
-          break
-        case 'logbook':
-          completed_at = new Date().getTime()
-          break
-        case 'trash':
-          archived_at = new Date().getTime()
-          break
-        case 'inbox':
-        default:
-          start = 'not_started'
-          start_bucket = 'today'
-          start_date = null
-          archived_at = null
-          completed_at = null
-          break
-      }
+    const paths = bucketId.split('-')
+    const id = paths[0]!
+    const idDate = paths?.[1] ? parseInt(paths[1]) : null
+
+    switch (id) {
+      case 'today':
+        start = 'started'
+        start_date = startOfDay(new Date()).getTime()
+        archived_at = null
+        completed_at = null
+        break
+      case 'evening':
+        start_bucket = 'evening'
+        start = 'started'
+        start_date = startOfDay(new Date()).getTime()
+        archived_at = null
+        completed_at = null
+        break
+      case 'anytime':
+        start = 'started'
+        start_date = null
+        archived_at = null
+        completed_at = null
+        break
+      case 'upcoming':
+        start = 'postponed'
+        start_date = idDate ?? addDays(startOfDay(new Date()), 1).getTime()
+        archived_at = null
+        completed_at = null
+        break
+      case 'someday':
+        start = 'postponed'
+        start_date = null
+        archived_at = null
+        completed_at = null
+        break
+      case 'logbook':
+        completed_at = new Date().getTime()
+        break
+      case 'trash':
+        archived_at = new Date().getTime()
+        break
+      case 'inbox':
+      default:
+        start = 'not_started'
+        start_date = null
+        archived_at = null
+        completed_at = null
+        break
     }
 
     const todayStartTime = startOfDay(new Date()).getTime()
-    const tomorrowStartTime = addDays(startOfDay(new Date()), 1).getTime()
 
     // Get current tasks in target bucket with proper filtering
     const tasksInBucket = allTasks.filter((task) => {
-      // Exclude the tasks being moved from the current bucket tasks
-      if (taskIds.includes(task.id)) {
-        return false
-      }
-
-      switch (targetBucket) {
+      switch (id) {
         case 'today':
-        case 'today-list':
           return (
             task.start === 'started' &&
             task.start_bucket === 'today' &&
-            task.start_date === todayStartTime
+            task.start_date === todayStartTime &&
+            !task.archived_at &&
+            !task.completed_at
           )
-        case 'evening-list':
+        case 'evening':
           return (
             task.start === 'started' &&
             task.start_bucket === 'evening' &&
-            task.start_date === todayStartTime
+            task.start_date === todayStartTime &&
+            !task.archived_at &&
+            !task.completed_at
           )
         case 'anytime':
           return (
             task.start === 'started' &&
             task.start_bucket === 'today' &&
-            task.start_date === null
+            task.start_date === null &&
+            !task.archived_at &&
+            !task.completed_at
           )
         case 'upcoming':
           return (
             task.start === 'postponed' &&
             task.start_bucket === 'today' &&
             task.start_date !== null &&
-            task.start_date >= tomorrowStartTime
+            !task.archived_at &&
+            !task.completed_at
           )
         case 'someday':
           return (
             task.start === 'postponed' &&
             task.start_bucket === 'today' &&
-            task.start_date === null
+            task.start_date === null &&
+            !task.archived_at &&
+            !task.completed_at
           )
         case 'inbox':
           return (
             task.start === 'not_started' &&
             task.start_bucket === 'today' &&
-            task.start_date === null
+            task.start_date === null &&
+            !task.archived_at &&
+            !task.completed_at
           )
+        case 'logbook':
+          return !!task.completed_at
+        case 'trash':
+          return !!task.archived_at
         default:
           return false
       }
     })
 
-    // Move selected tasks to front with updated properties
-    const movedTasks = taskIds.map((id, index) => ({
+    const newTasks = taskIds.map((id) => ({
       id,
-      sort_order: -1 * (taskIds.length - index) * INITIAL_GAP,
       start_bucket,
       start,
       start_date,
@@ -227,38 +243,28 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
       archived_at,
     }))
 
-    // Update tasks
-    for (const task of movedTasks) {
-      await updateTask(task)
-    }
+    let orderedTasks: any[] = []
 
-    // Rebalance if needed
-    if (tasksInBucket.length > 0) {
-      await rebalanceBucket([...movedTasks, ...tasksInBucket])
-    }
-  }
+    // Find the position to insert at
+    const overIndex = tasksInBucket.findIndex((task) => task.id === overId)
 
-  const reorderTasks = async (taskIds: string[], targetId: string) => {
-    const targetTask = allTasks.find((t) => t.id === targetId)
-    if (!targetTask) return
-
-    // Get all tasks in the same bucket
-    const bucketTasks = allTasks.filter(
-      (t) => t.start_bucket === targetTask.start_bucket,
+    // Remove the tasks being moved
+    const filteredTasks = tasksInBucket.filter(
+      (task) => !taskIds.includes(task.id),
     )
-    const targetIndex = bucketTasks.findIndex((t) => t.id === targetId)
 
-    // Remove tasks being moved
-    const remainingTasks = bucketTasks.filter((t) => !taskIds.includes(t.id))
+    // If no target index, append to end
+    if (overIndex === -1) {
+      orderedTasks = [...filteredTasks, ...newTasks]
+    }
 
-    // Insert tasks at target position
-    const orderedTasks = [
-      ...remainingTasks.slice(0, targetIndex),
-      ...taskIds.map((id) => bucketTasks.find((t) => t.id === id)!),
-      ...remainingTasks.slice(targetIndex),
+    // Insert at the target index
+    orderedTasks = [
+      ...filteredTasks.slice(0, overIndex),
+      ...newTasks,
+      ...filteredTasks.slice(overIndex),
     ]
 
-    // Rebalance entire bucket
     await rebalanceBucket(orderedTasks)
   }
 
@@ -271,56 +277,63 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
     })
   }
 
+  const handleDragOver = ({over}: DragOverEvent) => {
+    if (!over) {
+      setIsOverSidebar(false)
+      setDragOverId(null)
+      return
+    }
+
+    const overData = over.data.current as {type: string; listData?: DndListData}
+
+    // Check if dragging over sidebar container
+    setIsOverSidebar(['sidebar', 'bucket'].includes(overData?.type || ''))
+
+    setDragOverId(overData?.listData?.id || null)
+  }
+
   const handleDragEnd = async ({active, over}: DragEndEvent) => {
     if (!over) {
       setDragState({activeId: null, activeType: null})
       return
     }
 
-    const activeData = active.data.current as {type?: string}
-    const overData = over.data.current as {type?: string; date?: number}
+    const activeData = active.data.current as {
+      type: string
+      listData?: DndListData
+    }
+    const overData = over.data.current as {type: string; listData?: DndListData}
 
     try {
-      if (['bucket', 'list', 'upcoming-day'].includes(overData?.type || '')) {
-        const tasksToMove =
-          activeType === 'multiple-tasks'
-            ? selectedTaskIds
-            : [active.id as string]
-        await handleBucketTransition(tasksToMove, over.id as string, overData)
+      const taskIds =
+        activeType === 'multiple-tasks'
+          ? selectedTaskIds
+          : [active.id as string]
+
+      const bucketId = overData?.listData?.id || ''
+      const overId = over.id as string
+
+      if (overData?.type === 'bucket') {
+        await handleBucketTransition({taskIds, bucketId, overId})
       } else if (activeData?.type === 'task' && overData?.type === 'task') {
-        const tasksToReorder =
-          activeType === 'multiple-tasks'
-            ? selectedTaskIds
-            : [active.id as string]
-        await reorderTasks(tasksToReorder, over.id as string)
+        await handleBucketTransition({taskIds, bucketId, overId})
       }
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error during drag operation:', error)
     }
 
     setDragState({activeId: null, activeType: null})
   }
 
-  const handleDragOver = ({over}: DragOverEvent) => {
-    if (!over) {
-      setIsOverSidebar(false)
-      return
-    }
-
-    // Check if dragging over sidebar container
-    setIsOverSidebar(
-      ['sidebar', 'bucket'].includes(
-        (over?.data?.current as {type?: string})?.type || '',
-      ),
-    )
-  }
-
   const value = useMemo(
     () => ({
       isDragging: !!activeId,
       activeType,
+      activeId,
+      dragOverId,
     }),
-    [activeId, activeType],
+    [activeId, activeType, dragOverId],
   )
 
   return (
@@ -349,6 +362,7 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
                     isSelected={false}
                     isDragging
                     checked={!!activeTask.completed_at}
+                    listData={{id: ''}}
                   />
                 )
               )}

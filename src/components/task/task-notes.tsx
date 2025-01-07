@@ -3,6 +3,7 @@ import Placeholder from '@tiptap/extension-placeholder'
 import Typography from '@tiptap/extension-typography'
 import {EditorContent, useEditor} from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import {useEffect} from 'react'
 
 import {useZero} from '@/hooks/use-zero'
 import {cn} from '@/lib/utils'
@@ -42,6 +43,12 @@ export const TaskNotes = ({task}: Props) => {
       })
     },
   })
+
+  useEffect(() => {
+    if (editor && task.description !== editor.getHTML()) {
+      editor.commands.setContent(task.description || '')
+    }
+  }, [editor, task.description])
 
   return <EditorContent editor={editor} className="w-full" />
 }

@@ -129,6 +129,7 @@ const BlockSidebarItems = () => {
   const [todayTasks] = useQuery(
     zero.query.task
       .where('start', '=', 'started')
+      .where('start_date', 'IS NOT', null)
       .where('archived_at', 'IS', null)
       .where('completed_at', 'IS', null),
   )

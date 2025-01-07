@@ -33,7 +33,7 @@ export const TaskItemDetails = observer(
     const newTask = tempTask || task
 
     return (
-      <div className="py-5">
+      <div className="task-outside-click py-5">
         <div className="flex h-full flex-col rounded-lg bg-background shadow-md">
           <TaskHeader
             task={task}

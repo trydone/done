@@ -6,7 +6,7 @@ import {MouseEvent, useContext} from 'react'
 import {RootStoreContext} from '@/lib/stores/root-store'
 import {cn} from '@/lib/utils'
 
-import {useDndContext} from '../dnd/dnd-context'
+import {DndListData, useDndContext} from '../dnd/dnd-context'
 import {TaskItemContent} from './task-item-content'
 import {Task} from './types'
 
@@ -21,6 +21,7 @@ type Props = {
   className?: string
   noRadiusTop?: boolean
   noRadiusBottom?: boolean
+  listData: DndListData
 }
 
 export const TaskItem = observer(
@@ -35,6 +36,7 @@ export const TaskItem = observer(
     className,
     noRadiusTop,
     noRadiusBottom,
+    listData,
   }: Props) => {
     const {
       localStore: {selectedTaskIds, setSelectedTaskIds, setOpenTaskId},
@@ -52,6 +54,7 @@ export const TaskItem = observer(
       data: {
         type: 'task',
         task,
+        listData,
       },
     })
 

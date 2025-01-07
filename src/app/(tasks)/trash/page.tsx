@@ -1,13 +1,14 @@
 'use client'
-import { useQuery } from '@rocicorp/zero/react'
-import { TrashIcon } from 'lucide-react'
-import { useCallback } from 'react'
+import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
+import {useQuery} from '@rocicorp/zero/react'
+import {TrashIcon} from 'lucide-react'
+import {useCallback} from 'react'
 
-import { PageContainer } from '@/components/shared/page-container'
-import { Section } from '@/components/shared/section'
-import { TaskList } from '@/components/task/task-list'
-import { Button } from '@/components/ui/button'
-import { useZero } from '@/hooks/use-zero'
+import {PageContainer} from '@/components/shared/page-container'
+import {Section} from '@/components/shared/section'
+import {TaskList} from '@/components/task/task-list'
+import {Button} from '@/components/ui/button'
+import {useZero} from '@/hooks/use-zero'
 
 export default function PageTrash() {
   return (
@@ -39,7 +40,7 @@ const SectionTrash = () => {
 
   return (
     <Section>
-      <div className="task-outside-click mx-4 mb-6 flex items-center gap-2">
+      <div className="task-outside-click mx-4 flex items-center gap-2">
         <TrashIcon className="task-outside-click size-6" />
         <h1 className="h3 task-outside-click">Trash</h1>
       </div>
@@ -55,7 +56,13 @@ const SectionTrash = () => {
           </Button>
         </div>
       )}
-      <TaskList tasks={tasks} />
+
+      <SortableContext
+        items={[{id: 'trash'}]}
+        strategy={verticalListSortingStrategy}
+      >
+        <TaskList tasks={tasks} listData={{id: 'trash'}} />
+      </SortableContext>
     </Section>
   )
 }

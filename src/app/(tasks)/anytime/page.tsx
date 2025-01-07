@@ -1,11 +1,12 @@
 'use client'
 
-import { useQuery } from '@rocicorp/zero/react'
-import { LayersIcon } from 'lucide-react'
+import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
+import {useQuery} from '@rocicorp/zero/react'
+import {LayersIcon} from 'lucide-react'
 
-import { PageContainer } from '@/components/shared/page-container'
-import { TaskList } from '@/components/task/task-list'
-import { useZero } from '@/hooks/use-zero'
+import {PageContainer} from '@/components/shared/page-container'
+import {TaskList} from '@/components/task/task-list'
+import {useZero} from '@/hooks/use-zero'
 
 export default function Page() {
   const zero = useZero()
@@ -24,7 +25,7 @@ export default function Page() {
 
   return (
     <PageContainer>
-      <div className="task-outside-click mx-4 mb-6 flex items-center gap-2">
+      <div className="task-outside-click mx-4 flex items-center gap-2">
         <LayersIcon className="task-outside-click size-6" />
         <h1 className="h3 task-outside-click">Anytime</h1>
       </div>
@@ -34,8 +35,12 @@ export default function Page() {
           <LayersIcon className="size-16 opacity-30" />
         </div>
       )}
-
-      <TaskList tasks={tasks} showWhenIcon />
+      <SortableContext
+        items={[{id: 'anytime'}]}
+        strategy={verticalListSortingStrategy}
+      >
+        <TaskList tasks={tasks} showWhenIcon listData={{id: 'anytime'}} />
+      </SortableContext>
     </PageContainer>
   )
 }

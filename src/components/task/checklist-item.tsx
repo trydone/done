@@ -1,16 +1,16 @@
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import { GripVertical } from 'lucide-react'
-import { KeyboardEvent, useCallback, useRef } from 'react'
+import {useSortable} from '@dnd-kit/sortable'
+import {CSS} from '@dnd-kit/utilities'
+import {GripVertical} from 'lucide-react'
+import {KeyboardEvent, useCallback, useRef} from 'react'
 
-import { Checkbox } from '@/components/ui/checkbox'
-import { Input } from '@/components/ui/input'
-import { useZero } from '@/hooks/use-zero'
-import { cn } from '@/lib/utils'
-import { ChecklistItemRow, TaskRow } from '@/schema'
+import {Checkbox} from '@/components/ui/checkbox'
+import {Input} from '@/components/ui/input'
+import {useZero} from '@/hooks/use-zero'
+import {cn} from '@/lib/utils'
+import {ChecklistItemRow, TaskRow} from '@/schema'
 
 type Props = {
-  task: TaskRow & { checklistItems: readonly ChecklistItemRow[] }
+  task: TaskRow & {checklistItems: readonly ChecklistItemRow[]}
   item: ChecklistItemRow
   isDragging: boolean
   onAddItem?: (afterId: string) => void
@@ -143,14 +143,8 @@ export const ChecklistItem = ({
     [onAddItem, item.id, handleDeleteItem, task.checklistItems],
   )
 
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging: isSortableDragging,
-  } = useSortable({ id: item.id })
+  const {attributes, listeners, setNodeRef, transform, transition} =
+    useSortable({id: item.id})
 
   const style = {
     transform: CSS.Transform.toString(transform),

@@ -1,3 +1,4 @@
+import {useDroppable} from '@dnd-kit/core'
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {observer} from 'mobx-react-lite'
 import {useContext, useMemo} from 'react'
@@ -5,7 +6,7 @@ import {useContext, useMemo} from 'react'
 import {RootStoreContext} from '@/lib/stores/root-store'
 import {cn} from '@/lib/utils'
 
-import {useDndContext} from '../dnd/dnd-context'
+import {DndListData, useDndContext} from '../dnd/dnd-context'
 import {TaskItemWrapper} from './task-item-wrapper'
 import {Task} from './types'
 
@@ -14,6 +15,7 @@ type Props = {
   className?: string
   showWhenIcon?: boolean
   showDashedCheckbox?: boolean
+  listData: DndListData
 }
 
 function findBorderRadiusGroups(tasks: readonly Task[], selectedIds: string[]) {
@@ -41,7 +43,7 @@ function findBorderRadiusGroups(tasks: readonly Task[], selectedIds: string[]) {
 }
 
 export const TaskList = observer(
-  ({tasks, className, showWhenIcon, showDashedCheckbox}: Props) => {
+  ({tasks, className, showWhenIcon, showDashedCheckbox, listData}: Props) => {
     const {
       localStore: {selectedTaskIds},
     } = useContext(RootStoreContext)
@@ -53,17 +55,26 @@ export const TaskList = observer(
       [tasks, selectedTaskIds],
     )
 
+    const {setNodeRef: setDroppableRef} = useDroppable({
+      id: `list-${listData.id}-droppable`,
+      data: {
+        type: 'list',
+        listData,
+      },
+    })
+
     return (
       <SortableContext
-        items={tasks.map((task) => task.id)}
+        items={tasks.map((t) => t.id!)}
         strategy={verticalListSortingStrategy}
       >
         <div
           className={cn(
-            'flex flex-col',
+            'flex min-h-6 flex-col',
             isDragging && 'cursor-grabbing',
             className,
           )}
+          ref={setDroppableRef}
         >
           {tasks.map((task) => (
             <TaskItemWrapper
@@ -74,6 +85,7 @@ export const TaskList = observer(
               showDashedCheckbox={showDashedCheckbox}
               noRadiusTop={noRadiusTop.includes(task.id)}
               noRadiusBottom={noRadiusBottom.includes(task.id)}
+              listData={listData}
             />
           ))}
         </div>

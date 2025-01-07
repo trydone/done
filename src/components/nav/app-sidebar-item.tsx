@@ -1,13 +1,13 @@
-import { useDroppable } from '@dnd-kit/core'
-import { LucideProps } from 'lucide-react'
-import { observer } from 'mobx-react-lite'
+import {useDroppable} from '@dnd-kit/core'
+import {LucideProps} from 'lucide-react'
+import {observer} from 'mobx-react-lite'
 import Link from 'next/link'
-import { ForwardRefExoticComponent, RefAttributes } from 'react'
+import {ForwardRefExoticComponent, RefAttributes} from 'react'
 
-import { cn } from '@/lib/utils'
+import {cn} from '@/lib/utils'
 
-import { useDndContext } from '../dnd/dnd-context'
-import { SidebarMenuButton, SidebarMenuItem } from '../ui/sidebar'
+import {useDndContext} from '../dnd/dnd-context'
+import {SidebarMenuButton, SidebarMenuItem} from '../ui/sidebar'
 
 export type AppSidebarItemType = {
   id: string
@@ -24,13 +24,14 @@ type Props = {
   isActive?: boolean
 }
 
-export const AppSidebarItem = observer(({ item, count, isActive }: Props) => {
-  const { isDragging } = useDndContext()
-  const { setNodeRef, isOver } = useDroppable({
+export const AppSidebarItem = observer(({item, count, isActive}: Props) => {
+  const {isDragging} = useDndContext()
+  const {setNodeRef, isOver} = useDroppable({
     disabled: isActive,
     id: item.id,
     data: {
       type: 'bucket',
+      listData: {id: item.id},
     },
   })
 

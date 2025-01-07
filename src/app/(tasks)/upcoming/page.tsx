@@ -1,14 +1,14 @@
 'use client'
-import {useDroppable} from '@dnd-kit/core'
+import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {useQuery} from '@rocicorp/zero/react'
 import {format, isThisWeek, isThisYear, isToday, isTomorrow} from 'date-fns'
 import {CalendarIcon} from 'lucide-react'
 
+import {useDndContext} from '@/components/dnd/dnd-context'
 import {PageContainer} from '@/components/shared/page-container'
 import {TaskList} from '@/components/task/task-list'
 import {Task} from '@/components/task/types'
 import {useZero} from '@/hooks/use-zero'
-import {cn} from '@/lib/utils'
 
 // Helper function to format date headers
 const formatDateHeader = (date: Date) => {
@@ -31,8 +31,9 @@ const formatDateHeader = (date: Date) => {
 const groupTasksByDate = (tasks: readonly Task[]) => {
   const groups = tasks.reduce(
     (groups: Record<string, {date: Date; tasks: Task[]}>, task) => {
+      // Changed to string
       const date = new Date(task.start_date!)
-      const dateKey = date.toISOString()
+      const dateKey = date.getTime()
       if (!groups[dateKey]) {
         groups[dateKey] = {
           date,
@@ -45,54 +46,22 @@ const groupTasksByDate = (tasks: readonly Task[]) => {
     {},
   )
 
-  // Sort the entries by date
   return Object.entries(groups)
     .sort(([keyA], [keyB]) => {
-      return new Date(keyA).getTime() - new Date(keyB).getTime()
+      return Number(keyA) - Number(keyB) // Convert back to numbers for comparison
     })
     .reduce(
       (sorted, [key, value]) => {
         sorted[key] = value
         return sorted
       },
-      {} as Record<string, {date: Date; tasks: Task[]}>,
+      {} as Record<string, {date: Date; tasks: Task[]}>, // Changed to string
     )
 }
 
-const DaySection = ({
-  dateKey,
-  date,
-  tasks,
-}: {
-  dateKey: string
-  date: Date
-  tasks: Task[]
-}) => {
-  const {setNodeRef, isOver} = useDroppable({
-    id: `upcoming-${dateKey}`,
-    data: {
-      type: 'upcoming-day',
-      date: date.getTime(),
-    },
-  })
-
-  return (
-    <div
-      ref={setNodeRef}
-      className={cn('p-2 pb-6 transition-colors', {
-        'bg-muted': isOver,
-      })}
-    >
-      <h2 className="task-outside-click mx-4 mb-4 text-lg font-medium">
-        {formatDateHeader(date)}
-      </h2>
-
-      <TaskList tasks={tasks} />
-    </div>
-  )
-}
-
 export default function Page() {
+  const {dragOverId, activeId} = useDndContext()
+
   const zero = useZero()
   const [tasks] = useQuery(
     zero.query.task
@@ -105,11 +74,23 @@ export default function Page() {
       .related('checklistItems', (q) => q.orderBy('sort_order', 'asc')),
   )
 
-  const groupedTasks = groupTasksByDate(tasks || [])
+  const newTasks = tasks.map((task) => {
+    if (dragOverId && task.id === activeId) {
+      // If task is being dragged, only show it in the list it's currently over
+      const targetDateKey = dragOverId.replace('upcoming-', '')
+
+      return {...task, start_date: parseInt(targetDateKey)}
+    }
+    return task
+  })
+
+  const initialGroupedTasks = groupTasksByDate(tasks || [])
+
+  const groupedTasks = groupTasksByDate(newTasks || [])
 
   return (
     <PageContainer>
-      <div className="task-outside-click mx-4 mb-6 flex items-center gap-2">
+      <div className="task-outside-click mx-4 flex items-center gap-2">
         <CalendarIcon className="task-outside-click size-6" />
         <h1 className="h3 task-outside-click">Upcoming</h1>
       </div>
@@ -120,16 +101,35 @@ export default function Page() {
         </div>
       )}
 
-      {Object.entries(groupedTasks).map(
-        ([dateKey, {date, tasks: tasksForDate}]) => (
-          <DaySection
-            key={dateKey}
-            dateKey={dateKey}
-            date={date}
-            tasks={tasksForDate}
-          />
-        ),
-      )}
+      <SortableContext
+        items={Object.keys(initialGroupedTasks).map((dateKey) => ({
+          id: `upcoming-${dateKey}`,
+        }))}
+        strategy={verticalListSortingStrategy}
+      >
+        <div className="flex flex-col">
+          {Object.keys(initialGroupedTasks).map((dateKey) => {
+            const item = initialGroupedTasks[dateKey]!
+            const newItem = groupedTasks[dateKey]
+
+            return (
+              <div key={dateKey} className="pb-6 pt-2">
+                <h2 className="task-outside-click mx-4 pb-2 text-lg font-medium">
+                  {formatDateHeader(item.date)}
+                </h2>
+                <TaskList
+                  tasks={newItem?.tasks || []}
+                  listData={{
+                    id: `upcoming-${dateKey}`,
+                    start: 'postponed',
+                    start_date: item.date.getTime(),
+                  }}
+                />
+              </div>
+            )
+          })}
+        </div>
+      </SortableContext>
     </PageContainer>
   )
 }

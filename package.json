@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "test": "echo 'test not set'",
+    "test": "echo \"Error: no test framework installed\" && exit 1",
     "dev": "next dev --turbopack",
     "dev:zero-cache": "zero-cache-dev -p src/schema.ts",
     "dev:db-up": "docker compose --env-file .env -f ./docker/docker-compose.yml up",

@@ -2,7 +2,6 @@
 
 import {Slot} from '@radix-ui/react-slot'
 import {cva, VariantProps} from 'class-variance-authority'
-import {PanelLeft} from 'lucide-react'
 import * as React from 'react'
 
 import {Button} from '@/components/ui/button'
@@ -249,7 +248,7 @@ const Sidebar = React.forwardRef<
             // Adjust the padding for floating and inset variants.
             variant === 'floating' || variant === 'inset'
               ? 'p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]'
-              : 'group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l',
+              : 'border-sidebar-border group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l',
             className,
           )}
           {...props}
@@ -274,21 +273,24 @@ const SidebarTrigger = React.forwardRef<
   const {toggleSidebar} = useSidebar()
 
   return (
-    <Button
+    <button
       ref={ref}
       data-sidebar="trigger"
       variant="ghost"
       size="sm"
-      className={cn('h-7 w-7 p-1.5', className)}
+      className={cn(
+        'group absolute inset-y-0 left-0 flex h-full min-h-full cursor-col-resize items-center justify-center px-2',
+        className,
+      )}
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
       }}
       {...props}
     >
-      <PanelLeft />
+      <div className="h-12 w-2 rounded-full bg-foreground opacity-0 transition-all group-hover:opacity-40" />
       <span className="sr-only">Toggle Sidebar</span>
-    </Button>
+    </button>
   )
 })
 SidebarTrigger.displayName = 'SidebarTrigger'

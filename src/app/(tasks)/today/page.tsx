@@ -25,6 +25,10 @@ export default function Page() {
       .related('checklistItems', (q) => q.orderBy('sort_order', 'asc')),
   )
 
+  const initialTodayTasks = tasks.filter(
+    (task) => task.start_bucket !== 'evening',
+  )
+
   const todayTasks = tasks.filter((task) => {
     if (dragOverId && task.id === activeId) {
       // Show dragged task in the list it's over
@@ -64,6 +68,10 @@ export default function Page() {
         strategy={verticalListSortingStrategy}
       >
         <div className="flex flex-col">
+          {initialTodayTasks.length > 0 && (
+            <div className="task-outside-click h-6" />
+          )}
+
           <TaskList
             tasks={todayTasks}
             listData={{id: 'today', start: 'started', start_bucket: 'today'}}
@@ -71,14 +79,15 @@ export default function Page() {
 
           {initialEveningTasks.length > 0 && (
             <>
-              <div className="mx-4 mt-6">
-                <div className="task-outside-click flex items-center gap-2 border-b border-border py-1">
+              <div className="task-outside-click mx-4 pb-2">
+                <div className="task-outside-click flex items-center gap-2 border-b border-border py-1 pt-6">
                   <MoonIcon className="task-outside-click size-4" />
                   <h1 className="task-outside-click text-base font-bold tracking-tight">
                     This Evening
                   </h1>
                 </div>
               </div>
+
               <TaskList
                 tasks={eveningTasks}
                 listData={{

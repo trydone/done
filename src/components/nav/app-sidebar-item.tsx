@@ -48,10 +48,14 @@ export const AppSidebarItem = observer(({item, count, isActive}: Props) => {
           <item.icon className="size-4" />
 
           <div className="flex-1">
-            <span>{item.title}</span>
+            <span className="font-medium">{item.title}</span>
           </div>
 
-          {(count || 0) > 0 && <span>{count}</span>}
+          {(count || 0) > 0 && (
+            <span className="text-xs font-medium text-muted-foreground">
+              {count}
+            </span>
+          )}
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>

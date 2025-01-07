@@ -9,7 +9,11 @@ import {Toaster} from '@/components/ui/sonner'
 import {RootStoreProvider} from '@/lib/stores/root-store-provider'
 import {createZero} from '@/lib/zero-setup'
 
-const inter = Inter({subsets: ['latin'], variable: '--font-inter'})
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
 
 const zero = createZero()
 
@@ -21,7 +25,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} h-full font-sans font-normal antialiased`}
+      className={`${inter.variable} h-full font-sans antialiased`}
       suppressHydrationWarning
     >
       <meta name="apple-mobile-web-app-title" content="Done" />

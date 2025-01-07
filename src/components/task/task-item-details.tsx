@@ -34,7 +34,7 @@ export const TaskItemDetails = observer(
 
     return (
       <div className="task-outside-click py-5">
-        <div className="flex h-full flex-col rounded-lg bg-background shadow-md">
+        <div className="flex h-full flex-col rounded-lg bg-card shadow-lg">
           <TaskHeader
             task={task}
             checked={checked}

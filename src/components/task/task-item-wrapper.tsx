@@ -33,9 +33,11 @@ export const TaskItemWrapper = observer(({task, ...props}: Props) => {
   const handleComplete = useCallback(
     async (checked: boolean) => {
       setIsCheckedLocally(checked)
+
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
+
       if (!checked) {
         await zero.mutate.task.update({
           id: task.id,
@@ -43,12 +45,24 @@ export const TaskItemWrapper = observer(({task, ...props}: Props) => {
         })
         return
       }
+
       timeoutRef.current = setTimeout(async () => {
         await zero.mutate.task.update({
           id: task.id,
           completed_at: Date.now(),
         })
       }, 3000)
+    },
+    [task.id, zero.mutate.task],
+  )
+
+  const handleArchived = useCallback(
+    async (archived: boolean) => {
+      await zero.mutate.task.update({
+        id: task.id,
+        archived_at: archived ? Date.now() : null,
+      })
+      return
     },
     [task.id, zero.mutate.task],
   )
@@ -80,6 +94,7 @@ export const TaskItemWrapper = observer(({task, ...props}: Props) => {
           task={task}
           {...props}
           onComplete={handleComplete}
+          onArchive={handleArchived}
           checked={isCheckedLocally}
         />
       )}

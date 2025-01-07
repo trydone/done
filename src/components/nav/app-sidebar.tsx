@@ -18,6 +18,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
+  SidebarTrigger,
 } from '@/components/ui/sidebar'
 import {useZero} from '@/hooks/use-zero'
 
@@ -78,20 +79,22 @@ export const AppSidebar = () => {
   })
 
   return (
-    <Sidebar ref={setNodeRef}>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <BlockWorkspaceSwitch />
-              <BlockLoginGoogle />
-              <BlockLoginGithub />
-              <BlockSidebarItems />
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+    <div>
+      <Sidebar ref={setNodeRef}>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <BlockWorkspaceSwitch />
+                <BlockLoginGoogle />
+                <BlockLoginGithub />
+                <BlockSidebarItems />
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
+    </div>
   )
 }
 

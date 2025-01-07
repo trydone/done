@@ -314,7 +314,7 @@ export const WhenDialog = observer((props: Props) => {
 
         <div className="w-full">
           <Button
-            variant="secondary"
+            variant="muted"
             size="xs"
             onClick={handleClear}
             className="w-full"

@@ -110,10 +110,12 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
     taskIds,
     bucketId,
     overId,
+    activeId,
   }: {
     taskIds: string[]
     bucketId: string
     overId: string
+    activeId: string
   }) => {
     let start: string
     let start_date: number | null
@@ -234,8 +236,17 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
       }
     })
 
-    const newTasks = taskIds.map((id) => ({
-      id,
+    // Get and sort selected tasks
+    const selectedTasks = allTasks
+      .filter((task) => taskIds.includes(task.id))
+      .sort((a, b) => {
+        if (a.id === activeId) return -1
+        if (b.id === activeId) return 1
+        return a.sort_order - b.sort_order
+      })
+
+    const updatedTasks = selectedTasks.map((task) => ({
+      id: task.id,
       start_bucket,
       start,
       start_date,
@@ -243,29 +254,27 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
       archived_at,
     }))
 
-    let orderedTasks: any[] = []
-
-    // Find the position to insert at
-    const overIndex = tasksInBucket.findIndex((task) => task.id === overId)
-
-    // Remove the tasks being moved
-    const filteredTasks = tasksInBucket.filter(
+    // Reorder tasks in target bucket
+    const remainingTasks = tasksInBucket.filter(
       (task) => !taskIds.includes(task.id),
     )
 
-    // If no target index, append to end
-    if (overIndex === -1) {
-      orderedTasks = [...filteredTasks, ...newTasks]
-    }
+    const selectedWithoutActive = taskIds.filter((id) => id !== activeId)
 
-    // Insert at the target index
-    orderedTasks = [
-      ...filteredTasks.slice(0, overIndex),
-      ...newTasks,
-      ...filteredTasks.slice(overIndex),
-    ]
+    const overIndex = tasksInBucket
+      .filter((task) => !selectedWithoutActive.includes(task.id))
+      .findIndex((task) => task.id === overId)
 
-    await rebalanceBucket(orderedTasks)
+    const orderedTasks =
+      overIndex === -1
+        ? [...remainingTasks, ...updatedTasks]
+        : [
+            ...remainingTasks.slice(0, overIndex),
+            ...updatedTasks,
+            ...remainingTasks.slice(overIndex),
+          ]
+
+    await rebalanceBucket(orderedTasks as any)
   }
 
   const handleDragStart = ({active}: DragStartEvent) => {
@@ -312,11 +321,12 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
 
       const bucketId = overData?.listData?.id || ''
       const overId = over.id as string
+      const activeId = active.id as string
 
       if (overData?.type === 'bucket') {
-        await handleBucketTransition({taskIds, bucketId, overId})
+        await handleBucketTransition({taskIds, bucketId, overId, activeId})
       } else if (activeData?.type === 'task' && overData?.type === 'task') {
-        await handleBucketTransition({taskIds, bucketId, overId})
+        await handleBucketTransition({taskIds, bucketId, overId, activeId})
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -359,8 +369,7 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
                 activeTask && (
                   <TaskItem
                     task={activeTask}
-                    isSelected={false}
-                    isDragging
+                    isOverlay
                     checked={!!activeTask.completed_at}
                     listData={{id: ''}}
                   />

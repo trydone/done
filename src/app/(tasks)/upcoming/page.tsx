@@ -113,10 +113,15 @@ export default function Page() {
             const newItem = groupedTasks[dateKey]
 
             return (
-              <div key={dateKey} className="pb-6 pt-2">
-                <h2 className="task-outside-click mx-4 pb-2 text-lg font-medium">
-                  {formatDateHeader(item.date)}
-                </h2>
+              <div key={dateKey}>
+                <div className="task-outside-click mx-4 pb-2">
+                  <div className="task-outside-click flex items-center gap-2 border-b border-border py-1 pt-6">
+                    <h1 className="task-outside-click text-base font-bold tracking-tight">
+                      {formatDateHeader(item.date)}
+                    </h1>
+                  </div>
+                </div>
+
                 <TaskList
                   tasks={newItem?.tasks || []}
                   listData={{

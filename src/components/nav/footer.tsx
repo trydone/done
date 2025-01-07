@@ -167,7 +167,12 @@ export const Footer = observer(() => {
 
   return (
     <>
-      <footer className="flex w-full items-center justify-between gap-1 border-t bg-background p-2">
+      <footer
+        className="fixed bottom-0 flex w-full items-center justify-between gap-1 border-t border-sidebar-border bg-background px-2 py-1"
+        style={{
+          paddingBottom: 'max(8px, calc(2 * env(safe-area-inset-bottom)))',
+        }}
+      >
         <FooterButton
           icon={PlusIcon}
           title="New To-Do"

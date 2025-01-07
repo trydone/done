@@ -40,7 +40,7 @@ export const TaskItemContent = ({
       <div className="flex min-w-0 grow">
         <div className="flex items-center gap-2">
           {task.completed_at && (
-            <span className="text-sm text-muted-foreground">
+            <span className="text-xs font-bold text-blue-600 dark:text-blue-500">
               {formatCompletedDate(task.completed_at)}
             </span>
           )}

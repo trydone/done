@@ -12,13 +12,13 @@ const buttonVariants = cva(
         default:
           'bg-primary text-primary-foreground shadow hover:bg-primary/90 active:bg-primary/80',
         secondary:
-          'border border-gray-300 bg-background text-foreground hover:bg-gray-100 active:bg-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 dark:active:bg-gray-600',
+          'border border-neutral-300 bg-background text-foreground hover:bg-neutral-200 active:bg-neutral-200 dark:border-neutral-600 dark:hover:bg-neutral-700 dark:active:bg-neutral-600',
         outline:
-          'border border-foreground text-foreground hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-gray-800 dark:active:bg-gray-700',
+          'border border-foreground text-foreground hover:bg-neutral-200 active:bg-neutral-200 dark:hover:bg-neutral-800 dark:active:bg-neutral-700',
         muted:
-          'border border-gray-100 bg-gray-100 text-foreground hover:border-gray-200 hover:bg-gray-200 active:border-gray-300 active:bg-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:hover:border-gray-700 dark:hover:bg-gray-700 dark:active:border-gray-600 dark:active:bg-gray-600',
+          'border border-neutral-200 bg-neutral-200 text-foreground hover:border-neutral-200 hover:bg-neutral-200 active:border-neutral-300 active:bg-neutral-300 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-700 dark:hover:bg-neutral-700 dark:active:border-neutral-600 dark:active:bg-neutral-600',
         ghost:
-          'text-gray-700 hover:bg-gray-100 active:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800 dark:active:bg-gray-700',
+          'text-neutral-700 hover:bg-neutral-200 active:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:active:bg-neutral-700',
         input:
           'border-[1.5px] border-input bg-card text-base !font-normal text-foreground ring-offset-background focus:border-ring focus:outline-none',
         link: 'border border-transparent text-primary underline-offset-4 hover:underline',

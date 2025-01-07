@@ -47,19 +47,13 @@ const Layout = observer(
             <AppSidebar />
 
             <SidebarInset>
-              <header className="flex h-14 shrink-0 items-center gap-2">
-                <div className="flex flex-1 items-center gap-2 px-3">
-                  <SidebarTrigger />
-                  <Separator orientation="vertical" className="mr-2 h-4" />
-                </div>
-              </header>
-
+              <SidebarTrigger />
               <div
                 onClick={handleBackgroundClick}
                 className={cn(
-                  'flex flex-1 flex-col gap-4 px-4 py-10 transition-colors',
+                  'mx-auto flex w-full max-w-[1000px] flex-1 flex-col gap-4 px-4 py-10 transition-colors md:px-8 lg:px-12',
                   {
-                    'bg-sidebar': !!openTaskId,
+                    'bg-sidebar dark:bg-background': !!openTaskId,
                   },
                 )}
               >

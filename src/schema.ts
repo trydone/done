@@ -4,6 +4,7 @@ import {
   createTableSchema,
   definePermissions,
   type ExpressionBuilder,
+  NOBODY_CAN,
   type Row,
   type TableSchema,
 } from '@rocicorp/zero'
@@ -156,8 +157,6 @@ export const userSchema = {
     id: 'string',
     username: 'string',
     email: {type: 'string', optional: true},
-    name: {type: 'string', optional: true},
-    avatar: {type: 'string', optional: true},
     role: 'string',
     github_id: 'number',
     created_at: 'number',
@@ -195,18 +194,25 @@ export const userSchema = {
   },
 } as const
 
-export const profileSchema = createTableSchema({
+export const profileSchema = {
   tableName: 'profile',
   columns: {
     id: 'string',
     user_id: 'string',
-    name: {type: 'string', optional: true},
+    name: {type: 'string'},
     avatar: {type: 'string', optional: true},
     created_at: 'number',
     updated_at: 'number',
   },
   primaryKey: 'id',
-})
+  relationships: {
+    session: {
+      sourceField: 'user_id',
+      destField: 'user_id',
+      destSchema: () => sessionSchema,
+    },
+  },
+} as const
 
 export const taskSchema = {
   tableName: 'task',
@@ -594,6 +600,17 @@ export const permissions: ReturnType<typeof definePermissions> =
         ),
       )
 
+    const allowYourProfile = (
+      authData: AuthData,
+      eb: ExpressionBuilder<typeof profileSchema>,
+    ) =>
+      eb.and(
+        userIsLoggedIn(authData, eb),
+        eb.exists('session', (session) =>
+          session.where('id', '=', authData.sub),
+        ),
+      )
+
     // const canSeeTask = (
     //   authData: AuthData,
     //   eb: ExpressionBuilder<typeof taskSchema>,
@@ -657,6 +674,17 @@ export const permissions: ReturnType<typeof definePermissions> =
           // },
           // delete: NOBODY_CAN,
           select: [allowUser],
+        },
+      },
+      profile: {
+        row: {
+          insert: NOBODY_CAN,
+          update: {
+            preMutation: [allowYourProfile],
+            postMutation: [allowYourProfile],
+          },
+          delete: NOBODY_CAN,
+          select: [allowYourProfile],
         },
       },
       task: {

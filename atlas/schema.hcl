@@ -673,8 +673,9 @@ table "profile" {
     type = uuid
   }
   column "name" {
-    null = true
+    null = false
     type = text
+    default = ""
   }
   column "avatar" {
     null = true

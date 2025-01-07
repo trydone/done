@@ -1,10 +1,10 @@
 'use client'
 
-import {useQuery} from '@rocicorp/zero/react'
 import {Lock, Mail, Shield} from 'lucide-react'
-import {ChangeEvent, useEffect, useState} from 'react'
+import {ChangeEvent, useState} from 'react'
 import {toast} from 'sonner'
 
+import {ProfileSwitch} from '@/components/profile/profile-switch'
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
 import {Button} from '@/components/ui/button'
 import {
@@ -16,34 +16,25 @@ import {
 } from '@/components/ui/card'
 import {Input} from '@/components/ui/input'
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import {useZero} from '@/hooks/use-zero'
-import {ProfileRow} from '@/schema'
 
 export default function Page() {
   const zero = useZero()
-  const fromProfileSwitch = useProfileSwitch()
-
-  const {selectedProfile} = fromProfileSwitch
+  const fromProfileSwitch = ProfileSwitch.useProfileSwitch()
+  const {selectedUser, selectedProfileId} = fromProfileSwitch
 
   const [isUploading, setIsUploading] = useState(false)
 
   const handleNameChange = async (e: ChangeEvent<HTMLInputElement>) => {
     try {
-      if (selectedProfile) {
+      if (selectedProfileId) {
         await zero.mutate.profile.update({
-          id: selectedProfile.id,
+          id: selectedProfileId,
           name: e.target.value,
         })
       }
@@ -103,14 +94,9 @@ export default function Page() {
         </p>
       </div>
 
-      <div>
-        <ProfileSwitch
-          selectedProfileId={selectedProfile?.id}
-          selectedProfile={selectedProfile}
-          profiles={fromProfileSwitch.profiles}
-          changeProfile={fromProfileSwitch.changeProfile}
-        />
-      </div>
+      {fromProfileSwitch.users.length > 1 && (
+        <ProfileSwitch {...fromProfileSwitch} />
+      )}
 
       {/* Profile Section */}
       <Card>
@@ -127,10 +113,10 @@ export default function Page() {
                 <TooltipTrigger asChild>
                   <div className="relative">
                     <Avatar className="size-20">
-                      <AvatarImage src={selectedProfile?.avatar || ''} />
+                      <AvatarImage src={selectedUser?.profile?.avatar || ''} />
                       <AvatarFallback>
-                        {selectedProfile?.name
-                          ? getInitials(selectedProfile.name)
+                        {selectedUser?.profile?.name
+                          ? getInitials(selectedUser?.profile?.name)
                           : '?'}
                       </AvatarFallback>
                     </Avatar>
@@ -150,7 +136,7 @@ export default function Page() {
               <label className="text-sm font-medium">Preferred name</label>
               <Input
                 placeholder="Enter your name"
-                value={selectedProfile?.name || ``}
+                value={selectedUser?.profile?.name || ``}
                 onChange={handleNameChange}
               />
             </div>
@@ -175,7 +161,7 @@ export default function Page() {
                 <h3 className="font-medium">Email</h3>
               </div>
               <p className="text-sm text-muted-foreground">
-                {selectedProfile?.email}
+                {selectedUser?.email}
               </p>
             </div>
             <Button variant="outline" onClick={handleEmailChange}>
@@ -217,97 +203,5 @@ export default function Page() {
         </CardContent>
       </Card>
     </div>
-  )
-}
-
-const useProfileSwitch = () => {
-  const zero = useZero()
-  const [session] = useQuery(
-    zero.query.session.related('user', (q) => q.related('profile')),
-  )
-
-  const profiles = session.flatMap((s) =>
-    s.user.flatMap((u) =>
-      u.profile?.[0] ? {...u.profile?.[0], email: u.email} : [],
-    ),
-  )
-
-  const [selectedProfileId, setSelectedProfileId] = useState<
-    string | undefined
-  >()
-
-  const changeProfile = async (profileId: string) => {
-    setSelectedProfileId(profileId)
-  }
-
-  useEffect(() => {
-    if (profiles[0]?.id && !selectedProfileId) {
-      setSelectedProfileId(profiles[0].id)
-    }
-  }, [profiles, selectedProfileId])
-
-  const selectedProfile = profiles.find((p) => p.id === selectedProfileId)
-
-  return {
-    profiles,
-    selectedProfile,
-    selectedProfileId,
-    changeProfile,
-  }
-}
-
-const ProfileSwitch = ({
-  selectedProfileId,
-  selectedProfile,
-  profiles,
-  changeProfile,
-}: {
-  selectedProfileId?: string
-  selectedProfile?: ProfileRow
-  profiles: ReturnType<typeof useProfileSwitch>['profiles']
-  changeProfile: (profileId: string) => void
-}) => {
-  return (
-    <Select value={selectedProfileId} onValueChange={changeProfile}>
-      <SelectTrigger className="w-[280px]">
-        <SelectValue placeholder="Select profile">
-          {selectedProfile && (
-            <div className="flex items-center gap-2">
-              <Avatar className="size-6">
-                <AvatarImage
-                  src={selectedProfile.avatar || undefined}
-                  alt={selectedProfile.name || 'Profile'}
-                />
-                <AvatarFallback>
-                  {selectedProfile.name ? selectedProfile.name[0] : '?'}
-                </AvatarFallback>
-              </Avatar>
-              <span>{selectedProfile.name || 'Unnamed Profile'}</span>
-            </div>
-          )}
-        </SelectValue>
-      </SelectTrigger>
-      <SelectContent>
-        {profiles.map((profile) => (
-          <SelectItem key={profile.id} value={profile.id}>
-            <div className="flex items-center gap-2">
-              <Avatar className="size-6">
-                <AvatarImage
-                  src={profile.avatar || undefined}
-                  alt={profile.name || 'Profile'}
-                />
-                <AvatarFallback>
-                  {profile.name ? profile.name[0] : '?'}
-                </AvatarFallback>
-              </Avatar>
-              <span>{profile.name || 'Unnamed Profile'}</span>
-              <span className="ml-2 text-xs text-muted-foreground">
-                {profile.email}
-              </span>
-            </div>
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
   )
 }

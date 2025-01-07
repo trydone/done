@@ -147,6 +147,209 @@
         "update": {}
       }
     },
+    "profile": {
+      "row": {
+        "select": [
+          [
+            "allow",
+            {
+              "type": "and",
+              "conditions": [
+                {
+                  "type": "simple",
+                  "left": {
+                    "type": "static",
+                    "anchor": "authData",
+                    "field": "sub"
+                  },
+                  "right": {
+                    "type": "literal",
+                    "value": null
+                  },
+                  "op": "IS NOT"
+                },
+                {
+                  "type": "correlatedSubquery",
+                  "related": {
+                    "system": "permissions",
+                    "correlation": {
+                      "parentField": [
+                        "user_id"
+                      ],
+                      "childField": [
+                        "user_id"
+                      ]
+                    },
+                    "subquery": {
+                      "table": "session",
+                      "alias": "zsubq_session",
+                      "where": {
+                        "type": "simple",
+                        "left": {
+                          "type": "column",
+                          "name": "id"
+                        },
+                        "right": {
+                          "type": "static",
+                          "anchor": "authData",
+                          "field": "sub"
+                        },
+                        "op": "="
+                      },
+                      "orderBy": [
+                        [
+                          "id",
+                          "asc"
+                        ],
+                        [
+                          "user_id",
+                          "asc"
+                        ]
+                      ]
+                    }
+                  },
+                  "op": "EXISTS"
+                }
+              ]
+            }
+          ]
+        ],
+        "insert": [],
+        "update": {
+          "preMutation": [
+            [
+              "allow",
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "simple",
+                    "left": {
+                      "type": "static",
+                      "anchor": "authData",
+                      "field": "sub"
+                    },
+                    "right": {
+                      "type": "literal",
+                      "value": null
+                    },
+                    "op": "IS NOT"
+                  },
+                  {
+                    "type": "correlatedSubquery",
+                    "related": {
+                      "system": "permissions",
+                      "correlation": {
+                        "parentField": [
+                          "user_id"
+                        ],
+                        "childField": [
+                          "user_id"
+                        ]
+                      },
+                      "subquery": {
+                        "table": "session",
+                        "alias": "zsubq_session",
+                        "where": {
+                          "type": "simple",
+                          "left": {
+                            "type": "column",
+                            "name": "id"
+                          },
+                          "right": {
+                            "type": "static",
+                            "anchor": "authData",
+                            "field": "sub"
+                          },
+                          "op": "="
+                        },
+                        "orderBy": [
+                          [
+                            "id",
+                            "asc"
+                          ],
+                          [
+                            "user_id",
+                            "asc"
+                          ]
+                        ]
+                      }
+                    },
+                    "op": "EXISTS"
+                  }
+                ]
+              }
+            ]
+          ],
+          "postMutation": [
+            [
+              "allow",
+              {
+                "type": "and",
+                "conditions": [
+                  {
+                    "type": "simple",
+                    "left": {
+                      "type": "static",
+                      "anchor": "authData",
+                      "field": "sub"
+                    },
+                    "right": {
+                      "type": "literal",
+                      "value": null
+                    },
+                    "op": "IS NOT"
+                  },
+                  {
+                    "type": "correlatedSubquery",
+                    "related": {
+                      "system": "permissions",
+                      "correlation": {
+                        "parentField": [
+                          "user_id"
+                        ],
+                        "childField": [
+                          "user_id"
+                        ]
+                      },
+                      "subquery": {
+                        "table": "session",
+                        "alias": "zsubq_session",
+                        "where": {
+                          "type": "simple",
+                          "left": {
+                            "type": "column",
+                            "name": "id"
+                          },
+                          "right": {
+                            "type": "static",
+                            "anchor": "authData",
+                            "field": "sub"
+                          },
+                          "op": "="
+                        },
+                        "orderBy": [
+                          [
+                            "id",
+                            "asc"
+                          ],
+                          [
+                            "user_id",
+                            "asc"
+                          ]
+                        ]
+                      }
+                    },
+                    "op": "EXISTS"
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        "delete": []
+      }
+    },
     "task": {
       "row": {
         "update": {}
@@ -439,7 +642,7 @@
           },
           "name": {
             "type": "string",
-            "optional": true
+            "optional": false
           },
           "updated_at": {
             "type": "number",
@@ -450,7 +653,17 @@
             "optional": false
           }
         },
-        "relationships": {}
+        "relationships": {
+          "session": {
+            "sourceField": [
+              "user_id"
+            ],
+            "destField": [
+              "user_id"
+            ],
+            "destSchema": "session"
+          }
+        }
       },
       "project": {
         "tableName": "project",
@@ -979,10 +1192,6 @@
           "id"
         ],
         "columns": {
-          "avatar": {
-            "type": "string",
-            "optional": true
-          },
           "created_at": {
             "type": "number",
             "optional": false
@@ -998,10 +1207,6 @@
           "id": {
             "type": "string",
             "optional": false
-          },
-          "name": {
-            "type": "string",
-            "optional": true
           },
           "role": {
             "type": "string",

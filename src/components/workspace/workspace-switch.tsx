@@ -3,6 +3,7 @@
 import {useQuery} from '@rocicorp/zero/react'
 import {Pencil, User} from 'lucide-react'
 import {observer} from 'mobx-react-lite'
+import Link from 'next/link'
 import {FC, ReactNode, useContext} from 'react'
 
 import {H2} from '@/components/shared/typography'
@@ -77,14 +78,15 @@ export const WorkspaceSwitch: Compound = ({
               <Label className="flex-1" htmlFor={workspaceMember.workspace_id}>
                 {workspaceMember.workspace[0]?.name}
               </Label>
-              <Button
-                className="invisible -my-2 group-hover/wmember:visible"
-                variant="ghost"
-                size="xs"
-                onClick={() => {}}
-              >
-                <Pencil size={12} />
-              </Button>
+              <Link href={`/workspace/general`}>
+                <Button
+                  className="invisible -my-2 group-hover/wmember:visible"
+                  variant="ghost"
+                  size="xs"
+                >
+                  <Pencil size={12} />
+                </Button>
+              </Link>
             </div>
           ))}
         </RadioGroup>

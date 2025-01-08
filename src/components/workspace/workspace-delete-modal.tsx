@@ -97,11 +97,15 @@ export const View = ({
 
 const useBlock = (workspaceId?: string) => {
   const zero = useZero()
-  const [isOpen, setIsOpen] = useState(false)
-  const [workspace] = useQuery(
-    zero.query.workspace.where('id', '=', workspaceId || '').one(),
-  )
 
+  let query = zero.query.workspace.one()
+  if (workspaceId) {
+    query = query.where('id', '=', workspaceId).one()
+  }
+
+  const [workspace] = useQuery(query)
+
+  const [isOpen, setIsOpen] = useState(false)
   const onDelete = async () => {
     if (!workspaceId) return
 

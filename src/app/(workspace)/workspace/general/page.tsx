@@ -19,7 +19,7 @@ export default function Page() {
   return (
     <div className="container mx-auto max-w-3xl space-y-8 py-6">
       <SectionTitle />
-      {fromWorkspaceSelect.workspaces.length > 0 && (
+      {fromWorkspaceSelect.workspaces.length > 1 && (
         <WorkspaceSelect {...fromWorkspaceSelect} />
       )}
       <SectionInfoEditor workspaceId={workspaceId} />

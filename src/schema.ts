@@ -580,7 +580,7 @@ export const permissions: ReturnType<typeof definePermissions> =
     //     ),
     //   )
 
-    const allowWorkspace = (
+    const allowYourWorkspace = (
       authData: AuthData,
       eb: ExpressionBuilder<typeof workspaceSchema>,
     ) => {
@@ -652,15 +652,16 @@ export const permissions: ReturnType<typeof definePermissions> =
       workspace: {
         // Only the authentication system can write to the user table.
         row: {
-          insert: ANYONE_CAN,
-          update: ANYONE_CAN,
-          delete: ANYONE_CAN,
-          // insert: NOBODY_CAN,
+          insert: [userIsLoggedIn],
+          update: {
+            preMutation: [allowYourWorkspace],
+            postMutation: [allowYourWorkspace],
+          },
+          delete: [allowYourWorkspace],
           // update: {
           //   preMutation: NOBODY_CAN,
           // },
-          // delete: NOBODY_CAN,
-          select: [allowWorkspace],
+          select: [allowYourWorkspace],
         },
       },
       user: {

@@ -74,7 +74,242 @@
             }
           ]
         ],
-        "update": {}
+        "insert": [
+          [
+            "allow",
+            {
+              "type": "simple",
+              "left": {
+                "type": "static",
+                "anchor": "authData",
+                "field": "sub"
+              },
+              "right": {
+                "type": "literal",
+                "value": null
+              },
+              "op": "IS NOT"
+            }
+          ]
+        ],
+        "update": {
+          "preMutation": [
+            [
+              "allow",
+              {
+                "type": "correlatedSubquery",
+                "related": {
+                  "system": "permissions",
+                  "correlation": {
+                    "parentField": [
+                      "id"
+                    ],
+                    "childField": [
+                      "workspace_id"
+                    ]
+                  },
+                  "subquery": {
+                    "table": "workspace_member",
+                    "alias": "zsubq_sessionMembers",
+                    "orderBy": [
+                      [
+                        "id",
+                        "asc"
+                      ]
+                    ],
+                    "where": {
+                      "type": "correlatedSubquery",
+                      "related": {
+                        "system": "permissions",
+                        "correlation": {
+                          "parentField": [
+                            "user_id"
+                          ],
+                          "childField": [
+                            "user_id"
+                          ]
+                        },
+                        "subquery": {
+                          "table": "session",
+                          "alias": "zsubq_sessionMembers",
+                          "where": {
+                            "type": "simple",
+                            "left": {
+                              "type": "column",
+                              "name": "id"
+                            },
+                            "right": {
+                              "type": "static",
+                              "anchor": "authData",
+                              "field": "sub"
+                            },
+                            "op": "="
+                          },
+                          "orderBy": [
+                            [
+                              "id",
+                              "asc"
+                            ],
+                            [
+                              "user_id",
+                              "asc"
+                            ]
+                          ]
+                        }
+                      },
+                      "op": "EXISTS"
+                    }
+                  }
+                },
+                "op": "EXISTS"
+              }
+            ]
+          ],
+          "postMutation": [
+            [
+              "allow",
+              {
+                "type": "correlatedSubquery",
+                "related": {
+                  "system": "permissions",
+                  "correlation": {
+                    "parentField": [
+                      "id"
+                    ],
+                    "childField": [
+                      "workspace_id"
+                    ]
+                  },
+                  "subquery": {
+                    "table": "workspace_member",
+                    "alias": "zsubq_sessionMembers",
+                    "orderBy": [
+                      [
+                        "id",
+                        "asc"
+                      ]
+                    ],
+                    "where": {
+                      "type": "correlatedSubquery",
+                      "related": {
+                        "system": "permissions",
+                        "correlation": {
+                          "parentField": [
+                            "user_id"
+                          ],
+                          "childField": [
+                            "user_id"
+                          ]
+                        },
+                        "subquery": {
+                          "table": "session",
+                          "alias": "zsubq_sessionMembers",
+                          "where": {
+                            "type": "simple",
+                            "left": {
+                              "type": "column",
+                              "name": "id"
+                            },
+                            "right": {
+                              "type": "static",
+                              "anchor": "authData",
+                              "field": "sub"
+                            },
+                            "op": "="
+                          },
+                          "orderBy": [
+                            [
+                              "id",
+                              "asc"
+                            ],
+                            [
+                              "user_id",
+                              "asc"
+                            ]
+                          ]
+                        }
+                      },
+                      "op": "EXISTS"
+                    }
+                  }
+                },
+                "op": "EXISTS"
+              }
+            ]
+          ]
+        },
+        "delete": [
+          [
+            "allow",
+            {
+              "type": "correlatedSubquery",
+              "related": {
+                "system": "permissions",
+                "correlation": {
+                  "parentField": [
+                    "id"
+                  ],
+                  "childField": [
+                    "workspace_id"
+                  ]
+                },
+                "subquery": {
+                  "table": "workspace_member",
+                  "alias": "zsubq_sessionMembers",
+                  "orderBy": [
+                    [
+                      "id",
+                      "asc"
+                    ]
+                  ],
+                  "where": {
+                    "type": "correlatedSubquery",
+                    "related": {
+                      "system": "permissions",
+                      "correlation": {
+                        "parentField": [
+                          "user_id"
+                        ],
+                        "childField": [
+                          "user_id"
+                        ]
+                      },
+                      "subquery": {
+                        "table": "session",
+                        "alias": "zsubq_sessionMembers",
+                        "where": {
+                          "type": "simple",
+                          "left": {
+                            "type": "column",
+                            "name": "id"
+                          },
+                          "right": {
+                            "type": "static",
+                            "anchor": "authData",
+                            "field": "sub"
+                          },
+                          "op": "="
+                        },
+                        "orderBy": [
+                          [
+                            "id",
+                            "asc"
+                          ],
+                          [
+                            "user_id",
+                            "asc"
+                          ]
+                        ]
+                      }
+                    },
+                    "op": "EXISTS"
+                  }
+                }
+              },
+              "op": "EXISTS"
+            }
+          ]
+        ]
       }
     },
     "user": {

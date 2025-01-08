@@ -4,7 +4,6 @@ import {Lock, Mail, Shield} from 'lucide-react'
 import {ChangeEvent, useState} from 'react'
 import {toast} from 'sonner'
 
-import {ProfileSwitch} from '@/components/profile/profile-switch'
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
 import {Button} from '@/components/ui/button'
 import {
@@ -21,20 +20,21 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import {UserSelect} from '@/components/user/user-select'
 import {useZero} from '@/hooks/use-zero'
 
 export default function Page() {
   const zero = useZero()
-  const fromProfileSwitch = ProfileSwitch.useProfileSwitch()
-  const {selectedUser, selectedProfileId} = fromProfileSwitch
+  const fromProfileSwitch = UserSelect.useBlock()
+  const {selectedUser} = fromProfileSwitch
 
   const [isUploading, setIsUploading] = useState(false)
 
   const handleNameChange = async (e: ChangeEvent<HTMLInputElement>) => {
     try {
-      if (selectedProfileId) {
+      if (selectedUser?.profile?.id) {
         await zero.mutate.profile.update({
-          id: selectedProfileId,
+          id: selectedUser?.profile?.id,
           name: e.target.value,
         })
       }
@@ -95,7 +95,7 @@ export default function Page() {
       </div>
 
       {fromProfileSwitch.users.length > 1 && (
-        <ProfileSwitch {...fromProfileSwitch} />
+        <UserSelect {...fromProfileSwitch} />
       )}
 
       {/* Profile Section */}

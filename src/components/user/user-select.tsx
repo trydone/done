@@ -1,7 +1,7 @@
 'use client'
 
 import {useQuery} from '@rocicorp/zero/react'
-import {FC, useEffect, useMemo, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
 import {
@@ -23,29 +23,23 @@ type ExtendedUserRow = UserRow & {
   }
 }
 
-interface Compound
-  extends FC<{
-    users: ExtendedUserRow[]
-    selectedUser?: ExtendedUserRow
-    selectedProfileId?: string
-    changeProfile: (profileId: string) => void
-  }> {
-  Block: FC
-  useProfileSwitch: () => {
-    users: ExtendedUserRow[]
-    selectedUser?: ExtendedUserRow
-    selectedProfileId?: string
-    changeProfile: (profileId: string) => void
-  }
+type Compound = typeof View & {
+  useBlock: typeof useBlock
+  Block: typeof Block
 }
 
-export const ProfileSwitch: Compound = ({
+export const View = ({
   users,
   selectedUser,
-  selectedProfileId,
-  changeProfile,
+  selectedUserId,
+  changeUser: changeProfile,
+}: {
+  users: readonly ExtendedUserRow[]
+  selectedUser?: ExtendedUserRow
+  selectedUserId?: string
+  changeUser: (profileId: string) => void
 }) => (
-  <Select value={selectedProfileId} onValueChange={changeProfile}>
+  <Select value={selectedUserId} onValueChange={changeProfile}>
     <SelectTrigger className="w-[280px]">
       <SelectValue placeholder="Select profile">
         {selectedUser && (
@@ -96,7 +90,7 @@ const ProfileItem = ({
   </div>
 )
 
-const useProfileSwitch: Compound['useProfileSwitch'] = () => {
+const useBlock = () => {
   const zero = useZero()
 
   const [sessions] = useQuery(
@@ -105,9 +99,7 @@ const useProfileSwitch: Compound['useProfileSwitch'] = () => {
     ),
   )
 
-  const [selectedProfileId, setSelectedProfileId] = useState<
-    string | undefined
-  >()
+  const [selectedUserId, setSelectedUserId] = useState<string | undefined>()
 
   const users = useMemo(() => {
     if (!sessions) {
@@ -119,33 +111,31 @@ const useProfileSwitch: Compound['useProfileSwitch'] = () => {
   }, [sessions])
 
   useEffect(() => {
-    if (users[0]?.profile?.id && !selectedProfileId) {
-      setSelectedProfileId(users[0]?.profile.id)
+    if (users[0]?.profile?.id && !selectedUserId) {
+      setSelectedUserId(users[0]?.profile.id)
     }
-  }, [users, selectedProfileId])
+  }, [users, selectedUserId])
 
   const changeProfile = async (profileId: string) => {
-    setSelectedProfileId(profileId)
+    setSelectedUserId(profileId)
   }
 
-  const selectedUser = users.find(
-    (user) => user.profile.id === selectedProfileId,
-  )
+  const selectedUser = users.find((user) => user.profile.id === selectedUserId)
 
   return {
     users,
     selectedUser,
-    selectedProfileId,
-    changeProfile,
+    selectedUserId,
+    changeUser: changeProfile,
   }
 }
 
-ProfileSwitch.useProfileSwitch = useProfileSwitch
-
-const Block: Compound['Block'] = () => {
-  const fromProfileSwitch = useProfileSwitch()
-
-  return <ProfileSwitch {...fromProfileSwitch} />
+const Block = () => {
+  const fromUserSelect = useBlock()
+  return <UserSelect {...fromUserSelect} />
 }
 
-ProfileSwitch.Block = Block
+// @ts-expect-error compound
+export const UserSelect: Compound = View
+UserSelect.useBlock = useBlock
+UserSelect.Block = Block

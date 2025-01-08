@@ -109,7 +109,7 @@ const CustomDaycell = (
       className={cn(
         'flex h-9 w-9 items-center justify-center rounded-[8px] p-0 font-normal text-foreground hover:bg-muted hover:text-foreground focus:bg-muted focus:outline-none',
         {
-          'bg-muted text-foreground': isSelectedDate,
+          'bg-primary text-primary-foreground': isSelectedDate,
           'pointer-events-none opacity-60': disabled,
         },
       )}

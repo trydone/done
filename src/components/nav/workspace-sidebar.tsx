@@ -1,4 +1,12 @@
-import {ArrowLeftIcon, GroupIcon, HomeIcon, TagIcon, UsersIcon} from 'lucide-react'
+import {
+  ArrowLeftIcon,
+  GroupIcon,
+  HomeIcon,
+  TagIcon,
+  UsersIcon,
+} from 'lucide-react'
+import {observer} from 'mobx-react-lite'
+import Link from 'next/link'
 import {usePathname} from 'next/navigation'
 
 import {
@@ -8,6 +16,7 @@ import {
   SidebarGroupContent,
   SidebarMenu,
 } from '@/components/ui/sidebar'
+import {WorkspaceSelect} from '@/components/workspace/workspace-select'
 
 type WorkspaceSidebarItemType = {
   id: string
@@ -43,8 +52,9 @@ const items: WorkspaceSidebarItemType[] = [
   },
 ]
 
-export function WorkspaceSidebar() {
+export const WorkspaceSidebar = observer(() => {
   const pathname = usePathname()
+  const fromWorkspaceSelect = WorkspaceSelect.useBlock()
 
   return (
     <Sidebar>
@@ -52,19 +62,26 @@ export function WorkspaceSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              <a
+              <Link
                 href="/inbox"
-                className="mb-2 flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
               >
                 <ArrowLeftIcon />
                 Back to Inbox
-              </a>
+              </Link>
+
+              {fromWorkspaceSelect.workspaces.length > 1 && (
+                <div className="border-y px-3 py-2">
+                  <WorkspaceSelect {...fromWorkspaceSelect} />
+                </div>
+              )}
+
               {items.map((item) => {
                 const Icon = item.icon
                 const isActive = pathname.startsWith(item.url)
 
                 return (
-                  <a
+                  <Link
                     key={item.id}
                     href={item.url}
                     className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
@@ -75,7 +92,7 @@ export function WorkspaceSidebar() {
                   >
                     <Icon />
                     {item.title}
-                  </a>
+                  </Link>
                 )
               })}
             </SidebarMenu>
@@ -84,4 +101,4 @@ export function WorkspaceSidebar() {
       </SidebarContent>
     </Sidebar>
   )
-}
+})

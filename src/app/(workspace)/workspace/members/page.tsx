@@ -2,7 +2,8 @@
 
 import {useQuery} from '@rocicorp/zero/react'
 import {ArrowUpDown, MoreHorizontal, PlusCircle} from 'lucide-react'
-import {use, useState} from 'react'
+import {observer} from 'mobx-react-lite'
+import {useContext, useState} from 'react'
 
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
 import {Button} from '@/components/ui/button'
@@ -23,20 +24,24 @@ import {
 } from '@/components/ui/select'
 import {useZero} from '@/hooks/use-zero'
 import {getUserInitials} from '@/lib/helpers'
+import {RootStoreContext} from '@/lib/stores/root-store'
 
-export default function Page({
-  params,
-}: {
-  params: Promise<{workspaceId: string}>
-}) {
-  const queryParams = use(params)
+export default observer(function () {
+  const {
+    localStore: {selectedWorkspaceId},
+  } = useContext(RootStoreContext)
 
   const zero = useZero()
-  const [members] = useQuery(
-    zero.query.workspace_member
-      .where('workspace_id', '=', queryParams.workspaceId)
-      .related('user', (q) => q.one().related('profile', (q) => q.one())),
+
+  let query = zero.query.workspace_member.related('user', (q) =>
+    q.one().related('profile', (q) => q.one()),
   )
+
+  if (selectedWorkspaceId) {
+    query = query.where('workspace_id', '=', selectedWorkspaceId).limit(0)
+  }
+
+  const [members] = useQuery(query)
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState<'All' | 'Admin' | 'Member'>('All')
 
@@ -174,4 +179,4 @@ export default function Page({
       </div>
     </div>
   )
-}
+})

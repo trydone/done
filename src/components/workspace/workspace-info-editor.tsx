@@ -1,6 +1,7 @@
 'use client'
 
 import {useQuery} from '@rocicorp/zero/react'
+import {observer} from 'mobx-react-lite'
 
 import {
   Card,
@@ -20,37 +21,39 @@ type Compound = typeof View & {
 }
 
 // TODO: NextJS borken compound components https://github.com/vercel/next.js/issues/74585
-const View = ({
-  workspace,
-  onNameChange,
-}: {
-  workspace?: WorkspaceRow
-  onNameChange: (name: string) => void
-}) => {
-  return (
-    <div className="container mx-auto max-w-3xl space-y-8 py-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Workspace Information</CardTitle>
-          <CardDescription>
-            Update your workspace details and customize your experience.
-          </CardDescription>
-        </CardHeader>
+const View = observer(
+  ({
+    workspace,
+    onNameChange,
+  }: {
+    workspace?: WorkspaceRow
+    onNameChange: (name: string) => void
+  }) => {
+    return (
+      <div className="container mx-auto max-w-3xl space-y-8 py-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Workspace Information</CardTitle>
+            <CardDescription>
+              Update your workspace details and customize your experience.
+            </CardDescription>
+          </CardHeader>
 
-        <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <Label>Name</Label>
-            <Input
-              defaultValue={workspace?.name || ``}
-              onChange={(e) => onNameChange(e.target.value)}
-              placeholder="Done"
-            />
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <Label>Name</Label>
+              <Input
+                value={workspace?.name || ``}
+                onChange={(e) => onNameChange(e.target.value)}
+                placeholder="Done"
+              />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  },
+)
 
 const useBlock = (workspaceId: string) => {
   const zero = useZero()

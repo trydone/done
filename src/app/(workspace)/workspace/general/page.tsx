@@ -1,5 +1,8 @@
 'use client'
 
+import {observer} from 'mobx-react-lite'
+import {useContext} from 'react'
+
 import {Button} from '@/components/ui/button'
 import {
   Card,
@@ -10,23 +13,23 @@ import {
 } from '@/components/ui/card'
 import {WorkspaceDeleteModal} from '@/components/workspace/workspace-delete-modal'
 import {WorkspaceInfoEditor} from '@/components/workspace/workspace-info-editor'
-import {WorkspaceSelect} from '@/components/workspace/workspace-select'
+import {RootStoreContext} from '@/lib/stores/root-store'
 
-export default function Page() {
-  const fromWorkspaceSelect = WorkspaceSelect.useBlock()
-  const workspaceId = fromWorkspaceSelect.selectedWorkspaceId
+const Page = observer(() => {
+  const {
+    localStore: {selectedWorkspaceId},
+  } = useContext(RootStoreContext)
 
   return (
     <div className="container mx-auto max-w-3xl space-y-8 py-6">
       <SectionTitle />
-      {fromWorkspaceSelect.workspaces.length > 1 && (
-        <WorkspaceSelect {...fromWorkspaceSelect} />
-      )}
-      <SectionInfoEditor workspaceId={workspaceId} />
-      <SectionDangerZone workspaceId={workspaceId} />
+      <SectionInfoEditor workspaceId={selectedWorkspaceId} />
+      <SectionDangerZone workspaceId={selectedWorkspaceId} />
     </div>
   )
-}
+})
+
+export default Page
 
 const SectionTitle = () => {
   return (

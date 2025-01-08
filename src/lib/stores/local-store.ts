@@ -12,8 +12,8 @@ export class LocalStore {
   rootStore: RootStore
   zero: ReturnType<typeof useZero>
 
-  selectedUserId?: string
-  selectedWorkspaceId?: string
+  selectedUserId: string | undefined
+  selectedWorkspaceId: string | undefined
 
   // Selection and View States
   selectedTaskIds: string[] = []
@@ -71,7 +71,10 @@ export class LocalStore {
     this.selectedWorkspaceId = undefined
   }
 
-  changeWorkspace(params: {userId: string; workspaceId: string}) {
+  changeWorkspace(params: {
+    userId: string | undefined
+    workspaceId: string | undefined
+  }) {
     this.selectedUserId = params.userId
     this.selectedWorkspaceId = params.workspaceId
   }

@@ -13,7 +13,7 @@ export default function Page() {
 
   const [tasks] = useQuery(
     zero.query.task
-      .where('start', '=', 'postponed')
+      .where('start', '=', 'someday')
       .where('start_date', 'IS', null)
       .where('archived_at', 'IS', null)
       .where('completed_at', 'IS', null)

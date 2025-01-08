@@ -1,5 +1,6 @@
 import {useDroppable} from '@dnd-kit/core'
 import {useQuery} from '@rocicorp/zero/react'
+import {addDays, startOfDay} from 'date-fns'
 import {
   ArchiveIcon,
   BookCheckIcon,
@@ -18,7 +19,6 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
-  SidebarTrigger,
 } from '@/components/ui/sidebar'
 import {useZero} from '@/hooks/use-zero'
 
@@ -122,6 +122,8 @@ const BlockSidebarItems = () => {
   const pathname = usePathname()
   const zero = useZero()
 
+  const tomorrow = addDays(startOfDay(new Date()), 1).getTime()
+
   const [inboxTasks] = useQuery(
     zero.query.task
       .where('start', '=', 'not_started')
@@ -132,7 +134,7 @@ const BlockSidebarItems = () => {
   const [todayTasks] = useQuery(
     zero.query.task
       .where('start', '=', 'started')
-      .where('start_date', 'IS NOT', null)
+      .where('start_date', '<', tomorrow)
       .where('archived_at', 'IS', null)
       .where('completed_at', 'IS', null),
   )

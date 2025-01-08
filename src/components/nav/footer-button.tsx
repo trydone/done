@@ -37,7 +37,7 @@ export const FooterButton = ({
             size="sm"
             disabled={state === 'disabled'}
             className={cn(
-              'h-8 w-full p-0',
+              'h-8 w-full max-w-[200px] p-0',
               'border border-transparent !bg-transparent hover:border-border focus:border-border',
               'disabled:cursor-not-allowed disabled:opacity-50',
               'rounded-md transition-colors',

@@ -6,7 +6,7 @@ import {DndProvider} from '@/components/dnd/dnd-context'
 import {AppSidebar} from '@/components/nav/app-sidebar'
 import {Footer} from '@/components/nav/footer'
 import {QuickFindCommand} from '@/components/quick-find/quick-find-command'
-import {Separator} from '@/components/ui/separator'
+import {WhenDialogWrapper} from '@/components/task/when-dialog-wrapper'
 import {
   SidebarInset,
   SidebarProvider,
@@ -50,22 +50,21 @@ const Layout = observer(
               <SidebarTrigger />
               <div
                 onClick={handleBackgroundClick}
-                className={cn(
-                  'mx-auto flex w-full max-w-[1000px] flex-1 flex-col gap-4 px-4 py-10 transition-colors md:px-8 lg:px-12',
-                  {
-                    'bg-sidebar dark:bg-background': !!openTaskId,
-                  },
-                )}
+                className={cn('flex flex-1 transition-colors', {
+                  'bg-sidebar dark:bg-background': !!openTaskId,
+                })}
               >
-                {children}
+                <div className="task-outside-click mx-auto flex w-full max-w-[1000px] flex-1 flex-col gap-4 px-4 py-10 md:px-8 lg:px-12">
+                  {children}
+                </div>
               </div>
-
               <Footer />
             </SidebarInset>
           </SidebarProvider>
         </DndProvider>
 
         <QuickFindCommand />
+        <WhenDialogWrapper />
       </>
     )
   },

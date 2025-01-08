@@ -719,9 +719,9 @@ table "account" {
   column "provider" {
     null = false
     type = text
-    check {
-      expr = "provider IN ('google', 'github')"
-    }
+    # check {
+    #   expr = "provider IN ('google', 'github')"
+    # }
   }
   column "provider_user_id" {
     null = false
@@ -757,23 +757,23 @@ table "account" {
     type    = timestamptz
     default = sql("now()")
   }
-  
+
   primary_key {
     columns = [column.id]
   }
-  
+
   foreign_key "account_user_id_fk" {
     columns     = [column.user_id]
     ref_columns = [table.user.column.id]
     on_update   = NO_ACTION
     on_delete   = CASCADE
   }
-  
+
   index "account_provider_user_id_idx" {
     unique  = true
     columns = [column.provider, column.provider_user_id]
   }
-  
+
   index "account_user_id_idx" {
     columns = [column.user_id]
   }

@@ -1,4 +1,12 @@
-import {format, isBefore, isSameDay, isToday, startOfToday} from 'date-fns'
+import {
+  addDays,
+  format,
+  isBefore,
+  isSameDay,
+  isToday,
+  startOfDay,
+  startOfToday,
+} from 'date-fns'
 import {
   Check,
   ChevronLeft,
@@ -34,6 +42,7 @@ type BaseDialogProps = {
 type SingleTaskProps = BaseDialogProps & {
   type: 'single'
   task: TaskRow
+  immediate?: boolean
 }
 
 type MultipleTaskProps = BaseDialogProps & {
@@ -44,7 +53,7 @@ type MultipleTaskProps = BaseDialogProps & {
 type Props = SingleTaskProps | MultipleTaskProps
 
 type TaskUpdate = {
-  start?: 'not_started' | 'started' | 'postponed'
+  start?: 'not_started' | 'started' | 'someday'
   start_bucket: 'today' | 'evening'
   start_date: number | null
 }
@@ -52,7 +61,7 @@ type TaskUpdate = {
 export const getButtonIcon = (task: TaskRow) => {
   if (task.start === 'started' && !task.start_date)
     return <LayersIcon className="size-4" />
-  if (task.start === 'postponed' && !task.start_date)
+  if (task.start === 'someday' && !task.start_date)
     return <Package className="size-4" />
   if (task.start === 'not_started') return <Inbox className="size-4" />
   if (task.start_bucket === 'evening') return <Moon className="size-4" />
@@ -60,19 +69,23 @@ export const getButtonIcon = (task: TaskRow) => {
 }
 
 export const getButtonText = (task: TaskRow) => {
+  const tomorrow = addDays(startOfDay(new Date()), 1).getTime()
+
   if (task.start === 'started' && !task.start_date) return 'Anytime'
-  if (task.start === 'postponed' && !task.start_date) return 'Someday'
+  if (task.start === 'someday' && !task.start_date) return 'Someday'
   if (task.start === 'not_started') return 'Inbox'
   if (
     task.start === 'started' &&
     task.start_bucket === 'evening' &&
-    !!task.start_date
+    !!task.start_date &&
+    task.start_date < tomorrow
   )
     return 'This Evening'
   if (
     task.start === 'started' &&
     task.start_bucket === 'today' &&
-    !!task.start_date
+    !!task.start_date &&
+    task.start_date < tomorrow
   )
     return 'Today'
   if (task.start_date) return format(new Date(task.start_date), 'MMM d')
@@ -116,9 +129,16 @@ export const WhenDialog = observer((props: Props) => {
 
   const updateTasks = useCallback(
     async (update: TaskUpdate) => {
-      if (props.type === 'single') {
+      if (props.type === 'single' && !!props.immediate) {
+        zero.mutate.task.update({
+          id: props.task.id,
+          archived_at: null,
+          ...update,
+        })
+      } else if (props.type === 'single') {
         setTempTask({
           ...props.task,
+          archived_at: null,
           ...update,
         })
       } else {
@@ -143,7 +163,7 @@ export const WhenDialog = observer((props: Props) => {
     if (!date) return
 
     await updateTasks({
-      start: isToday(date) ? 'started' : 'postponed',
+      start: 'started',
       start_date: date ? date.getTime() : null,
       start_bucket: 'today',
     })
@@ -171,7 +191,7 @@ export const WhenDialog = observer((props: Props) => {
 
   const handleSomeday = async () => {
     await updateTasks({
-      start: 'postponed',
+      start: 'someday',
       start_bucket: 'today',
       start_date: null,
     })
@@ -185,6 +205,8 @@ export const WhenDialog = observer((props: Props) => {
     })
     props.setOpen(false)
   }
+
+  const tomorrow = addDays(startOfDay(new Date()), 1).getTime()
 
   const singleTask = props.type === 'single' ? props.task : null
 
@@ -201,7 +223,8 @@ export const WhenDialog = observer((props: Props) => {
             variant={
               singleTask?.start_bucket === 'today' &&
               singleTask?.start === 'started' &&
-              !!singleTask?.start_date
+              !!singleTask?.start_date &&
+              singleTask.start_date < tomorrow
                 ? 'secondary'
                 : 'ghost'
             }
@@ -212,7 +235,10 @@ export const WhenDialog = observer((props: Props) => {
             Today
             {singleTask?.start_bucket === 'today' &&
               singleTask?.start === 'started' &&
-              !!singleTask?.start_date && <Check className="ml-auto size-4" />}
+              !!singleTask?.start_date &&
+              singleTask.start_date < tomorrow && (
+                <Check className="ml-auto size-4" />
+              )}
           </Button>
 
           <Button
@@ -220,7 +246,8 @@ export const WhenDialog = observer((props: Props) => {
             variant={
               singleTask?.start_bucket === 'evening' &&
               singleTask?.start === 'started' &&
-              !!singleTask?.start_date
+              !!singleTask?.start_date &&
+              singleTask.start_date < tomorrow
                 ? 'secondary'
                 : 'ghost'
             }
@@ -231,7 +258,10 @@ export const WhenDialog = observer((props: Props) => {
             This Evening
             {singleTask?.start_bucket === 'evening' &&
               singleTask?.start === 'started' &&
-              !!singleTask?.start_date && <Check className="ml-auto size-4" />}
+              !!singleTask?.start_date &&
+              singleTask.start_date < tomorrow && (
+                <Check className="ml-auto size-4" />
+              )}
           </Button>
         </div>
 
@@ -289,7 +319,7 @@ export const WhenDialog = observer((props: Props) => {
 
         <Button
           variant={
-            singleTask?.start === 'postponed' && !singleTask.start_date
+            singleTask?.start === 'someday' && !singleTask.start_date
               ? 'secondary'
               : 'ghost'
           }
@@ -299,7 +329,7 @@ export const WhenDialog = observer((props: Props) => {
         >
           <Package className="mr-2 size-4" />
           Someday
-          {singleTask?.start === 'postponed' && !singleTask.start_date && (
+          {singleTask?.start === 'someday' && !singleTask.start_date && (
             <Check className="ml-auto size-4" />
           )}
         </Button>

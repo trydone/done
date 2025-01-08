@@ -15,6 +15,7 @@ import {
 } from '../ui/context-menu'
 import {TaskItemContent} from './task-item-content'
 import {Task} from './types'
+import {WhenHoverButton} from './when-hover-button'
 
 type Props = {
   task: Task
@@ -101,7 +102,11 @@ export const TaskItem = observer(
     return (
       <ContextMenu>
         <ContextMenuTrigger>
-          <div className="mx-2">
+          <div className="relative mx-2">
+            <div className="absolute left-0 top-[2px] -translate-x-full">
+              <WhenHoverButton task={task} />
+            </div>
+
             <div
               ref={setNodeRef}
               style={style}

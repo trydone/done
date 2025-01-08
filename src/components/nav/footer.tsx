@@ -3,7 +3,7 @@ import {addDays, startOfDay} from 'date-fns'
 import {CalendarIcon, PlusIcon, SearchIcon, TrashIcon} from 'lucide-react'
 import {observer} from 'mobx-react-lite'
 import {usePathname} from 'next/navigation'
-import {useCallback, useContext, useState} from 'react'
+import {useCallback, useContext} from 'react'
 import {useHotkeys} from 'react-hotkeys-hook'
 import {v4} from 'uuid'
 
@@ -11,13 +11,13 @@ import {useZero} from '@/hooks/use-zero'
 import {INITIAL_GAP} from '@/lib/constants'
 import {RootStoreContext} from '@/lib/stores/root-store'
 
-import {WhenDialog} from '../task/when-dialog'
+import {SIDEBAR_WIDTH, useSidebar} from '../ui/sidebar'
 import {FooterButton} from './footer-button'
 
 export const Footer = observer(() => {
+  const {state, isMobile} = useSidebar()
   const pathname = usePathname()
   const zero = useZero()
-  const [whenOpen, setWhenOpen] = useState(false)
 
   const [firstTask] = useQuery(
     zero.query.task.orderBy('sort_order', 'asc').one(),
@@ -33,6 +33,8 @@ export const Footer = observer(() => {
       selectedWorkspaceId,
       selectedTaskIds,
       setQuickFindOpen,
+      setWhenState,
+      setWhenOpen,
     },
   } = useContext(RootStoreContext)
 
@@ -69,12 +71,12 @@ export const Footer = observer(() => {
         start_date = null
         break
       case '/upcoming':
-        start = 'postponed'
+        start = 'started'
         start_bucket = 'today'
         start_date = addDays(startOfDay(new Date()), 1).getTime()
         break
       case '/someday':
-        start = 'postponed'
+        start = 'someday'
         start_bucket = 'today'
         start_date = null
         break
@@ -117,10 +119,15 @@ export const Footer = observer(() => {
     setOpenTaskId,
   ])
 
-  const handleQuickFind = () => {
+  const handleQuickFind = useCallback(() => {
     setQuickFindQuery('')
     setQuickFindOpen(true)
-  }
+  }, [setQuickFindOpen, setQuickFindQuery])
+
+  const handleWhenClick = useCallback(() => {
+    setWhenState({type: 'multiple', task: undefined})
+    setWhenOpen(true)
+  }, [setWhenOpen, setWhenState])
 
   useHotkeys(
     'n',
@@ -168,9 +175,13 @@ export const Footer = observer(() => {
   return (
     <>
       <footer
-        className="fixed bottom-0 flex w-full items-center justify-between gap-1 border-t border-sidebar-border bg-background px-2 py-1"
+        className="fixed bottom-0 flex items-center justify-center gap-1 border-t border-sidebar-border bg-background px-2 py-1"
         style={{
           paddingBottom: 'max(8px, calc(2 * env(safe-area-inset-bottom)))',
+          width:
+            state === 'expanded' && !isMobile
+              ? `calc(100% - ${SIDEBAR_WIDTH})`
+              : 'w-full',
         }}
       >
         <FooterButton
@@ -190,7 +201,7 @@ export const Footer = observer(() => {
             icon={CalendarIcon}
             title="When"
             state={buttonStates.when}
-            onClick={() => setWhenOpen(true)}
+            onClick={handleWhenClick}
           />
         )}
 
@@ -208,15 +219,6 @@ export const Footer = observer(() => {
           state={buttonStates.delete}
         />
       </footer>
-
-      {whenOpen && (
-        <WhenDialog
-          type="multiple"
-          taskIds={selectedTaskIds}
-          open={whenOpen}
-          setOpen={setWhenOpen}
-        />
-      )}
     </>
   )
 })

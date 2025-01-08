@@ -1,7 +1,15 @@
 'use client'
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {useQuery} from '@rocicorp/zero/react'
-import {format, isThisWeek, isThisYear, isToday, isTomorrow} from 'date-fns'
+import {
+  addDays,
+  format,
+  isThisWeek,
+  isThisYear,
+  isToday,
+  isTomorrow,
+  startOfDay,
+} from 'date-fns'
 import {CalendarIcon} from 'lucide-react'
 
 import {useDndContext} from '@/components/dnd/dnd-context'
@@ -62,11 +70,13 @@ const groupTasksByDate = (tasks: readonly Task[]) => {
 export default function Page() {
   const {dragOverId, activeId} = useDndContext()
 
+  const tomorrow = addDays(startOfDay(new Date()), 1).getTime()
+
   const zero = useZero()
   const [tasks] = useQuery(
     zero.query.task
-      .where('start', '=', 'postponed')
-      .where('start_date', 'IS NOT', null)
+      .where('start', '=', 'started')
+      .where('start_date', '>=', tomorrow)
       .where('archived_at', 'IS', null)
       .where('completed_at', 'IS', null)
       .orderBy('sort_order', 'asc')
@@ -126,7 +136,7 @@ export default function Page() {
                   tasks={newItem?.tasks || []}
                   listData={{
                     id: `upcoming-${dateKey}`,
-                    start: 'postponed',
+                    start: 'started',
                     start_date: item.date.getTime(),
                   }}
                 />

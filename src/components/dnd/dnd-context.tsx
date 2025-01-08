@@ -143,18 +143,17 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
         break
       case 'anytime':
         start = 'started'
-        start_date = null
         archived_at = null
         completed_at = null
         break
       case 'upcoming':
-        start = 'postponed'
+        start = 'started'
         start_date = idDate ?? addDays(startOfDay(new Date()), 1).getTime()
         archived_at = null
         completed_at = null
         break
       case 'someday':
-        start = 'postponed'
+        start = 'someday'
         start_date = null
         archived_at = null
         completed_at = null
@@ -174,7 +173,7 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
         break
     }
 
-    const todayStartTime = startOfDay(new Date()).getTime()
+    const tomorrow = addDays(startOfDay(new Date()), 1).getTime()
 
     // Get current tasks in target bucket with proper filtering
     const tasksInBucket = allTasks.filter((task) => {
@@ -183,7 +182,8 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
           return (
             task.start === 'started' &&
             task.start_bucket === 'today' &&
-            task.start_date === todayStartTime &&
+            !!task.start_date &&
+            task.start_date < tomorrow &&
             !task.archived_at &&
             !task.completed_at
           )
@@ -191,29 +191,30 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
           return (
             task.start === 'started' &&
             task.start_bucket === 'evening' &&
-            task.start_date === todayStartTime &&
+            !!task.start_date &&
+            task.start_date < tomorrow &&
             !task.archived_at &&
             !task.completed_at
           )
         case 'anytime':
           return (
             task.start === 'started' &&
-            task.start_bucket === 'today' &&
-            task.start_date === null &&
+            (task.start_date === null || task.start_date < tomorrow) &&
             !task.archived_at &&
             !task.completed_at
           )
         case 'upcoming':
           return (
-            task.start === 'postponed' &&
+            task.start === 'started' &&
             task.start_bucket === 'today' &&
-            task.start_date !== null &&
+            !!task.start_date &&
+            task.start_date >= tomorrow &&
             !task.archived_at &&
             !task.completed_at
           )
         case 'someday':
           return (
-            task.start === 'postponed' &&
+            task.start === 'someday' &&
             task.start_bucket === 'today' &&
             task.start_date === null &&
             !task.archived_at &&

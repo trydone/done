@@ -2,6 +2,7 @@
 
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {useQuery} from '@rocicorp/zero/react'
+import {addDays, startOfDay} from 'date-fns'
 import {MoonIcon, StarIcon} from 'lucide-react'
 
 import {useDndContext} from '@/components/dnd/dnd-context'
@@ -14,10 +15,13 @@ export default function Page() {
 
   const zero = useZero()
 
+  const tomorrow = addDays(startOfDay(new Date()), 1).getTime()
+
   const [tasks] = useQuery(
     zero.query.task
       .where('start', '=', 'started')
       .where('start_date', 'IS NOT', null)
+      .where('start_date', '<', tomorrow)
       .where('archived_at', 'IS', null)
       .where('completed_at', 'IS', null)
       .orderBy('sort_order', 'asc')

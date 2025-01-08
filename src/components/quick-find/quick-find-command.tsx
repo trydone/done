@@ -1,4 +1,5 @@
 import {useQuery} from '@rocicorp/zero/react'
+import {addDays, startOfDay} from 'date-fns'
 import {observer} from 'mobx-react-lite'
 import {useRouter} from 'next/navigation'
 import {useCallback, useContext} from 'react'
@@ -76,14 +77,20 @@ export const QuickFindCommand = observer(() => {
       } else {
         switch (task.start) {
           case 'started':
-            targetRoute = '/today'
+            if (!task.start_date) {
+              targetRoute = '/anytime'
+              break
+            }
+
+            const tomorrow = addDays(startOfDay(new Date()), 1).getTime()
+            targetRoute = task.start_date < tomorrow ? '/today' : '/upcoming'
             break
-          case 'postponed':
-            // Someday tasks have start='postponed' and no start_date
-            targetRoute = task.start_date === null ? '/someday' : '/upcoming'
+          case 'someday':
+            // Someday tasks have start='started' and no start_date
+            targetRoute = '/someday'
             break
           case 'not_started':
-            targetRoute = task.start_bucket === 'inbox' ? '/inbox' : '/anytime'
+            targetRoute = '/inbox'
             break
         }
       }

@@ -1,4 +1,4 @@
-import {format} from 'date-fns'
+import {addDays, format, startOfDay} from 'date-fns'
 import {MoonIcon, StarIcon} from 'lucide-react'
 
 import {Checkbox} from '@/components/ui/checkbox'
@@ -22,6 +22,8 @@ export const TaskItemContent = ({
   showWhenIcon,
   showDashedCheckbox,
 }: Props) => {
+  const tomorrow = addDays(startOfDay(new Date()), 1).getTime()
+
   const formatCompletedDate = (timestamp: number) => {
     const date = new Date(timestamp * 1000) // Convert seconds to milliseconds
     return format(date, 'd MMM') // Format as "4 Jan"
@@ -48,12 +50,14 @@ export const TaskItemContent = ({
           {showWhenIcon &&
             task.start === 'started' &&
             task.start_bucket === 'today' &&
-            !!task.start_date && <StarIcon className="size-4" />}
+            !!task.start_date &&
+            task.start_date < tomorrow && <StarIcon className="size-4" />}
 
           {showWhenIcon &&
             task.start === 'started' &&
             task.start_bucket === 'evening' &&
-            !!task.start_date && <MoonIcon className="size-4" />}
+            !!task.start_date &&
+            task.start_date < tomorrow && <MoonIcon className="size-4" />}
 
           <span
             className={cn('truncate text-sm', {

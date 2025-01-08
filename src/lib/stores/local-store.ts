@@ -25,6 +25,18 @@ export class LocalStore {
   quickFindQuery = ''
   quickFindOpen = false
 
+  // When state
+  whenState: {
+    type: 'single' | 'multiple'
+    task?: TaskRow
+    immediate?: boolean
+  } = {
+    type: 'single',
+    task: undefined,
+  }
+
+  whenOpen = false
+
   // UI Interaction States
   draggedTaskId: string | null = null
   contextMenuPosition: {x: number; y: number} | null = null
@@ -126,9 +138,21 @@ export class LocalStore {
     this.quickFindQuery = query
   }
 
-  // Find Actions
   setQuickFindOpen(quickFindOpen: boolean) {
     this.quickFindOpen = quickFindOpen
+  }
+
+  // When Actions
+  setWhenState(whenState: {
+    type: 'single' | 'multiple'
+    task?: TaskRow
+    immediate?: boolean
+  }) {
+    this.whenState = whenState
+  }
+
+  setWhenOpen(whenOpen: boolean) {
+    this.whenOpen = whenOpen
   }
 
   // UI Interaction Actions

@@ -51,7 +51,7 @@ export const TaskItemWrapper = observer(({task, ...props}: Props) => {
           id: task.id,
           completed_at: Date.now(),
         })
-      }, 3000)
+      }, 2000)
     },
     [task.id, zero.mutate.task],
   )

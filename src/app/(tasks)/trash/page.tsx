@@ -25,7 +25,7 @@ const SectionTrash = () => {
     zero.query.task
       .where('archived_at', 'IS NOT', null)
       .orderBy('archived_at', 'asc')
-      .related('tags')
+      .related('tags', (q) => q.orderBy('updated_at', 'desc'))
       .related('checklistItems', (q) => q.orderBy('sort_order', 'asc')),
   )
 

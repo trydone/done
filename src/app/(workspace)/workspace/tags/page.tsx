@@ -29,7 +29,7 @@ type Props = {
 
 export default function Page({params: {}}: Props) {
   const zero = useZero()
-  const [tags] = useQuery(zero.query.tag)
+  const [tags] = useQuery(zero.query.tag.orderBy('updated_at', 'desc'))
   const [search, setSearch] = useState('')
 
   const filteredTags = useMemo(() => {

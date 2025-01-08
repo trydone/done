@@ -27,7 +27,7 @@ export const TagDialogList = ({
 }: Props) => {
   const [search, setSearch] = useState('')
   const zero = useZero()
-  const [availableTags] = useQuery(zero.query.tag)
+  const [availableTags] = useQuery(zero.query.tag.orderBy('updated_at', 'desc'))
 
   const filteredTags = availableTags?.filter((tag) =>
     tag.title.toLowerCase().includes(search.toLowerCase()),

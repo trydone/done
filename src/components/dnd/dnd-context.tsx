@@ -70,7 +70,7 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
   const [activeTask] = useQuery(
     zero.query.task
       .where('id', '=', activeId as string)
-      .related('tags')
+      .related('tags', (q) => q.orderBy('updated_at', 'desc'))
       .related('checklistItems', (q) => q.orderBy('sort_order', 'asc'))
       .one(),
     !!activeId,

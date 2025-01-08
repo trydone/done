@@ -16,7 +16,7 @@ export default function Page() {
       .where('archived_at', 'IS', null)
       .where('completed_at', 'IS NOT', null)
       .orderBy('completed_at', 'asc')
-      .related('tags')
+      .related('tags', (q) => q.orderBy('updated_at', 'desc'))
       .related('checklistItems', (q) => q.orderBy('sort_order', 'asc')),
   )
 

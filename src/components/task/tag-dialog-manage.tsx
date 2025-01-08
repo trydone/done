@@ -21,7 +21,7 @@ type Props = {
 export const TagDialogManage = ({onEditTag, onCancel}: Props) => {
   const [search, setSearch] = useState('')
   const zero = useZero()
-  const [availableTags] = useQuery(zero.query.tag)
+  const [availableTags] = useQuery(zero.query.tag.orderBy('updated_at', 'desc'))
   const dialog = usePrompt()
 
   const filteredTags = availableTags?.filter((tag) =>

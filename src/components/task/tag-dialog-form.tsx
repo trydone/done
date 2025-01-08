@@ -21,7 +21,7 @@ type Props = {
 export const TagDialogForm = ({task, tag, onSuccess, onCancel}: Props) => {
   const [title, setTitle] = useState(tag?.title || '')
   const zero = useZero()
-  const [availableTags] = useQuery(zero.query.tag)
+  const [availableTags] = useQuery(zero.query.tag.orderBy('updated_at', 'desc'))
   const isEditing = !!tag
 
   const handleSubmit = async (e: React.FormEvent) => {

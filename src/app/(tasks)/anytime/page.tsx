@@ -2,7 +2,7 @@
 
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {useQuery} from '@rocicorp/zero/react'
-import { addDays, startOfDay } from 'date-fns'
+import {addDays, startOfDay} from 'date-fns'
 import {LayersIcon} from 'lucide-react'
 
 import {PageContainer} from '@/components/shared/page-container'
@@ -25,7 +25,7 @@ export default function Page() {
       .orderBy('start', 'asc')
       .orderBy('start_bucket', 'desc')
       .orderBy('sort_order', 'asc')
-      .related('tags')
+      .related('tags', (q) => q.orderBy('updated_at', 'desc'))
       .related('checklistItems', (q) => q.orderBy('sort_order', 'asc')),
   )
 

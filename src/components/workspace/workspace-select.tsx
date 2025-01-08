@@ -83,19 +83,19 @@ const useBlock = () => {
     string | undefined
   >()
 
+  const selectedWorkspace = workspaces?.find(
+    (workspace) => workspace.id === selectedWorkspaceId,
+  )
+
   useEffect(() => {
-    if (workspaces?.[0]?.id && !selectedWorkspaceId) {
+    if (!selectedWorkspace && workspaces?.[0]?.id) {
       setSelectedWorkspaceId(workspaces[0].id)
     }
-  }, [workspaces, selectedWorkspaceId])
+  }, [workspaces, selectedWorkspace])
 
   const changeWorkspace = async (workspaceId: string) => {
     setSelectedWorkspaceId(workspaceId)
   }
-
-  const selectedWorkspace = workspaces?.find(
-    (workspace) => workspace.id === selectedWorkspaceId,
-  )
 
   return {
     workspaces: workspaces || [],

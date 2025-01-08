@@ -8,12 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {WorkspaceDeleteModal} from '@/components/workspace/workspace-delete-modal'
 import {WorkspaceInfoEditor} from '@/components/workspace/workspace-info-editor'
 import {WorkspaceSelect} from '@/components/workspace/workspace-select'
 
 export default function Page() {
   const fromWorkspaceSelect = WorkspaceSelect.useBlock()
-
   const workspaceId = fromWorkspaceSelect.selectedWorkspaceId
 
   return (
@@ -23,7 +23,7 @@ export default function Page() {
         <WorkspaceSelect {...fromWorkspaceSelect} />
       )}
       <SectionInfoEditor workspaceId={workspaceId} />
-      <SectionDangerZone />
+      <SectionDangerZone workspaceId={workspaceId} />
     </div>
   )
 }
@@ -42,24 +42,38 @@ const SectionTitle = () => {
 const SectionInfoEditor = ({workspaceId}: {workspaceId?: string}) =>
   workspaceId && <WorkspaceInfoEditor.Block workspaceId={workspaceId} />
 
-const SectionDangerZone = () => (
-  <Card>
-    <CardHeader>
-      <CardTitle>Danger Zone</CardTitle>
-      <CardDescription>Irreversible and destructive actions.</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <p className="text-sm font-medium">Delete Workspace</p>
-          <p className="text-sm text-muted-foreground">
-            Permanently delete this workspace and all of its contents.
-          </p>
-        </div>
-        <Button variant="destructive" onClick={() => {}}>
-          Delete Workspace
-        </Button>
-      </div>
-    </CardContent>
-  </Card>
-)
+const SectionDangerZone = ({workspaceId}: {workspaceId?: string}) => {
+  const fromWorkspaceDelete = WorkspaceDeleteModal.useBlock(workspaceId)
+
+  return (
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>Danger Zone</CardTitle>
+          <CardDescription>
+            Irreversible and destructive actions.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-sm font-medium">Delete Workspace</p>
+              <p className="text-sm text-muted-foreground">
+                Permanently delete this workspace and all of its contents.
+              </p>
+            </div>
+            <Button
+              variant="destructive"
+              onClick={fromWorkspaceDelete.onOpen}
+              disabled={!workspaceId}
+            >
+              Delete Workspace
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {workspaceId && <WorkspaceDeleteModal {...fromWorkspaceDelete} />}
+    </>
+  )
+}

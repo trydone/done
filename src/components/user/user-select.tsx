@@ -110,17 +110,17 @@ const useBlock = () => {
       .filter((user) => user?.profile?.id) as ExtendedUserRow[]
   }, [sessions])
 
+  const selectedUser = users.find((user) => user.profile.id === selectedUserId)
+
   useEffect(() => {
-    if (users[0]?.profile?.id && !selectedUserId) {
+    if (!selectedUser && users[0]?.profile?.id) {
       setSelectedUserId(users[0]?.profile.id)
     }
-  }, [users, selectedUserId])
+  }, [users, selectedUser])
 
   const changeProfile = async (profileId: string) => {
     setSelectedUserId(profileId)
   }
-
-  const selectedUser = users.find((user) => user.profile.id === selectedUserId)
 
   return {
     users,

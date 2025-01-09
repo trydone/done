@@ -1,16 +1,16 @@
-import { ListIcon } from 'lucide-react'
-import { useCallback } from 'react'
-import { v4 } from 'uuid'
+import {ListIcon} from 'lucide-react'
+import {useCallback} from 'react'
+import {v4} from 'uuid'
 
-import { Button } from '@/components/ui/button'
-import { useZero } from '@/hooks/use-zero'
-import { ChecklistItemRow, TaskRow } from '@/schema'
+import {Button} from '@/components/ui/button'
+import {useZero} from '@/hooks/use-zero'
+import {ChecklistItemRow, TaskRow} from '@/schema'
 
 type Props = {
-  task: TaskRow & { checklistItems: readonly ChecklistItemRow[] }
+  task: TaskRow & {checklistItems: readonly ChecklistItemRow[]}
 }
 
-export const ChecklistButton = ({ task }: Props) => {
+export const ChecklistButton = ({task}: Props) => {
   const zero = useZero()
 
   const handleAddItem = useCallback(() => {

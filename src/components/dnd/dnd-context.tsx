@@ -275,11 +275,11 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
   }
 
   const handleDragStart = ({active}: DragStartEvent) => {
-    const isSelected = selectedTaskIds.includes(active.id as string)
+    const isSelected = selectedTaskIds.has(active.id as string)
     setDragState({
       activeId: active.id,
       activeType:
-        isSelected && selectedTaskIds.length > 1 ? 'multiple-tasks' : 'task',
+        isSelected && selectedTaskIds.size > 1 ? 'multiple-tasks' : 'task',
     })
   }
 
@@ -359,7 +359,7 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
               {isOverSidebar || activeType === 'multiple-tasks' ? (
                 <MultipleTasksOverlay
                   count={
-                    activeType === 'multiple-tasks' ? selectedTaskIds.length : 1
+                    activeType === 'multiple-tasks' ? selectedTaskIds.size : 1
                   }
                 />
               ) : (

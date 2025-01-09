@@ -8,9 +8,11 @@ import {PageContainer} from '@/components/shared/page-container'
 import {Section} from '@/components/shared/section'
 import {TaskList} from '@/components/task/task-list'
 import {Button} from '@/components/ui/button'
+import { useTaskSelection } from '@/hooks/use-task-selection'
 import {useZero} from '@/hooks/use-zero'
+import { observer } from 'mobx-react-lite'
 
-export default function PageTrash() {
+const Page = observer(() => {
   return (
     <PageContainer>
       <SectionTrash />
@@ -28,6 +30,11 @@ const SectionTrash = () => {
       .related('tags', (q) => q.orderBy('updated_at', 'desc'))
       .related('checklistItems', (q) => q.orderBy('sort_order', 'asc')),
   )
+
+  const { handleClick } = useTaskSelection(
+    tasks.map(task => task.id)
+  );
+
 
   const handleEmptyTrash = useCallback(() => {
     // Loop through each task and delete it
@@ -61,8 +68,14 @@ const SectionTrash = () => {
         items={[{id: 'trash'}]}
         strategy={verticalListSortingStrategy}
       >
-        <TaskList tasks={tasks} listData={{id: 'trash'}} />
+        <TaskList
+          tasks={tasks}
+          listData={{id: 'trash'}}
+          onTaskClick={handleClick}
+        />
       </SortableContext>
     </Section>
   )
-}
+  })
+
+  export default Page

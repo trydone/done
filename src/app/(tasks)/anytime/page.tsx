@@ -4,12 +4,14 @@ import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {useQuery} from '@rocicorp/zero/react'
 import {addDays, startOfDay} from 'date-fns'
 import {LayersIcon} from 'lucide-react'
+import {observer} from 'mobx-react-lite'
 
 import {PageContainer} from '@/components/shared/page-container'
 import {TaskList} from '@/components/task/task-list'
+import {useTaskSelection} from '@/hooks/use-task-selection'
 import {useZero} from '@/hooks/use-zero'
 
-export default function Page() {
+const Page = observer(() => {
   const zero = useZero()
 
   const tomorrow = addDays(startOfDay(new Date()), 1).getTime()
@@ -29,6 +31,8 @@ export default function Page() {
       .related('checklistItems', (q) => q.orderBy('sort_order', 'asc')),
   )
 
+  const {handleClick} = useTaskSelection(tasks.map((task) => task.id))
+
   return (
     <PageContainer>
       <div className="task-outside-click mx-4 flex items-center gap-2">
@@ -41,12 +45,20 @@ export default function Page() {
           <LayersIcon className="size-16 opacity-30" />
         </div>
       )}
+
       <SortableContext
         items={[{id: 'anytime'}]}
         strategy={verticalListSortingStrategy}
       >
-        <TaskList tasks={tasks} showWhenIcon listData={{id: 'anytime'}} />
+        <TaskList
+          tasks={tasks}
+          showWhenIcon
+          listData={{id: 'anytime'}}
+          onTaskClick={handleClick}
+        />
       </SortableContext>
     </PageContainer>
   )
-}
+})
+
+export default Page

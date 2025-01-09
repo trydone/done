@@ -21,6 +21,8 @@ export const TaskHeader = ({
 }: Props) => {
   const zero = useZero()
 
+  const firstInputRef = useRef(null)
+
   const handleTitleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       zero.mutate.task.update({
@@ -30,6 +32,10 @@ export const TaskHeader = ({
     },
     [task.id, zero.mutate.task],
   )
+
+  useEffect(() => {
+    ;(firstInputRef?.current as any).focus()
+  }, [])
 
   return (
     <div className="flex gap-2 px-4">
@@ -52,7 +58,7 @@ export const TaskHeader = ({
         onChange={handleTitleChange}
         placeholder="New To-Do"
         className="h-auto !rounded-none border-none bg-transparent p-0 pb-1 pt-4 text-sm placeholder:text-muted-foreground focus-visible:ring-0"
-        autoFocus
+        ref={firstInputRef}
       />
     </div>
   )

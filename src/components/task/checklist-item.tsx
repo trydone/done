@@ -18,6 +18,8 @@ type Props = {
   onFocusChange: (id: string | null) => void
   showTopLine: boolean
   showBottomLine: boolean
+  isEndMode: boolean
+  setIsEndMode: (isEndMode: boolean) => void
 }
 
 export const ChecklistItem = ({
@@ -29,6 +31,8 @@ export const ChecklistItem = ({
   onFocusChange,
   showTopLine,
   showBottomLine,
+  isEndMode,
+  setIsEndMode,
 }: Props) => {
   const zero = useZero()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -103,19 +107,75 @@ export const ChecklistItem = ({
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') {
+        setIsEndMode(false)
+      }
+
+      const input = e.target as HTMLInputElement
+      const items = task?.checklistItems || []
+      const currentIndex = items.findIndex((i) => i.id === item.id)
+      const isFirstItem = currentIndex === 0
+      const isOnlyItem = items.length === 1
+      const cursorAtStart =
+        input.selectionStart === 0 && input.selectionEnd === 0
+
       if (e.key === 'Enter') {
         e.preventDefault()
-        onAddItem?.(item.id)
-      } else if (e.key === 'Backspace') {
-        const input = e.target as HTMLInputElement
-        if (input.value === '') {
+        if (cursorAtStart) {
+          // Add new item before current item
+          onAddItem?.(items[currentIndex - 1]?.id || '') // Pass previous item's ID or empty string if first item
+        } else {
+          // Add new item after current item (existing behavior)
+          onAddItem?.(item.id)
+        }
+      } else if (e.key === 'Backspace' || e.key === 'Delete') {
+        if (cursorAtStart) {
           e.preventDefault()
-          handleDeleteItem()
+
+          // Early returns remain the same...
+          if (isFirstItem && input.value === '' && isOnlyItem) {
+            handleDeleteItem()
+            return
+          }
+
+          if (isFirstItem) {
+            return
+          }
+
+          // Get the previous item
+          const previousItem = items[currentIndex - 1]
+          if (!previousItem) return
+
+          // Get the previous input element
+          const previousInput = document.querySelector(
+            `input[data-checklist-id="${previousItem.id}"]`,
+          ) as HTMLInputElement
+
+          if (previousInput) {
+            const currentText = input.value
+            const previousText = previousItem.title
+            const focusPosition = previousText.length // Store the position where texts will join
+
+            // Update previous item with concatenated text
+            zero.mutate.checklist_item.update({
+              id: previousItem.id,
+              title: previousText + currentText,
+            })
+
+            // Delete current item
+            handleDeleteItem()
+
+            // Focus and set cursor position after the update is complete
+            requestAnimationFrame(() => {
+              previousInput.focus()
+              previousInput.setSelectionRange(focusPosition, focusPosition)
+            })
+          }
         }
       } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
         e.preventDefault()
-        const items = task?.checklistItems || []
-        const currentIndex = items.findIndex((i) => i.id === item.id)
+        const currentCursorPosition = input.selectionStart
+        const isAtEnd = currentCursorPosition === input.value.length
 
         let targetIndex
         if (e.key === 'ArrowUp') {
@@ -124,23 +184,45 @@ export const ChecklistItem = ({
           targetIndex = currentIndex + 1
         }
 
-        // Check if target index is valid
         if (targetIndex >= 0 && targetIndex < items.length) {
-          const targetItem = items[targetIndex]
+          const targetItem = items[targetIndex]!
           const targetInput = document.querySelector(
             `input[data-checklist-id="${targetItem.id}"]`,
           ) as HTMLInputElement
 
           if (targetInput) {
+            // Update end mode state
+            if (isAtEnd && input.value.length > targetItem.title.length) {
+              setIsEndMode(true)
+            }
+
             targetInput.focus()
-            // Place cursor at the end of the input
-            const length = targetInput.value.length
-            targetInput.setSelectionRange(length, length)
+
+            if (isEndMode) {
+              // Always go to end if in end mode
+              const endPosition = targetItem.title.length
+              targetInput.setSelectionRange(endPosition, endPosition)
+            } else {
+              // Regular behavior - maintain horizontal position
+              const targetPosition = Math.min(
+                currentCursorPosition!,
+                targetItem.title.length,
+              )
+              targetInput.setSelectionRange(targetPosition, targetPosition)
+            }
           }
         }
       }
     },
-    [onAddItem, item.id, handleDeleteItem, task.checklistItems],
+    [
+      task?.checklistItems,
+      setIsEndMode,
+      item.id,
+      onAddItem,
+      handleDeleteItem,
+      zero.mutate.checklist_item,
+      isEndMode,
+    ],
   )
 
   const {attributes, listeners, setNodeRef, transform, transition} =

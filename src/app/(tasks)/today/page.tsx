@@ -4,13 +4,15 @@ import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {useQuery} from '@rocicorp/zero/react'
 import {addDays, startOfDay} from 'date-fns'
 import {MoonIcon, StarIcon} from 'lucide-react'
+import {observer} from 'mobx-react-lite'
 
 import {useDndContext} from '@/components/dnd/dnd-context'
 import {PageContainer} from '@/components/shared/page-container'
 import {TaskList} from '@/components/task/task-list'
+import {useTaskSelection} from '@/hooks/use-task-selection'
 import {useZero} from '@/hooks/use-zero'
 
-export default function Page() {
+const Page = observer(() => {
   const {dragOverId, activeId} = useDndContext()
 
   const zero = useZero()
@@ -52,6 +54,12 @@ export default function Page() {
     return task.start_bucket === 'evening'
   })
 
+  const {handleClick} = useTaskSelection(
+    [initialTodayTasks, initialEveningTasks].flatMap((tasks) =>
+      tasks.map((task) => task.id),
+    ),
+  )
+
   return (
     <PageContainer>
       <div>
@@ -79,6 +87,7 @@ export default function Page() {
           <TaskList
             tasks={todayTasks}
             listData={{id: 'today', start: 'started', start_bucket: 'today'}}
+            onTaskClick={handleClick}
           />
 
           {initialEveningTasks.length > 0 && (
@@ -99,6 +108,7 @@ export default function Page() {
                   start: 'started',
                   start_bucket: 'evening',
                 }}
+                onTaskClick={handleClick}
               />
             </>
           )}
@@ -106,4 +116,6 @@ export default function Page() {
       </SortableContext>
     </PageContainer>
   )
-}
+})
+
+export default Page

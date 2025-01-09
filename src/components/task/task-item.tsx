@@ -31,6 +31,7 @@ type Props = {
   noRadiusBottom?: boolean
   listData: DndListData
   isOverlay?: boolean
+  onClick: (e: MouseEvent<HTMLDivElement>) => void
 }
 
 export const TaskItem = observer(
@@ -48,9 +49,10 @@ export const TaskItem = observer(
     noRadiusBottom,
     listData,
     isOverlay,
+    onClick,
   }: Props) => {
     const {
-      localStore: {selectedTaskIds, setSelectedTaskIds, setOpenTaskId},
+      localStore: {setSelectedTaskIds, setOpenTaskId},
     } = useContext(RootStoreContext)
 
     const {isDragging: isContextDragging} = useDndContext()
@@ -80,19 +82,6 @@ export const TaskItem = observer(
       transition,
     }
 
-    const handleClick = (e: MouseEvent<HTMLDivElement>) => {
-      e.stopPropagation()
-      if (e.metaKey || e.ctrlKey) {
-        const isSelected = selectedTaskIds.includes(task.id)
-        const newSelected = isSelected
-          ? selectedTaskIds.filter((id) => id !== task.id)
-          : [...selectedTaskIds, task.id]
-        setSelectedTaskIds(newSelected)
-      } else {
-        setSelectedTaskIds([task.id])
-      }
-    }
-
     const handleDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
       e.stopPropagation()
       setSelectedTaskIds([])
@@ -102,7 +91,7 @@ export const TaskItem = observer(
     return (
       <ContextMenu>
         <ContextMenuTrigger>
-          <div className="relative mx-2">
+          <div className="relative mx-2 select-none">
             <div className="absolute left-0 top-[2px] -translate-x-full">
               <WhenHoverButton task={task} />
             </div>
@@ -113,7 +102,7 @@ export const TaskItem = observer(
               {...attributes}
               {...listeners}
               className={cn(
-                'group relative flex items-center gap-2 rounded-lg px-2 py-1 transition-all duration-200 ease-in-out',
+                'group relative flex items-center gap-2 rounded-lg px-2 py-1 outline-0 transition-all duration-200 ease-in-out',
                 {
                   'bg-[#CBE2FF] dark:bg-[#244174]':
                     !isDragging &&
@@ -129,7 +118,7 @@ export const TaskItem = observer(
                 },
                 className,
               )}
-              onClick={handleClick}
+              onClick={onClick}
               onDoubleClick={handleDoubleClick}
             >
               <TaskItemContent

@@ -1,6 +1,13 @@
 import {AnimatePresence, motion} from 'framer-motion'
 import {observer} from 'mobx-react-lite'
-import {useCallback, useContext, useEffect, useRef, useState} from 'react'
+import {
+  MouseEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
 import {useZero} from '@/hooks/use-zero'
 import {RootStoreContext} from '@/lib/stores/root-store'
@@ -19,6 +26,7 @@ type Props = {
   noRadiusTop?: boolean
   noRadiusBottom?: boolean
   listData: DndListData
+  onClick: (e: MouseEvent<HTMLDivElement>) => void
 }
 
 export const TaskItemWrapper = observer(({task, ...props}: Props) => {

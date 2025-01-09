@@ -16,7 +16,7 @@ export const WhenHoverButton = observer(({task}: Props) => {
   } = useContext(RootStoreContext)
 
   const handleClick = useCallback(() => {
-    if (!selectedTaskIds.includes(task.id)) {
+    if (!selectedTaskIds.has(task.id)) {
       setWhenState({type: 'single', task, immediate: true})
     } else {
       setWhenState({type: 'multiple'})

@@ -3,12 +3,14 @@
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {useQuery} from '@rocicorp/zero/react'
 import {BookCheckIcon} from 'lucide-react'
+import {observer} from 'mobx-react-lite'
 
 import {PageContainer} from '@/components/shared/page-container'
 import {TaskList} from '@/components/task/task-list'
+import {useTaskSelection} from '@/hooks/use-task-selection'
 import {useZero} from '@/hooks/use-zero'
 
-export default function Page() {
+const Page = observer(() => {
   const zero = useZero()
 
   const [tasks] = useQuery(
@@ -19,6 +21,8 @@ export default function Page() {
       .related('tags', (q) => q.orderBy('updated_at', 'desc'))
       .related('checklistItems', (q) => q.orderBy('sort_order', 'asc')),
   )
+
+  const {handleClick} = useTaskSelection(tasks.map((task) => task.id))
 
   return (
     <PageContainer>
@@ -37,8 +41,14 @@ export default function Page() {
         items={[{id: 'logbook'}]}
         strategy={verticalListSortingStrategy}
       >
-        <TaskList tasks={tasks} listData={{id: 'logbook'}} />
+        <TaskList
+          tasks={tasks}
+          listData={{id: 'logbook'}}
+          onTaskClick={handleClick}
+        />
       </SortableContext>
     </PageContainer>
   )
-}
+})
+
+export default Page

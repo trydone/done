@@ -11,11 +11,13 @@ import {
   startOfDay,
 } from 'date-fns'
 import {CalendarIcon} from 'lucide-react'
+import {observer} from 'mobx-react-lite'
 
 import {useDndContext} from '@/components/dnd/dnd-context'
 import {PageContainer} from '@/components/shared/page-container'
 import {TaskList} from '@/components/task/task-list'
 import {Task} from '@/components/task/types'
+import {useTaskSelection} from '@/hooks/use-task-selection'
 import {useZero} from '@/hooks/use-zero'
 
 // Helper function to format date headers
@@ -67,7 +69,7 @@ const groupTasksByDate = (tasks: readonly Task[]) => {
     )
 }
 
-export default function Page() {
+const Page = observer(() => {
   const {dragOverId, activeId} = useDndContext()
 
   const tomorrow = addDays(startOfDay(new Date()), 1).getTime()
@@ -97,6 +99,12 @@ export default function Page() {
   const initialGroupedTasks = groupTasksByDate(tasks || [])
 
   const groupedTasks = groupTasksByDate(newTasks || [])
+
+  const {handleClick} = useTaskSelection(
+    Object.values(groupedTasks)
+      .flatMap((group) => group.tasks)
+      .map((task) => task.id),
+  )
 
   return (
     <PageContainer>
@@ -139,6 +147,7 @@ export default function Page() {
                     start: 'started',
                     start_date: item.date.getTime(),
                   }}
+                  onTaskClick={handleClick}
                 />
               </div>
             )
@@ -147,4 +156,6 @@ export default function Page() {
       </SortableContext>
     </PageContainer>
   )
-}
+})
+
+export default Page

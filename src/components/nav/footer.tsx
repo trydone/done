@@ -142,20 +142,6 @@ export const Footer = observer(() => {
   )
 
   useHotkeys(
-    'enter',
-    (e) => {
-      e.preventDefault()
-      if (selectedTaskIds.length > 0) {
-        setSelectedTaskIds([])
-        setOpenTaskId(selectedTaskIds[0]!)
-      }
-    },
-    {
-      enabled: !openTaskId && selectedTaskIds.length > 0,
-    },
-  )
-
-  useHotkeys(
     'esc',
     (e) => {
       e.preventDefault()
@@ -184,7 +170,7 @@ export const Footer = observer(() => {
     (e) => {
       e.preventDefault()
 
-      if (selectedTaskIds.length > 0) {
+      if (selectedTaskIds.size > 0) {
         selectedTaskIds.forEach(async (taskId) => {
           await zero.mutate.task.update({
             id: taskId,
@@ -196,7 +182,7 @@ export const Footer = observer(() => {
       }
     },
     {
-      enabled: !!openTaskId || selectedTaskIds.length > 0,
+      enabled: !!openTaskId || selectedTaskIds.size > 0,
     },
   )
 

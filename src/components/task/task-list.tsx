@@ -1,7 +1,7 @@
 import {useDroppable} from '@dnd-kit/core'
 import {SortableContext, verticalListSortingStrategy} from '@dnd-kit/sortable'
 import {observer} from 'mobx-react-lite'
-import {useContext, useMemo} from 'react'
+import {MouseEvent, useContext, useMemo} from 'react'
 
 import {RootStoreContext} from '@/lib/stores/root-store'
 import {cn} from '@/lib/utils'
@@ -16,11 +16,15 @@ type Props = {
   showWhenIcon?: boolean
   showDashedCheckbox?: boolean
   listData: DndListData
+  onTaskClick: (id: string, e: MouseEvent<HTMLDivElement>) => void
 }
 
-function findBorderRadiusGroups(tasks: readonly Task[], selectedIds: string[]) {
+const findBorderRadiusGroups = (
+  tasks: readonly Task[],
+  selectedTaskIds: Set<string>,
+) => {
   const selectedTasks = tasks
-    .filter((task) => selectedIds.includes(task.id))
+    .filter((task) => selectedTaskIds.has(task.id))
     .sort((a, b) => tasks.indexOf(a) - tasks.indexOf(b))
 
   const noRadiusTop: string[] = []
@@ -33,7 +37,6 @@ function findBorderRadiusGroups(tasks: readonly Task[], selectedIds: string[]) {
     if (prevTask && tasks.indexOf(task) === tasks.indexOf(prevTask) + 1) {
       noRadiusTop.push(task.id)
     }
-
     if (nextTask && tasks.indexOf(nextTask) === tasks.indexOf(task) + 1) {
       noRadiusBottom.push(task.id)
     }
@@ -43,7 +46,14 @@ function findBorderRadiusGroups(tasks: readonly Task[], selectedIds: string[]) {
 }
 
 export const TaskList = observer(
-  ({tasks, className, showWhenIcon, showDashedCheckbox, listData}: Props) => {
+  ({
+    tasks,
+    className,
+    showWhenIcon,
+    showDashedCheckbox,
+    listData,
+    onTaskClick,
+  }: Props) => {
     const {
       localStore: {selectedTaskIds},
     } = useContext(RootStoreContext)
@@ -80,12 +90,13 @@ export const TaskList = observer(
             <TaskItemWrapper
               key={task.id}
               task={task}
-              isSelected={selectedTaskIds.includes(task.id)}
+              isSelected={selectedTaskIds.has(task.id)}
               showWhenIcon={showWhenIcon}
               showDashedCheckbox={showDashedCheckbox}
               noRadiusTop={noRadiusTop.includes(task.id)}
               noRadiusBottom={noRadiusBottom.includes(task.id)}
               listData={listData}
+              onClick={(e) => onTaskClick(task.id, e)}
             />
           ))}
         </div>

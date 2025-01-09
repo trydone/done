@@ -16,7 +16,8 @@ export class LocalStore {
   selectedWorkspaceId: string | undefined
 
   // Selection and View States
-  selectedTaskIds: string[] = []
+  selectedTaskIds: Set<string> = new Set()
+  lastSelectedTaskId: string | null = null
   openTaskId: string | null = null
   tempTask: TaskRow | null = null
   sidebarCollapsed = false
@@ -93,7 +94,8 @@ export class LocalStore {
 
   // Selection Actions
   setSelectedTaskIds(taskIds: string[]) {
-    this.selectedTaskIds = taskIds
+    this.selectedTaskIds = new Set(taskIds)
+    this.lastSelectedTaskId = taskIds[taskIds.length - 1] ?? null
     const hasSelection = taskIds.length > 0
 
     this.updateButtonStates({
@@ -171,20 +173,115 @@ export class LocalStore {
     this.buttonStates = {...this.buttonStates, ...newStates}
   }
 
+  toggleTaskSelection(
+    id: string,
+    isMultiSelect: boolean,
+    isRangeSelect: boolean,
+    allTaskIds: string[],
+  ) {
+    this.setOpenTaskId(null)
+
+    if (isRangeSelect && this.lastSelectedTaskId) {
+      // Handle range selection logic
+      const range = this.getRange(this.lastSelectedTaskId, id, allTaskIds)
+      range.forEach((id) => this.selectedTaskIds.add(id))
+    } else if (isMultiSelect) {
+      // Toggle individual selection
+      if (this.selectedTaskIds.has(id)) {
+        this.selectedTaskIds.delete(id)
+      } else {
+        this.selectedTaskIds.add(id)
+      }
+    } else {
+      // Single selection
+      this.selectedTaskIds.clear()
+      this.selectedTaskIds.add(id)
+    }
+    this.lastSelectedTaskId = id
+  }
+
+  private getRange(
+    startId: string,
+    endId: string,
+    allTaskIds: string[],
+  ): string[] {
+    const startIndex = allTaskIds.indexOf(startId)
+    const endIndex = allTaskIds.indexOf(endId)
+
+    if (startIndex === -1 || endIndex === -1) {
+      return []
+    }
+
+    // Handle selection in either direction (up or down)
+    const start = Math.min(startIndex, endIndex)
+    const end = Math.max(startIndex, endIndex)
+
+    return allTaskIds.slice(start, end + 1)
+  }
+
+  moveTaskSelection(direction: 'up' | 'down', allTaskIds: string[]) {
+    // Guard against empty array
+    if (!allTaskIds.length) {
+      return
+    }
+
+    // If nothing is selected, select the first/last item based on direction
+    if (this.selectedTaskIds.size === 0) {
+      const newId =
+        direction === 'up' ? allTaskIds[allTaskIds.length - 1] : allTaskIds[0]
+
+      if (newId) {
+        this.selectedTaskIds.clear()
+        this.selectedTaskIds.add(newId)
+        this.lastSelectedTaskId = newId
+      }
+
+      return
+    }
+
+    // Get the current focus point (last selected item)
+    const currentId =
+      this.lastSelectedTaskId ?? Array.from(this.selectedTaskIds)[0]
+    if (!currentId) {
+      return
+    }
+
+    const currentIndex = allTaskIds.indexOf(currentId)
+    if (currentIndex === -1) {
+      return
+    }
+
+    const newIndex =
+      direction === 'up'
+        ? currentIndex === 0
+          ? allTaskIds.length - 1
+          : currentIndex - 1
+        : currentIndex === allTaskIds.length - 1
+          ? 0
+          : currentIndex + 1
+
+    const newId = allTaskIds[newIndex]
+    if (!newId) {
+      return
+    }
+
+    // Check if shift key is held (assuming we pass this as a parameter if needed)
+    const isShiftHeld = false // This should be passed as a parameter if needed
+
+    if (isShiftHeld) {
+      // Add to existing selection
+      this.selectedTaskIds.add(newId)
+    } else {
+      // Replace selection
+      this.selectedTaskIds.clear()
+      this.selectedTaskIds.add(newId)
+    }
+
+    this.lastSelectedTaskId = newId
+  }
+
   // Computed Properties
   get isHydrated() {
     return isHydrated(this)
-  }
-
-  get hasSelectedTask() {
-    return this.selectedTaskIds.length > 0
-  }
-
-  get isDragging() {
-    return this.draggedTaskId !== null
-  }
-
-  get hasContextMenu() {
-    return this.contextMenuPosition !== null
   }
 }

@@ -1,9 +1,13 @@
+// import {useQuery} from '@rocicorp/zero/react'
 import {differenceInDays, format} from 'date-fns'
 import {ClockIcon, FileIcon, ListIcon} from 'lucide-react'
 
+// import {useCallback} from 'react'
+// import {useZero} from '@/hooks/use-zero'
 import {cn} from '@/lib/utils'
 
 import {Badge} from '../ui/badge'
+// import {AssigneeSwitcher} from './assignee-switcher'
 import {Task} from './types'
 
 type Props = {
@@ -12,6 +16,22 @@ type Props = {
 }
 
 export const TaskMetadata = ({task, className}: Props) => {
+  // const zero = useZero()
+
+  // const [workspaceMembers] = useQuery(
+  //   zero.query.workspace_member.related('user', (q) => q.one()),
+  // )
+
+  // const handleAssigneeChange = useCallback(
+  //   (assigneeId: string | null) => {
+  //     zero.mutate.task.update({
+  //       id: task.id,
+  //       assignee_id: assigneeId,
+  //     })
+  //   },
+  //   [task.id, zero.mutate.task],
+  // )
+
   const getDaysLeft = (deadline_at: Date) => {
     const days = differenceInDays(deadline_at, new Date())
     return `${days} days left`
@@ -75,6 +95,12 @@ export const TaskMetadata = ({task, className}: Props) => {
           </span>
         </div>
       )}
+
+      {/* <AssigneeSwitcher
+        members={workspaceMembers.map((member) => member.user!)}
+        selectedAssigneeId={task.assignee_id}
+        onAssigneeChange={handleAssigneeChange}
+      /> */}
     </div>
   )
 }

@@ -32,6 +32,7 @@ export const Footer = observer(() => {
       selectedUserId,
       selectedWorkspaceId,
       selectedTaskIds,
+      setSelectedTaskIds,
       setQuickFindOpen,
       setWhenState,
       setWhenOpen,
@@ -130,13 +131,40 @@ export const Footer = observer(() => {
   }, [setWhenOpen, setWhenState])
 
   useHotkeys(
-    'n',
+    'space',
     (e) => {
       e.preventDefault()
       handleNewTask()
     },
     {
       enabled: buttonStates.newTask === 'visible',
+    },
+  )
+
+  useHotkeys(
+    'enter',
+    (e) => {
+      e.preventDefault()
+      if (selectedTaskIds.length > 0) {
+        setSelectedTaskIds([])
+        setOpenTaskId(selectedTaskIds[0]!)
+      }
+    },
+    {
+      enabled: !openTaskId && selectedTaskIds.length > 0,
+    },
+  )
+
+  useHotkeys(
+    'esc',
+    (e) => {
+      e.preventDefault()
+      setSelectedTaskIds([openTaskId!])
+      setOpenTaskId(null)
+    },
+    {
+      enabled: !!openTaskId,
+      enableOnFormTags: true,
     },
   )
 

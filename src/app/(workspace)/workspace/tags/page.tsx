@@ -34,7 +34,7 @@ export default function Page({params: {}}: Props) {
 
   const filteredTags = useMemo(() => {
     return tags.filter((tag) =>
-      tag.name.toLowerCase().includes(search.toLowerCase()),
+      tag.title.toLowerCase().includes(search.toLowerCase()),
     )
   }, [tags, search])
 
@@ -88,7 +88,7 @@ export default function Page({params: {}}: Props) {
               <TableCell>
                 <div className="flex items-center gap-2">
                   <div className={`size-3 rounded-full`} />
-                  <span>{tag.name}</span>
+                  <span>{tag.title}</span>
                 </div>
               </TableCell>
               <TableCell>

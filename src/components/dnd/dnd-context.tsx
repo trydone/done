@@ -4,7 +4,6 @@ import {
   DragOverEvent,
   DragOverlay,
   DragStartEvent,
-  KeyboardSensor,
   PointerSensor,
   pointerWithin,
   UniqueIdentifier,
@@ -83,9 +82,6 @@ export const DndProvider = observer(({children}: {children: ReactNode}) => {
       activationConstraint: {
         distance: 8,
       },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
     }),
   )
 
